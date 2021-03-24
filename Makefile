@@ -1,0 +1,23 @@
+#DEPS = function.h
+#LIB_OBJS = function.o
+
+# https://stackoverflow.com/questions/18007326/how-to-change-default-values-of-variables-like-cc-in-makefile
+ifeq ($(origin CC),default) 
+	CC = gcc
+endif
+
+.PHONY: all
+all: test
+	@echo All done!
+
+
+test: $(LIB_OBJS) test.o
+	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
+
+%.o: %.cpp $(DEPS)
+	$(CC) $(CFLAGS) $<
+
+.PHONY: clean
+clean:
+	rm -f *.o test
+	@echo Clean done!
