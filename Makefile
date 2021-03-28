@@ -7,17 +7,23 @@ ifeq ($(origin CC),default)
 endif
 
 .PHONY: all
-all: test
+all: test cpp_test
 	@echo All done!
 
 
 test: $(LIB_OBJS) test.o
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
+cpp_test: $(LIB_OBJS) cpp_test.o
+	$(CXX) $(LDFLAGS) $^ -o $@ $(LDLIBS)
+
 %.o: %.cpp $(DEPS)
-	$(CC) $(CFLAGS) $<
+	$(CXX) -c -g $(CFLAGS) $<
+
+%.o: %.c $(DEPS)
+	$(CC) -c -g $(CXXFLAGS) $<
 
 .PHONY: clean
 clean:
-	rm -f *.o test
+	rm -f *.o test cpp_test
 	@echo Clean done!

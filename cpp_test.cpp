@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <string>
 
 
 typedef struct wflMemCtx
@@ -90,10 +91,10 @@ wflShiftDouble(wflBlobDsc* blob)
     double * d;
     char * res;
     wflBlobDsc * b2 = wflShiftN(blob, sizeof(double));
-    d = (double *) b2->data;
-    if (! d) return NULL;
+    if (! b2) return NULL;
 
-    printf("%.999g",*d);
+    d = (double *)( (char*) b2->data + blob->begin);
+
     ret = snprintf(buf,1000,"%.999g",*d);
     // FIXME анализировать ret
     length = strlen(buf);
@@ -129,6 +130,26 @@ wflShiftPgPoint(wflBlobDsc* blob)
     return res;
 }
 
+
+char *
+wflShiftPgPath(wflBlobDsc* blob)
+{
+    std::string res = "";
+    char *pc, *pres;
+
+    while (pc = wflShiftPgPoint(blob))
+    {
+        if (!res.empty()) res = res + ", ";
+        res = res + pc;
+        wflFree(blob->mctx, pc);
+    }
+    res = "[" + res + "]";
+    pres = (char*) wflMalloc(blob->mctx, res.size() + 1);
+    memcpy(pres,res.c_str(), res.size() + 1);
+    return pres;
+
+}
+
 char blob_data[]="aaalkjdhfs89345yu3ifhjew;lkhf4;lt;o34ithp;eriuwtgp;etup568p34tuewritwe;rtgj;ewoty;4w85tyeihwritgzzz";
 
 int main()
@@ -158,6 +179,9 @@ printf("\n aaa = %s\n-----\n",str);
 
 printf("\n aaa = %s\n-----\n",str);
 
+    str = wflShiftPgPath(&blob);
+
+printf("\n zzz = %s\n-----\n",str);
 
     wflBlobDump(&blob);
     wflBlobDump(b2);
