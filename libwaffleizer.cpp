@@ -91,32 +91,22 @@ wflShiftDouble(wflBlobDsc* blob)
     return res;
 }
 
-char *
+std::string
 wflShiftPgPoint(wflBlobDsc* blob)
 {
-    char buf[10000];
-    int ret, length;
-    char *res;
+    std::string res = "";
     char *a1, *a2;
 
     a1 = wflShiftDouble(blob);
-    if (! a1) return NULL;
+    if (! a1) return res;
 
     a2 = wflShiftDouble(blob);
     if (! a2)
     {
         wflFree(blob->mctx, a1);
-        return NULL;
+        return res;
     }
-    ret = snprintf(buf,10000,"(%s, %s)",a1, a2);
-    // FIXME анализировать ret
-
-    length = strlen(buf);
-    res = (char*) wflMalloc(blob->mctx,length+1);
-    memcpy(res,buf,length + 1);
-    wflFree(blob->mctx, a1);
-    wflFree(blob->mctx, a2);
-
+    res = (std::string) "(" + a1 +", " + a2 + ")";
     return res;
 }
 
@@ -125,13 +115,15 @@ std::string
 wflShiftPgPath(wflBlobDsc* blob)
 {
     std::string res = "";
-    char *pc;
+    std::string point;
 
-    while (pc = wflShiftPgPoint(blob))
+    while (1)
     {
+        point = wflShiftPgPoint(blob);
+        if (point.empty())
+            break;
         if (!res.empty()) res = res + ", ";
-        res = res + pc;
-        wflFree(blob->mctx, pc);
+        res = res + point;
     }
     if (res.empty())
         return res;
@@ -148,9 +140,8 @@ poly_contain_prepare(char* in, int in_size, char ** res1, char ** res2)
     wflMemCtx * mctx;
     wflBlobDsc blob;
     wflBlobDsc * b2;
-    char *r1;
 
-    std::string r2;
+    std::string r1, r2;
 
     mctx = wflCreateMemCtx();
 
@@ -162,12 +153,12 @@ poly_contain_prepare(char* in, int in_size, char ** res1, char ** res2)
 
     r1 = wflShiftPgPoint(&blob);
 
-    if (! r1)
+    if (r1.empty())
     {
       fprintf(stderr,"Problema\n");
       return 1;
     }
-   
+
     r2 = wflShiftPgPath(& blob);
 
     if (r2.empty())
@@ -175,10 +166,9 @@ poly_contain_prepare(char* in, int in_size, char ** res1, char ** res2)
       fprintf(stderr,"Problema\n");
       return 1;
     }
-   
-    *res1 = (char *) malloc(strlen(r1)+1);
-    memcpy(*res1, r1,strlen(r1)  + 1);
-    free(r1);
+
+    *res1 = (char *) malloc(strlen(r1.c_str()) + 1);
+    memcpy(*res1, r1.c_str(), strlen(r1.c_str())  + 1);
 
     *res2 = (char *) malloc(strlen(r2.c_str())+1);
     memcpy(*res2, r2.c_str(), strlen(r2.c_str())  + 1);
