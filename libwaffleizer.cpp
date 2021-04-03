@@ -70,24 +70,45 @@ wflShiftN(wflBlobDsc* blob, size_t n)
     return new_blob;
 }
 
-char *
+std::string
 wflShiftDouble(wflBlobDsc* blob)
 {
     char buf[10000];
     int ret, length;
     double * d;
-    char * res;
+    char * resc;
+    std::string res;
+
+
     wflBlobDsc * b2 = wflShiftN(blob, sizeof(double));
-    if (! b2) return NULL;
+    if (! b2) return "";
 
     d = (double *)( (char*)b2->data + b2->begin);
-
-    ret = snprintf(buf,10000,"%.999g",*d);
-    // FIXME анализировать ret
-    length = strlen(buf);
-    res = (char*) wflMalloc(blob->mctx,length+1);
-    memcpy(res, buf, length+1);
     wflFree(blob->mctx, b2);
+
+    int size_s = snprintf( nullptr, 0, "%.999g", *d) + 1;
+    if (size_s <= 0)
+    {
+        printf("ai-ai-ai\n");
+        return "";
+    }
+
+    resc =(char *) malloc(size_s);
+    if (! resc)
+    {
+        printf("oh-oh-oh\n");
+        return "";
+    }
+
+    ret = snprintf(resc,size_s,"%.999g", *d);
+    if (ret <= 0)
+    {
+        printf("oi-oi-oi\n");
+        free(resc);
+        return "";
+    }
+    res = resc;
+    free(resc);
     return res;
 }
 
@@ -95,18 +116,15 @@ std::string
 wflShiftPgPoint(wflBlobDsc* blob)
 {
     std::string res = "";
-    char *a1, *a2;
+    std::string x, y;
 
-    a1 = wflShiftDouble(blob);
-    if (! a1) return res;
+    x = wflShiftDouble(blob);
+    if (x.empty()) return "";
 
-    a2 = wflShiftDouble(blob);
-    if (! a2)
-    {
-        wflFree(blob->mctx, a1);
-        return res;
-    }
-    res = (std::string) "(" + a1 +", " + a2 + ")";
+    y = wflShiftDouble(blob);
+    if (y.empty()) return "";
+
+    res = (std::string) "(" + x +", " + y + ")";
     return res;
 }
 
