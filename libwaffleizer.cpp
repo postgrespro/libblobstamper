@@ -73,8 +73,7 @@ wflShiftN(wflBlobDsc* blob, size_t n)
 std::string
 wflShiftDouble(wflBlobDsc* blob)
 {
-    char buf[10000];
-    int ret, length;
+    int ret;
     double * d;
     char * resc;
     std::string res;
