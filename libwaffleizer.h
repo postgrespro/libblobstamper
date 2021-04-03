@@ -1,0 +1,41 @@
+
+typedef struct wflMemCtx
+{
+    //Nothing for now;
+}wflMemCtx ;
+
+extern wflMemCtx static_ctx;
+
+wflMemCtx * wflCreateMemCtx();
+void  wflDestroyMemCtx(wflMemCtx * mctx);
+
+
+typedef struct wflBlobDsc
+{
+  struct wflMemCtx * mctx;
+  char * data;
+  int    begin;
+  int    end;
+}wflBlobDsc;
+
+
+void wflBlobDump(wflBlobDsc* blob);
+void* wflMalloc(wflMemCtx * mctx, size_t size);
+void wflFree(wflMemCtx * mctx, void* ptr);
+
+wflBlobDsc* wflShiftN(wflBlobDsc* blob, size_t n);
+char * wflShiftDouble(wflBlobDsc* blob);
+char * wflShiftPgPoint(wflBlobDsc* blob);
+char * wflShiftPgPath(wflBlobDsc* blob);
+
+
+
+
+
+
+
+extern "C" {
+
+int poly_contain_prepare(char* in, int in_size, char ** res1, char ** res2);
+
+}

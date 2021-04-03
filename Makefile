@@ -14,7 +14,7 @@ all: test cpp_test
 test: $(LIB_OBJS) test.o
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
-cpp_test: $(LIB_OBJS) cpp_test.o
+cpp_test: $(LIB_OBJS) cpp_test.o libwaffleizer.o
 	$(CXX) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
 %.o: %.cpp $(DEPS)
