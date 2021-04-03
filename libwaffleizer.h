@@ -26,7 +26,7 @@ void wflFree(wflMemCtx * mctx, void* ptr);
 wflBlobDsc* wflShiftN(wflBlobDsc* blob, size_t n);
 char * wflShiftDouble(wflBlobDsc* blob);
 char * wflShiftPgPoint(wflBlobDsc* blob);
-char * wflShiftPgPath(wflBlobDsc* blob);
+std::string  wflShiftPgPath(wflBlobDsc* blob);
 
 
 

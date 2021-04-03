@@ -121,11 +121,11 @@ wflShiftPgPoint(wflBlobDsc* blob)
 }
 
 
-char *
+std::string
 wflShiftPgPath(wflBlobDsc* blob)
 {
     std::string res = "";
-    char *pc, *pres;
+    char *pc;
 
     while (pc = wflShiftPgPoint(blob))
     {
@@ -133,11 +133,10 @@ wflShiftPgPath(wflBlobDsc* blob)
         res = res + pc;
         wflFree(blob->mctx, pc);
     }
+    if (res.empty())
+        return res;
     res = "(" + res + ")";
-    pres = (char*) wflMalloc(blob->mctx, res.size() + 1);
-    memcpy(pres,res.c_str(), res.size() + 1);
-    return pres;
-
+    return res;
 }
 
 extern "C" {
@@ -149,7 +148,9 @@ poly_contain_prepare(char* in, int in_size, char ** res1, char ** res2)
     wflMemCtx * mctx;
     wflBlobDsc blob;
     wflBlobDsc * b2;
-    char *r1, *r2;
+    char *r1;
+
+    std::string r2;
 
     mctx = wflCreateMemCtx();
 
@@ -169,7 +170,7 @@ poly_contain_prepare(char* in, int in_size, char ** res1, char ** res2)
    
     r2 = wflShiftPgPath(& blob);
 
-    if (! r2)
+    if (r2.empty())
     {
       fprintf(stderr,"Problema\n");
       return 1;
@@ -179,9 +180,8 @@ poly_contain_prepare(char* in, int in_size, char ** res1, char ** res2)
     memcpy(*res1, r1,strlen(r1)  + 1);
     free(r1);
 
-    *res2 = (char *) malloc(strlen(r2)+1);
-    memcpy(*res2, r2,strlen(r2)  + 1);
-    free(r2);
+    *res2 = (char *) malloc(strlen(r2.c_str())+1);
+    memcpy(*res2, r2.c_str(), strlen(r2.c_str())  + 1);
 
     return 0;
 }

@@ -11,37 +11,16 @@ char blob_data[]="aaalkjdhfs89345yu3ifhjew;lkhf4;lt;o34ithp;eriuwtgp;etup568p34t
 
 int main()
 {
-    wflMemCtx * mctx;
-    wflBlobDsc blob;
-    wflBlobDsc * b2;
-    char* str;
+    char *res1, *res2;
 
-    mctx = wflCreateMemCtx();
+    poly_contain_prepare(blob_data,strlen(blob_data),&res1, &res2);
 
-    blob.mctx = mctx;
-    blob.data = blob_data;
-    blob.begin = 0;
-    blob.end = strlen(blob_data)-1;
+  
+    printf("---- %s\n",res1);
+    printf("==== %s\n",res2);
 
 
-    wflBlobDump(&blob);
-printf("-----\n");
-    b2 = wflShiftN(&blob,3);
+    if (res1) free(res1);
+    if (res2) free(res2);
 
-    str = wflShiftDouble(&blob);
-
-printf("\n aaa = %s\n-----\n",str);
-
-    str = wflShiftPgPoint(&blob);
-
-printf("\n aaa = %s\n-----\n",str);
-
-    str = wflShiftPgPath(&blob);
-
-printf("\n zzz = %s\n-----\n",str);
-
-    wflBlobDump(&blob);
-    wflBlobDump(b2);
-
-    wflDestroyMemCtx(mctx);
 }
