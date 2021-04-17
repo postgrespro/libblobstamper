@@ -4,7 +4,7 @@
 
 #include <string>
 
-#include "libwaffleizer.h"
+#include "libblobstamper.h"
 
 
 char blob_data[]="aaalkjdhfs89345yu3ifhjew;lkhf4;lt;o34ithp;eriuwtgp;etup568p34tuewritwe;rtgj;ewoty;4w85tyeihwritgzzz";

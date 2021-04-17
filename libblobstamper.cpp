@@ -4,7 +4,7 @@
 
 #include <string>
 
-#include "libwaffleizer.h"
+#include "libblobstamper.h"
 
 wflMemCtx static_ctx;
 
