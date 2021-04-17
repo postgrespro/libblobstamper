@@ -152,8 +152,8 @@ extern "C" {
 int
 poly_contain_prepare(char* in, int in_size, char ** res1, char ** res2)
 {
-    char str[]="124567";
-
+    *res1 = NULL;
+    *res2 = NULL;
     wflMemCtx * mctx;
     wflBlobDsc blob;
     wflBlobDsc * b2;
@@ -172,7 +172,7 @@ poly_contain_prepare(char* in, int in_size, char ** res1, char ** res2)
 
     if (r1.empty())
     {
-      fprintf(stderr,"Problema\n");
+      fprintf(stderr,"Problema1\n");
       return 1;
     }
 
@@ -180,12 +180,49 @@ poly_contain_prepare(char* in, int in_size, char ** res1, char ** res2)
 
     if (r2.empty())
     {
-      fprintf(stderr,"Problema\n");
+      fprintf(stderr,"Problema2\n");
       return 1;
     }
 
     *res1 = (char *) malloc(strlen(r1.c_str()) + 1);
     memcpy(*res1, r1.c_str(), strlen(r1.c_str())  + 1);
+
+    *res2 = (char *) malloc(strlen(r2.c_str())+1);
+    memcpy(*res2, r2.c_str(), strlen(r2.c_str())  + 1);
+
+    return 0;
+}
+
+int
+poly_center_prepare(char* in, int in_size, char ** res2)
+{
+//    *res1 = NULL;
+    *res2 = NULL;
+    wflMemCtx * mctx;
+    wflBlobDsc blob;
+    wflBlobDsc * b2;
+
+    std::string  r2;
+
+    mctx = wflCreateMemCtx();
+
+    blob.mctx = mctx;
+    blob.data = in;
+    blob.begin = 0;
+    blob.end = in_size;
+
+
+
+    r2 = wflShiftPgPath(& blob);
+
+    if (r2.empty())
+    {
+      fprintf(stderr,"Problema2\n");
+      return 1;
+    }
+
+//    *res1 = (char *) malloc(strlen(r1.c_str()) + 1);
+//    memcpy(*res1, r1.c_str(), strlen(r1.c_str())  + 1);
 
     *res2 = (char *) malloc(strlen(r2.c_str())+1);
     memcpy(*res2, r2.c_str(), strlen(r2.c_str())  + 1);

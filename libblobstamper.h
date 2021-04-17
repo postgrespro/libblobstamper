@@ -23,10 +23,10 @@ void wflBlobDump(wflBlobDsc* blob);
 void* wflMalloc(wflMemCtx * mctx, size_t size);
 void wflFree(wflMemCtx * mctx, void* ptr);
 
-wflBlobDsc* wflShiftN(wflBlobDsc* blob, size_t n);
-std::string wflShiftDouble(wflBlobDsc* blob);
-std::string wflShiftPgPoint(wflBlobDsc* blob);
-std::string wflShiftPgPath(wflBlobDsc* blob);
+//wflBlobDsc* wflShiftN(wflBlobDsc* blob, size_t n);
+//std::string wflShiftDouble(wflBlobDsc* blob);
+//std::string wflShiftPgPoint(wflBlobDsc* blob);
+//std::string wflShiftPgPath(wflBlobDsc* blob);
 
 
 
