@@ -6,72 +6,57 @@
 
 #include "libblobstamper.h"
 
-wflMemCtx static_ctx;
 
-wflMemCtx *
-wflCreateMemCtx()
+Blob::Blob (char * data_in, int size_in)
 {
-  return &static_ctx;
+    data = data_in;
+    size = size_in;
+    begin = 0;
+    end = size;
 }
 
-
-void 
-wflDestroyMemCtx(wflMemCtx * mctx)
+bool
+Blob::isEmpty ()
 {
+    if (! data) return true;
+    return false;
 }
-
 
 void
-wflBlobDump(wflBlobDsc* blob)
+wflBlobDump(Blob blob)
 {
-    int length = blob->end - blob->begin + 1 ; 
+    int length = blob.end - blob.begin + 1 ;
     char * str =(char *) malloc(length + 1); // second +1 is for \0
     // FIXME проверка null
     str[0]='\0';
 
-    strncat(str, blob->data + blob->begin, length); 
+    strncat(str, blob.data + blob.begin, length);
 
     printf("%s\n",str);
     free(str);
 }
 
-void*
-wflMalloc(wflMemCtx * mctx, size_t size)
+Blob
+wflShiftN(Blob &blob, size_t n)
 {
-   /*just that simple for now*/
-  return malloc( size );
-}
+    if (blob.begin + n > blob.end)
+    {
+        Blob empty(NULL, -1);
+        return empty; /*not enough data*/
+    }
 
-void
-wflFree(wflMemCtx * mctx, void* ptr)
-{
-   /*just that simple for now*/
-  free(ptr);
-}
+    Blob new_blob(blob.data, blob.size);
 
+    new_blob.begin = blob.begin;
+    new_blob.end = blob.begin + n - 1;
 
-wflBlobDsc*
-wflShiftN(wflBlobDsc* blob, size_t n)
-{
-    wflBlobDsc*  new_blob;
-    // FIXME null check here;
-    if (blob->begin + n > blob->end)
-        return NULL; /*not enough data*/
-
-    new_blob = (wflBlobDsc*) wflMalloc(blob->mctx, sizeof(wflBlobDsc));
-
-    new_blob->data  = blob->data;
-    new_blob->begin = blob->begin;
-    new_blob->end = blob->begin + n - 1;
-    new_blob->mctx = blob->mctx;
-
-    blob->begin += n;
+    blob.begin += n;
 
     return new_blob;
 }
 
 std::string
-wflShiftDouble(wflBlobDsc* blob)
+wflShiftDouble(Blob &blob)
 {
     int ret;
     double * d;
@@ -79,11 +64,10 @@ wflShiftDouble(wflBlobDsc* blob)
     std::string res;
 
 
-    wflBlobDsc * b2 = wflShiftN(blob, sizeof(double));
-    if (! b2) return "";
+    Blob b2 = wflShiftN(blob, sizeof(double));
+    if (b2.isEmpty()) return "";
 
-    d = (double *)( (char*)b2->data + b2->begin);
-    wflFree(blob->mctx, b2);
+    d = (double *)( (char*)b2.data + b2.begin);
 
     int size_s = snprintf( nullptr, 0, "%.999g", *d) + 1;
     if (size_s <= 0)
@@ -112,7 +96,7 @@ wflShiftDouble(wflBlobDsc* blob)
 }
 
 std::string
-wflShiftPgPoint(wflBlobDsc* blob)
+wflShiftPgPoint(Blob &blob)
 {
     std::string res = "";
     std::string x, y;
@@ -129,7 +113,7 @@ wflShiftPgPoint(wflBlobDsc* blob)
 
 
 std::string
-wflShiftPgPath(wflBlobDsc* blob)
+wflShiftPgPath(Blob &blob)
 {
     std::string res = "";
     std::string point;
@@ -154,21 +138,11 @@ poly_contain_prepare(char* in, int in_size, char ** res1, char ** res2)
 {
     *res1 = NULL;
     *res2 = NULL;
-    wflMemCtx * mctx;
-    wflBlobDsc blob;
-    wflBlobDsc * b2;
 
     std::string r1, r2;
+    Blob blob(in, in_size);
 
-    mctx = wflCreateMemCtx();
-
-    blob.mctx = mctx;
-    blob.data = in;
-    blob.begin = 0;
-    blob.end = in_size;
-
-
-    r1 = wflShiftPgPoint(&blob);
+    r1 = wflShiftPgPoint(blob);
 
     if (r1.empty())
     {
@@ -176,7 +150,7 @@ poly_contain_prepare(char* in, int in_size, char ** res1, char ** res2)
       return 1;
     }
 
-    r2 = wflShiftPgPath(& blob);
+    r2 = wflShiftPgPath(blob);
 
     if (r2.empty())
     {
@@ -196,33 +170,18 @@ poly_contain_prepare(char* in, int in_size, char ** res1, char ** res2)
 int
 poly_center_prepare(char* in, int in_size, char ** res2)
 {
-//    *res1 = NULL;
     *res2 = NULL;
-    wflMemCtx * mctx;
-    wflBlobDsc blob;
-    wflBlobDsc * b2;
 
     std::string  r2;
+    Blob blob(in, in_size);
 
-    mctx = wflCreateMemCtx();
-
-    blob.mctx = mctx;
-    blob.data = in;
-    blob.begin = 0;
-    blob.end = in_size;
-
-
-
-    r2 = wflShiftPgPath(& blob);
+    r2 = wflShiftPgPath(blob);
 
     if (r2.empty())
     {
       fprintf(stderr,"Problema2\n");
       return 1;
     }
-
-//    *res1 = (char *) malloc(strlen(r1.c_str()) + 1);
-//    memcpy(*res1, r1.c_str(), strlen(r1.c_str())  + 1);
 
     *res2 = (char *) malloc(strlen(r2.c_str())+1);
     memcpy(*res2, r2.c_str(), strlen(r2.c_str())  + 1);

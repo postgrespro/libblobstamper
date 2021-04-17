@@ -1,4 +1,20 @@
 
+
+class Blob
+{
+    private:
+    public:
+        Blob(char * data, int size);
+        bool isEmpty ();
+
+        char * data;  /*FIZME потом сделать private*/
+        int    size;
+        int    begin;
+        int    end;
+
+};
+
+
 typedef struct wflMemCtx
 {
     //Nothing for now;

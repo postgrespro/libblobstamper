@@ -11,6 +11,9 @@ char blob_data[]="aaalkjdhfs89345yu3ifhjew;lkhf4;lt;o34ithp;eriuwtgp;etup568p34t
 
 int main()
 {
+
+    Blob bl(blob_data,strlen(blob_data));
+
     char *res1, *res2;
 
     poly_contain_prepare(blob_data,strlen(blob_data),&res1, &res2);
