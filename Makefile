@@ -14,7 +14,7 @@ all: test cpp_test
 test: $(LIB_OBJS) test.o
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
-cpp_test: $(LIB_OBJS) cpp_test.o libblobstamper.o
+cpp_test: $(LIB_OBJS) cpp_test.o libblobstamper.o pg_op_wrappers.o
 	$(CXX) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
 %.o: %.cpp $(DEPS)
