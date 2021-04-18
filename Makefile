@@ -7,15 +7,20 @@ ifeq ($(origin CC),default)
 endif
 
 .PHONY: all
-all: test cpp_test
+all: test test_pg_op_wrappers test_libblobstamper
 	@echo All done!
 
 
 test: $(LIB_OBJS) test.o
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
-cpp_test: $(LIB_OBJS) cpp_test.o libblobstamper.o pg_op_wrappers.o
+test_pg_op_wrappers: $(LIB_OBJS) test_pg_op_wrappers.o libblobstamper.o pg_op_wrappers.o
 	$(CXX) $(LDFLAGS) $^ -o $@ $(LDLIBS)
+
+test_libblobstamper: $(LIB_OBJS) libblobstamper.o test_libblobstamper.o
+	$(CXX) $(LDFLAGS) $^ -o $@ $(LDLIBS)
+
+
 
 %.o: %.cpp $(DEPS)
 	$(CXX) -c -g $(CFLAGS) $<
@@ -25,5 +30,5 @@ cpp_test: $(LIB_OBJS) cpp_test.o libblobstamper.o pg_op_wrappers.o
 
 .PHONY: clean
 clean:
-	rm -f *.o test cpp_test
+	rm -f *.o test test_pg_op_wrappers test_libblobstamper
 	@echo Clean done!

@@ -1,29 +1,19 @@
 
-
+#include <string>
 class Blob
 {
     private:
     public:
         Blob(char * data, int size);
         bool isEmpty ();
+        void Dump();
 
-        char * data;  /*FIZME потом сделать private*/
+        char * data;  /*FIXME потом сделать private*/
         int    size;
         int    begin;
         int    end;
 
 };
-
-typedef struct wflBlobDsc
-{
-  struct wflMemCtx * mctx;
-  char * data;
-  int    begin;
-  int    end;
-}wflBlobDsc;
-
-
-void wflBlobDump(wflBlobDsc* blob);
 
 Blob wflShiftN(Blob &blob, size_t n);
 std::string wflShiftDouble(Blob &blob);
