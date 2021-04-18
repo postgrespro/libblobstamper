@@ -7,12 +7,12 @@ class Blob
         Blob(char * data, int size);
         bool isEmpty ();
         void Dump();
+        Blob ShiftBytes(size_t n);
 
         char * data;  /*FIXME потом сделать private*/
         int    size;
         int    begin;
         int    end;
-
 };
 
 Blob wflShiftN(Blob &blob, size_t n);

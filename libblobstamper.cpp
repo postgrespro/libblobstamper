@@ -87,20 +87,20 @@ Blob::Dump()
 }
 
 Blob
-wflShiftN(Blob &blob, size_t n)
+Blob::ShiftBytes(size_t n)
 {
-    if (blob.begin + n > blob.end)
+    if (begin + n > end)
     {
         Blob empty(NULL, -1);
-        return empty; /*not enough data*/
+        return empty; /* not enough data */
     }
 
-    Blob new_blob(blob.data, blob.size);
+    Blob new_blob(data, size);
 
-    new_blob.begin = blob.begin;
-    new_blob.end = blob.begin + n - 1;
+    new_blob.begin = begin;   /* FIXME this should go private once */
+    new_blob.end = begin + n - 1;
 
-    blob.begin += n;
+    begin += n;
 
     return new_blob;
 }
@@ -114,7 +114,7 @@ wflShiftDouble(Blob &blob)
     std::string res;
 
 
-    Blob b2 = wflShiftN(blob, sizeof(double));
+    Blob b2 = blob.ShiftBytes(sizeof(double));
     if (b2.isEmpty()) return "";
 
     d = (double *)( (char*)b2.data + b2.begin);
