@@ -32,5 +32,22 @@ main(void)
         printf("got non-empty result. SOMETHING IS REALLY WRONG!!!!\n");
 
 
+    StampBinDouble stmp_double;
+
+    void* res = bl.ShiftSingleStampBin(stmp_double);
+
+    hexdump(res,sizeof(double));
+    free(res);
+
+    StampStrDouble stmp_str_double;
+    
+    std::string str = stmp_str_double.ExtractStr(bl);
+
+    printf("-------- %s\n", str.c_str());
+
+    str = wflShiftPgPoint(bl);
+
+    printf("++++++++ %s\n", str.c_str());
+
     return 0;
 }
