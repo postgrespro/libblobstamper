@@ -41,13 +41,21 @@ main(void)
 
     StampStrDouble stmp_str_double;
     
-    std::string str = stmp_str_double.ExtractStr(bl);
+    std::string str = bl.ShiftSingleStampStr(stmp_str_double);
 
     printf("-------- %s\n", str.c_str());
 
-    str = wflShiftPgPoint(bl);
+    StampStrPgPoint stmp_pg_point;
+
+    str = bl.ShiftSingleStampStr(stmp_pg_point);
+
+    printf("======= %s\n", str.c_str());
+
+    str = wflShiftPgPath(bl);
 
     printf("++++++++ %s\n", str.c_str());
+
+
 
     return 0;
 }

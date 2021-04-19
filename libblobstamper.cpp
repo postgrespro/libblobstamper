@@ -117,75 +117,14 @@ Blob::ShiftSingleStampStr(StampGeneric& stmp)
     return stmp.ExtractStr(*this);
 }
 
-
-std::string
-wflShiftDouble(Blob &blob)
-{
-    int ret;
-    double * d;
-    char * resc;
-    std::string res;
-
-
-    Blob b2 = blob.ShiftBytes(sizeof(double));
-    if (b2.isEmpty()) return "";
-
-    d = (double *)( (char*)b2.data + b2.begin);
-
-    int size_s = snprintf( nullptr, 0, "%.999g", *d) + 1;
-    if (size_s <= 0)
-    {
-        printf("ai-ai-ai\n");
-        return "";
-    }
-
-    resc =(char *) malloc(size_s);
-    if (! resc)
-    {
-        printf("oh-oh-oh\n");
-        return "";
-    }
-
-    ret = snprintf(resc,size_s,"%.999g", *d);
-    if (ret <= 0)
-    {
-        printf("oi-oi-oi\n");
-        free(resc);
-        return "";
-    }
-    res = resc;
-    free(resc);
-    return res;
-}
-
-std::string
-wflShiftPgPoint(Blob &blob)
-{
-    std::string res = "";
-    std::string x, y;
-
-    StampStrDouble stamp;
-
-    x = blob.ShiftSingleStampStr(stamp);
-    if (x.empty()) return "";
-
-    y = blob.ShiftSingleStampStr(stamp);
-    if (y.empty()) return "";
-
-    res = (std::string) "(" + x +", " + y + ")";
-    return res;
-}
-
-
 std::string
 wflShiftPgPath(Blob &blob)
 {
     std::string res = "";
-    std::string point;
-
+    StampStrPgPoint stamp_pg_point;
     while (1)
     {
-        point = wflShiftPgPoint(blob);
+        std::string point = blob.ShiftSingleStampStr(stamp_pg_point);
         if (point.empty())
             break;
         if (!res.empty()) res = res + ", ";
@@ -197,6 +136,7 @@ wflShiftPgPath(Blob &blob)
     return res;
 }
 
+/*************************************************************************************/
 
 StampBinDouble::StampBinDouble()
 {
@@ -215,6 +155,8 @@ StampBinDouble::Extract(Blob &blob)
     memcpy(res, blob2.data + blob2.begin, min_size);
     return res;
 }
+
+/* ---- */
 
 std::string
 StampStrDouble::ExtractStr(Blob &blob)
@@ -248,6 +190,31 @@ StampStrDouble::ExtractStr(Blob &blob)
     res = resc;
     free(resc);
     free(pd);
+    return res;
+}
+/* ---- */
+
+StampStrPgPoint::StampStrPgPoint()
+{
+    min_size = stamp_double.minSize() * 2;
+    max_size = stamp_double.maxSize() * 2;
+    is_fixed_size = true;
+}
+
+
+std::string
+StampStrPgPoint::ExtractStr(Blob &blob)
+{
+    std::string res = "";
+    std::string x, y;
+
+    x = blob.ShiftSingleStampStr(stamp_double);
+    if (x.empty()) return "";
+
+    y = blob.ShiftSingleStampStr(stamp_double);
+    if (y.empty()) return "";
+
+    res = (std::string) "(" + x +", " + y + ")";
     return res;
 }
 

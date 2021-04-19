@@ -58,6 +58,16 @@ class StampStrDouble: public StampBinDouble
 
 };
 
+
+class StampStrPgPoint: public StampGeneric
+{
+  protected:
+    StampStrDouble stamp_double;
+  public:
+    StampStrPgPoint();
+    std::string ExtractStr(Blob &blob) override;
+};
+
 Blob wflShiftN(Blob &blob, size_t n);
 std::string wflShiftDouble(Blob &blob);
 std::string wflShiftPgPoint(Blob &blob);
