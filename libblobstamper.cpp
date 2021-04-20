@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include <string>
+#include <list>
 
 #include "libblobstamper.h"
 
@@ -117,28 +118,33 @@ Blob::ShiftSingleStampStr(StampGeneric& stmp)
     return stmp.ExtractStr(*this);
 }
 
-std::string
-wflShiftPgPath(Blob &blob)
-{
-    std::string res = "";
-    StampStrPgPoint stamp_pg_point;
-    while (1)
-    {
-        std::string point = blob.ShiftSingleStampStr(stamp_pg_point);
-        if (point.empty())
-            break;
-        if (!res.empty()) res = res + ", ";
-        res = res + point;
-    }
-    if (res.empty())
-        return res;
-    res = "(" + res + ")";
-    return res;
-}
-
 /*************************************************************************************/
 
-StampBinDouble::StampBinDouble()
+std::list<std::string> StampList::ExtractStrList(Blob &blob)
+{
+  std::list<std::string> res;
+
+  if (target_stamp.isFixedSize())
+  {
+    while (1)
+    {
+      std::string el = blob.ShiftSingleStampStr(target_stamp);
+      if (el.empty())
+        break;
+      res.push_back(el);
+    }
+  }
+  else
+  {
+     printf("Not implemented yet!");
+     exit(1);
+  }
+
+  return res;
+}
+
+
+StampBinDouble::StampBinDouble() : StampGeneric()
 {
     min_size = sizeof(double);
     max_size = sizeof(double);
@@ -194,7 +200,7 @@ StampStrDouble::ExtractStr(Blob &blob)
 }
 /* ---- */
 
-StampStrPgPoint::StampStrPgPoint()
+StampStrPgPoint::StampStrPgPoint() : StampGeneric()
 {
     min_size = stamp_double.minSize() * 2;
     max_size = stamp_double.maxSize() * 2;
@@ -218,3 +224,21 @@ StampStrPgPoint::ExtractStr(Blob &blob)
     return res;
 }
 
+
+std::string
+StampStrPgPolygon::ExtractStr(Blob &blob)
+{
+    std::string res = "";
+  std::list<std::string> list = ExtractStrList(blob);
+
+
+  for (std::string point : list) {
+        if (!res.empty()) res = res + ", ";
+        res = res + point;
+  }
+
+  if (res.empty())
+    return res;
+  res = "(" + res + ")";
+  return res;
+}

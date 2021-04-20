@@ -1,6 +1,8 @@
 
-#include <string>
 #include <stdio.h>
+
+#include <string>
+#include <list>
 
 class StampGeneric;
 
@@ -38,23 +40,32 @@ class StampGeneric
 
 };
 
+class StampList: public StampGeneric
+{
+  protected:
+    StampGeneric& target_stamp;
+  public:
+    StampList(StampGeneric &stamp) : target_stamp(stamp) {};
+
+    virtual std::list<std::string> ExtractStrList(Blob &blob);
+
+
+};
+
+
 class StampBinDouble: public StampGeneric
 {
   public:
     StampBinDouble();
     void * Extract(Blob &blob) override;
-
-
 };
 
 
 class StampStrDouble: public StampBinDouble
 {
   public:
-//    StampStrDouble();
     StampStrDouble() : StampBinDouble() {}
-
-  std::string ExtractStr(Blob &blob) override;
+    std::string ExtractStr(Blob &blob) override;
 
 };
 
@@ -67,6 +78,16 @@ class StampStrPgPoint: public StampGeneric
     StampStrPgPoint();
     std::string ExtractStr(Blob &blob) override;
 };
+
+class StampStrPgPolygon: public StampList
+{
+    StampStrPgPoint actual_stamp; /*Запутался я нафиг с этими указателями. Пусть будет пока так, потом разберемся как правильно, все равно оно под капотом...*/
+  public:
+    StampStrPgPolygon() :  StampList(actual_stamp) {}
+    std::string ExtractStr(Blob &blob) override;
+};
+
+
 
 Blob wflShiftN(Blob &blob, size_t n);
 std::string wflShiftDouble(Blob &blob);

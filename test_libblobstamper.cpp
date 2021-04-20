@@ -40,7 +40,7 @@ main(void)
     free(res);
 
     StampStrDouble stmp_str_double;
-    
+
     std::string str = bl.ShiftSingleStampStr(stmp_str_double);
 
     printf("-------- %s\n", str.c_str());
@@ -51,9 +51,12 @@ main(void)
 
     printf("======= %s\n", str.c_str());
 
-    str = wflShiftPgPath(bl);
 
-    printf("++++++++ %s\n", str.c_str());
+    StampStrPgPolygon stmp_pg_poligon;
+
+    str = bl.ShiftSingleStampStr(stmp_pg_poligon);
+
+    printf("_________ %s\n", str.c_str());
 
 
 
