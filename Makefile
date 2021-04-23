@@ -6,19 +6,24 @@ ifeq ($(origin CC),default)
 	CC = gcc
 endif
 
+BLOB_STAMPER_OBJ = blobstamper/blob.o blobstamper/helpers.o
+
 .PHONY: all
-all: test test_pg_op_wrappers test_libblobstamper
+all: blob-stamper-all test test_pg_op_wrappers test_libblobstamper 
 	@echo All done!
 
+.PHONY: blob-stamper-all
+blob-stamper-all:
+	$(MAKE) -C blobstamper
 
 test: $(LIB_OBJS) test.o
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
-test_pg_op_wrappers: $(LIB_OBJS) test_pg_op_wrappers.o libblobstamper.o pg_op_wrappers.o
-	$(CXX) $(LDFLAGS) $^ -o $@ $(LDLIBS)
+test_pg_op_wrappers: blob-stamper-all $(LIB_OBJS) test_pg_op_wrappers.o  libblobstamper.o pg_op_wrappers.o 
+	$(CXX) $(LDFLAGS) $@.o -o $@  $(LDLIBS) $(BLOB_STAMPER_OBJ) libblobstamper.o pg_op_wrappers.o
 
-test_libblobstamper: $(LIB_OBJS) libblobstamper.o test_libblobstamper.o
-	$(CXX) $(LDFLAGS) $^ -o $@ $(LDLIBS)
+test_libblobstamper: $(LIB_OBJS) libblobstamper.o test_libblobstamper.o blob-stamper-all
+	$(CXX) $(LDFLAGS) $@.o -o $@ $(LDLIBS) $(BLOB_STAMPER_OBJ) libblobstamper.o
 
 
 
@@ -28,7 +33,12 @@ test_libblobstamper: $(LIB_OBJS) libblobstamper.o test_libblobstamper.o
 %.o: %.c $(DEPS)
 	$(CC) -c -g $(CXXFLAGS) $<
 
-.PHONY: clean
-clean:
+.PHONY: blob-stamper-clean
+
+blob-stamper-clean:
+	$(MAKE) -C blobstamper clean
+
+.PHONY: clean 
+clean: blob-stamper-clean
 	rm -f *.o test test_pg_op_wrappers test_libblobstamper
 	@echo Clean done!

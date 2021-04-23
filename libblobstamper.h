@@ -4,25 +4,7 @@
 #include <string>
 #include <list>
 
-class StampGeneric;
-
-class Blob
-{
-    private:
-    public:
-        Blob(char * data, int size);
-        bool isEmpty ();
-        void Dump();
-        Blob ShiftBytes(size_t n);
-
-        void * ShiftSingleStampBin(StampGeneric &stmp);
-        std::string  ShiftSingleStampStr(StampGeneric &stmp);
-
-        char*  data;  /*FIXME потом сделать private*/
-        int    size;
-        int    begin;
-        int    end;
-};
+#include "blobstamper/blob.h"
 
 class StampGeneric
 {
@@ -86,12 +68,3 @@ class StampStrPgPolygon: public StampList
     StampStrPgPolygon() :  StampList(actual_stamp) {}
     std::string ExtractStr(Blob &blob) override;
 };
-
-
-
-Blob wflShiftN(Blob &blob, size_t n);
-std::string wflShiftDouble(Blob &blob);
-std::string wflShiftPgPoint(Blob &blob);
-std::string wflShiftPgPath(Blob &blob);
-
-void hexdump(void *pAddressIn, long  lSize);

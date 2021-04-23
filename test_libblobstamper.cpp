@@ -2,6 +2,8 @@
 
 #include "libblobstamper.h"
 
+#include "blobstamper/helpers.h"
+
 char my_data[]="1234567890ABCDEFGHIGKLMNOPQRSTUVWXYZabcdefghigklmnopqrstuvwxyzАБВГДитд.___";
 
 int
