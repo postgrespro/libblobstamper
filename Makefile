@@ -6,7 +6,13 @@ ifeq ($(origin CC),default)
 	CC = gcc
 endif
 
-BLOB_STAMPER_OBJ = blobstamper/blob.o blobstamper/helpers.o
+BLOB_STAMPER_OBJ = blobstamper/blob.o \
+blobstamper/helpers.o \
+blobstamper/stamp.o \
+blobstamper/stamp_atomic.o \
+blobstamper/stamp_pg_type_geo.o \
+
+
 
 .PHONY: all
 all: blob-stamper-all test test_pg_op_wrappers test_libblobstamper 
@@ -19,12 +25,11 @@ blob-stamper-all:
 test: $(LIB_OBJS) test.o
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
-test_pg_op_wrappers: blob-stamper-all $(LIB_OBJS) test_pg_op_wrappers.o  libblobstamper.o pg_op_wrappers.o 
-	$(CXX) $(LDFLAGS) $@.o -o $@  $(LDLIBS) $(BLOB_STAMPER_OBJ) libblobstamper.o pg_op_wrappers.o
+test_pg_op_wrappers: blob-stamper-all $(LIB_OBJS) test_pg_op_wrappers.o  pg_op_wrappers.o
+	$(CXX) $(LDFLAGS) $@.o -o $@  $(LDLIBS) $(BLOB_STAMPER_OBJ) pg_op_wrappers.o
 
-test_libblobstamper: $(LIB_OBJS) libblobstamper.o test_libblobstamper.o blob-stamper-all
-	$(CXX) $(LDFLAGS) $@.o -o $@ $(LDLIBS) $(BLOB_STAMPER_OBJ) libblobstamper.o
-
+test_libblobstamper: $(LIB_OBJS) test_libblobstamper.o blob-stamper-all
+	$(CXX) $(LDFLAGS) $@.o -o $@ $(LDLIBS) $(BLOB_STAMPER_OBJ)
 
 
 %.o: %.cpp $(DEPS)

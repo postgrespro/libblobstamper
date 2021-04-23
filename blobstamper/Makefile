@@ -1,5 +1,10 @@
 
-ALL_OBJS = blob.o helpers.o
+ALL_OBJS = blob.o \
+helpers.o \
+stamp.o \
+stamp_atomic.o \
+stamp_pg_type_geo.o
+
 
 %.o: %.cpp $(DEPS)
 	$(CXX) -c -g $(CFLAGS) $<

@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "libblobstamper.h"
+#include "blobstamper/blobstamper.h"
 
 #include "blobstamper/helpers.h"
 

@@ -1,7 +1,7 @@
 #include "blob.h"
 #include "helpers.h"
 
-#include "../libblobstamper.h"  /*FIXME remove this*/
+#include "stamp.h"
 
 Blob::Blob (char * data_in, int size_in)
 {
