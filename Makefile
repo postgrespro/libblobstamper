@@ -22,9 +22,6 @@ all: blob-stamper-all test test_pg_op_wrappers test_libblobstamper
 blob-stamper-all:
 	$(MAKE) -C blobstamper
 
-test: $(LIB_OBJS) test.o
-	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
-
 test_pg_op_wrappers: blob-stamper-all $(LIB_OBJS) test_pg_op_wrappers.o  pg_op_wrappers.o
 	$(CXX) $(LDFLAGS) $@.o -o $@  $(LDLIBS) $(BLOB_STAMPER_OBJ) pg_op_wrappers.o
 

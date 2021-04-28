@@ -1,5 +1,10 @@
+
+
+#include <cstring>
+
 #include "blob.h"
 #include "helpers.h"
+
 
 #include "stamp.h"
 
@@ -54,5 +59,13 @@ std::string
 Blob::ShiftSingleStampStr(StampGeneric& stmp)
 {
     return stmp.ExtractStr(*this);
+}
+
+void
+Blob::DataDup(char *& data_out, size_t& size_out)
+{
+  size_out = end - begin + 1;
+  data_out = (char *)malloc(size);
+  memcpy(data_out, data + begin, size_out);
 }
 

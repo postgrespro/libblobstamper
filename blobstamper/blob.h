@@ -14,6 +14,7 @@ class Blob
         bool isEmpty ();
         void Dump();
         Blob ShiftBytes(size_t n);
+        void DataDup(char *& data_out, size_t& size_out);
 
         void * ShiftSingleStampBin(StampGeneric &stmp);
         std::string  ShiftSingleStampStr(StampGeneric &stmp);
