@@ -6,7 +6,7 @@ DEBUG := -ggdb3 -DDEBUG
 CXXFLAGS := $(DEBUG) $(WARNINGS) -fPIC
 PREFIX := /usr/local
 LIBRARY_VAR := LD_LIBRARY_PATH
-TEST_GOALS := ./00-sanity.t ./001-blob-generic.t ./100-stamp-base.t
+TEST_GOALS := ./00-sanity.t ./001-blob-generic.t ./100-stamp-base.t ./110-stamp-atomic.t
 
 all: $(TEST_GOALS)
 

@@ -11,22 +11,9 @@ main(void)
 {
     Blob bl(my_data, strlen(my_data));
 
-    StampBinDouble stmp_double;
-
-    void* res = bl.ShiftSingleStampBin(stmp_double);
-
-    hexdump(res,sizeof(double));
-    free(res);
-
-    StampStrDouble stmp_str_double;
-
-    std::string str = bl.ShiftSingleStampStr(stmp_str_double);
-
-    printf("-------- %s\n", str.c_str());
-
     StampStrPgPoint stmp_pg_point;
 
-    str = bl.ShiftSingleStampStr(stmp_pg_point);
+    std::string str = bl.ShiftSingleStampStr(stmp_pg_point);
 
     printf("======= %s\n", str.c_str());
 
