@@ -42,8 +42,18 @@ test_libblobstamper: $(LIB_OBJS) test_libblobstamper.o blob-stamper-all
 
 blob-stamper-clean:
 	$(MAKE) -C blobstamper clean
+	$(MAKE) -C t clean
+	$(MAKE) -C libtappp clean
 
-.PHONY: clean 
+
+
+.PHONY: clean
 clean: blob-stamper-clean
 	rm -f *.o test test_pg_op_wrappers test_libblobstamper
 	@echo Clean done!
+
+.PHONY: test
+
+test:
+	$(MAKE) -C t test
+
