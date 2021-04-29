@@ -15,7 +15,7 @@ blobstamper/stamp_pg_type_geo.o \
 
 
 .PHONY: all
-all: blob-stamper-all test test_pg_op_wrappers test_libblobstamper 
+all: blob-stamper-all test test_pg_op_wrappers
 	@echo All done!
 
 .PHONY: blob-stamper-all
@@ -24,10 +24,6 @@ blob-stamper-all:
 
 test_pg_op_wrappers: blob-stamper-all $(LIB_OBJS) test_pg_op_wrappers.o  pg_op_wrappers.o
 	$(CXX) $(LDFLAGS) $@.o -o $@  $(LDLIBS) $(BLOB_STAMPER_OBJ) pg_op_wrappers.o
-
-test_libblobstamper: $(LIB_OBJS) test_libblobstamper.o blob-stamper-all
-	$(CXX) $(LDFLAGS) $@.o -o $@ $(LDLIBS) $(BLOB_STAMPER_OBJ)
-
 
 %.o: %.cpp $(DEPS)
 	$(CXX) -c -g $(CFLAGS) $<

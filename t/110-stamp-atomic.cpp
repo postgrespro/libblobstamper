@@ -20,10 +20,6 @@ using namespace TAP;
 
 double sample_data[] =  {1.4142, 2, 3.1415, 4.2e01, 5, 6, 7};
  
-char my_data[]="1234567890ABCDEFGHIGKLMNOPQRSTUVWXYZabcdefghigklmnopqrstuvwxyzАБВГДитд.___";
-
-char short_sample[]="1234567";
-
 int
 main()
 {
