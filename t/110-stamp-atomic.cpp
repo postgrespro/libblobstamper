@@ -43,7 +43,7 @@ main()
     }
 
     /* Check that Str Double stamp works well */
-    { /* 1 */
+    { /* 2 */
         Blob blob(char_sample_data, sample_data_size);
         StampStrDouble stamp;
         std::string res = blob.ShiftSingleStampStr(stamp);
