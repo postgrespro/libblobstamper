@@ -6,7 +6,7 @@ DEBUG := -ggdb3 -DDEBUG
 CXXFLAGS := $(DEBUG) $(WARNINGS) -fPIC
 PREFIX := /usr/local
 LIBRARY_VAR := LD_LIBRARY_PATH
-TEST_GOALS := ./00-sanity.t ./001-blob-generic.t ./100-stamp-base.t ./110-stamp-atomic.t ./500-stamp-pg-type-geo.t
+TEST_GOALS := ./00-sanity.t ./001-blob-generic.t ./100-stamp-base.t ./110-stamp-atomic.t ./500-stamp-pg-type-geo.t ./700-wrapper-pg-type-geo.t
 
 all: $(TEST_GOALS)
 
@@ -18,6 +18,7 @@ BLOB_STAMPER_OBJ = ../blobstamper/blob.o \
 ../blobstamper/stamp.o \
 ../blobstamper/stamp_atomic.o \
 ../blobstamper/stamp_pg_type_geo.o \
+../pg_op_wrappers.o \
 
 
 build-libtappp:

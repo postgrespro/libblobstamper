@@ -12,18 +12,15 @@ blobstamper/stamp.o \
 blobstamper/stamp_atomic.o \
 blobstamper/stamp_pg_type_geo.o \
 
+WRAPPERS_OBJ = pg_op_wrappers.o
 
 
-.PHONY: all
-all: blob-stamper-all test test_pg_op_wrappers
+.PHONY: all blob-stamper-all blob-stamper-clean clean test
+all: blob-stamper-all $(WRAPPERS_OBJ)
 	@echo All done!
 
-.PHONY: blob-stamper-all
 blob-stamper-all:
 	$(MAKE) -C blobstamper
-
-test_pg_op_wrappers: blob-stamper-all $(LIB_OBJS) test_pg_op_wrappers.o  pg_op_wrappers.o
-	$(CXX) $(LDFLAGS) $@.o -o $@  $(LDLIBS) $(BLOB_STAMPER_OBJ) pg_op_wrappers.o
 
 %.o: %.cpp $(DEPS)
 	$(CXX) -c -g $(CFLAGS) $<
@@ -31,21 +28,14 @@ test_pg_op_wrappers: blob-stamper-all $(LIB_OBJS) test_pg_op_wrappers.o  pg_op_w
 %.o: %.c $(DEPS)
 	$(CC) -c -g $(CXXFLAGS) $<
 
-.PHONY: blob-stamper-clean
-
 blob-stamper-clean:
 	$(MAKE) -C blobstamper clean
 	$(MAKE) -C t clean
 	$(MAKE) -C libtappp clean
 
-
-
-.PHONY: clean
 clean: blob-stamper-clean
-	rm -f *.o test test_pg_op_wrappers test_libblobstamper
+	rm -f *.o
 	@echo Clean done!
-
-.PHONY: test
 
 test:
 	$(MAKE) -C t test
