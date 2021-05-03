@@ -11,12 +11,13 @@ blobstamper/helpers.o \
 blobstamper/stamp.o \
 blobstamper/stamp_atomic.o \
 blobstamper/stamp_pg_type_geo.o \
+blobstamper/dict.o \
 
 WRAPPERS_OBJ = pg_op_wrappers.o
 
 
 .PHONY: all blob-stamper-all blob-stamper-clean clean test
-all: blob-stamper-all $(WRAPPERS_OBJ)
+all: blob-stamper-all test_dict $(WRAPPERS_OBJ)
 	@echo All done!
 
 blob-stamper-all:
@@ -39,4 +40,7 @@ clean: blob-stamper-clean
 
 test:
 	$(MAKE) -C t test
+
+#test_dict: test_dict.o blob-stamper-all
+#	$(CXX) $(LDFLAGS) $@.o -o $@ $(BLOB_STAMPER_OBJ)
 

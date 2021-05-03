@@ -3,7 +3,8 @@ ALL_OBJS = blob.o \
 helpers.o \
 stamp.o \
 stamp_atomic.o \
-stamp_pg_type_geo.o
+stamp_pg_type_geo.o \
+dict.o
 
 
 %.o: %.cpp $(DEPS)
