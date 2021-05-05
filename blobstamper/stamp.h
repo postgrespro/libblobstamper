@@ -16,7 +16,7 @@ class StampGeneric
     int  minSize() {return min_size;}
     int  maxSize() {return max_size;}
 
-    virtual void *      Extract(Blob &blob) {printf ("1111111\n"); return NULL;}
+    virtual void *      Extract(Blob &blob);
     virtual std::string ExtractStr(Blob &blob)  {printf ("22222\n"); return "";}
 
 };
