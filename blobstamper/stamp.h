@@ -27,10 +27,6 @@ class StampList: public StampGeneric
     StampGeneric& target_stamp;
   public:
     StampList(StampGeneric &stamp) : target_stamp(stamp) {};
-
-    virtual std::list<std::string> ExtractStrList(Blob &blob);
-
-
 };
 
 #endif  /* STAMP_H */

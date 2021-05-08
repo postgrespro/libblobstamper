@@ -3,6 +3,7 @@
 #define BLOB_H
 
 #include <string>
+#include <list>
 
 class StampGeneric;
 
@@ -24,5 +25,20 @@ class Blob
         void * ShiftSingleStampBin(StampGeneric &stmp);
         std::string  ShiftSingleStampStr(StampGeneric &stmp);
 };
+
+class GalleyBase
+{
+
+};
+
+class GalleySeries : public GalleyBase
+{
+  protected:
+    StampGeneric &stamp;
+  public:
+    GalleySeries(StampGeneric & stamp_arg) : stamp(stamp_arg) {};
+    std::list<std::string> Extract(Blob &blob);
+};
+
 
 #endif /*BLOB_H*/

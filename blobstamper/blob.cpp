@@ -76,3 +76,30 @@ Blob::DataDup(char *& data_out, size_t& size_out)
   memcpy(data_out, data + begin, size_out);
 }
 
+
+std::list<std::string>
+GalleySeries::Extract(Blob &blob)
+{
+  std::list<std::string> res;
+
+  if (stamp.isFixedSize())
+  {
+    while (1)
+    {
+      std::string el = blob.ShiftSingleStampStr(stamp);
+      if (el.empty())
+        break;
+      res.push_back(el);
+    }
+  }
+  else
+  {
+     printf("Not implemented yet!");
+     exit(1);
+  }
+
+  return res;
+}
+
+
+

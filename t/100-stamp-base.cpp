@@ -66,7 +66,7 @@ main()
     char *ptr;
     size_t size;
 
-    TEST_START(8);
+    TEST_START(4);
 
     /* Test that ShiftSingleStampStr shifts ok with StampTwoChars stamp */
     { /* 1..3 */
@@ -85,6 +85,8 @@ main()
         free(ptr);
     }
 
+/* This should be moved to Galley test later */
+#if 0
     /* Test that StamList really splits the whole blob to the specified stamps */
     { /* 4..7 */
         std::string expected1 = "12";
@@ -112,6 +114,8 @@ main()
 
         ok(res.empty(), "ExtractStrList: The rest of the list is empty");
     }
+#endif
+
     /* Chekc that data is shifted till blob data is empty*/
     {   /* 8 */
         char sample_two_bytes[]="12";
