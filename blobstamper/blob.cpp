@@ -33,7 +33,7 @@ Blob::Dump()
 Blob
 Blob::ShiftBytes(size_t n)
 {
-    if (begin + n > end)
+    if (begin + n - 1 > end)
     {
         Blob empty(NULL, -1);
         return empty; /* not enough data */
@@ -47,6 +47,12 @@ Blob::ShiftBytes(size_t n)
     begin += n;
 
     return new_blob;
+}
+
+size_t
+Blob::Size()
+{
+  return end - begin + 1;
 }
 
 void *
@@ -64,8 +70,9 @@ Blob::ShiftSingleStampStr(StampGeneric& stmp)
 void
 Blob::DataDup(char *& data_out, size_t& size_out)
 {
-  size_out = end - begin + 1;
-  data_out = (char *)malloc(size);
+  size_out = Size();
+  data_out = (char *)malloc(size_out);
+  //FIXME add out of memory check here!!!!
   memcpy(data_out, data + begin, size_out);
 }
 

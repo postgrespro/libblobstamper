@@ -8,21 +8,21 @@ class StampGeneric;
 
 class Blob
 {
-    private:
+    protected:
+        char*  data;
+        int    size;
+        int    begin;
+        int    end;
     public:
         Blob(char * data, int size);
         bool isEmpty ();
+        size_t Size();
         void Dump();
         Blob ShiftBytes(size_t n);
         void DataDup(char *& data_out, size_t& size_out);
 
         void * ShiftSingleStampBin(StampGeneric &stmp);
         std::string  ShiftSingleStampStr(StampGeneric &stmp);
-
-        char*  data;  /*FIXME потом сделать private*/
-        int    size;
-        int    begin;
-        int    end;
 };
 
 #endif /*BLOB_H*/

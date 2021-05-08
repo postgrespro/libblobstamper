@@ -20,14 +20,14 @@ using namespace TAP;
 
 /* This stamps chops first two bytes and treat them as string */
 /* Never do this in real live, as blob is binary and may have \0 in the middle of it*/
-class StampForTest: public StampGeneric
+class StampTwoChars: public StampGeneric
 {
   public:
-    StampForTest();
+    StampTwoChars();
     std::string ExtractStr(Blob &blob) override;
 };
 
-StampForTest::StampForTest() : StampGeneric()
+StampTwoChars::StampTwoChars() : StampGeneric()
 {
     min_size = 2;  /* This stamp shifts two characters only */
     max_size = 2;
@@ -35,7 +35,7 @@ StampForTest::StampForTest() : StampGeneric()
 }
 
 std::string
-StampForTest::ExtractStr(Blob &blob)
+StampTwoChars::ExtractStr(Blob &blob)
 {
     char * buf;
     size_t buf_size;
@@ -66,16 +66,16 @@ main()
     char *ptr;
     size_t size;
 
-    TEST_START(7);
+    TEST_START(8);
 
-    /* Test that ShiftSingleStampStr shifts ok with StampForTest stamp */
+    /* Test that ShiftSingleStampStr shifts ok with StampTwoChars stamp */
     { /* 1..3 */
         std::string expected1 = "12";
         char* expected2 = "34567";
 
 
         Blob blob(short_sample, strlen(short_sample));
-        StampForTest stamp;
+        StampTwoChars stamp;
         std::string str = blob.ShiftSingleStampStr(stamp);
         ok(str == expected1, "ShiftSingleStampStr: shifts ok");
 
@@ -91,7 +91,7 @@ main()
         std::string expected2 = "34";
         std::string expected3 = "56";
 
-        StampForTest stamp;
+        StampTwoChars stamp;
         StampList    stamp_list(stamp);
         Blob blob(short_sample, strlen(short_sample));
         std::list<std::string> res = stamp_list.ExtractStrList(blob);
@@ -111,6 +111,16 @@ main()
         res.pop_front();
 
         ok(res.empty(), "ExtractStrList: The rest of the list is empty");
+    }
+    /* Chekc that data is shifted till blob data is empty*/
+    {   /* 8 */
+        char sample_two_bytes[]="12";
+        std::string expected1 = "12";
+        Blob blob(sample_two_bytes, strlen(sample_two_bytes));
+        StampTwoChars stamp;
+        std::string str = blob.ShiftSingleStampStr(stamp);
+        ok(str == expected1, "ShiftSingleStampStr: shifts last two bytes ok");
+
     }
 
     TEST_END;

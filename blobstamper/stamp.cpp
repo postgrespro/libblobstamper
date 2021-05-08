@@ -22,14 +22,11 @@ StampGeneric::Extract(Blob &blob)
 
     if (blob2.isEmpty())  /* original blob does not have enought data */
         return NULL;
-    void *res = malloc(min_size);
-    if(! res)
-    {
-        fprintf(stderr, "Out of memory\n");
-        return NULL;
-    }
-    memcpy(res, blob2.data + blob2.begin, min_size);
-    return res;
+
+    size_t res_size;
+    char *res;
+    blob2.DataDup(res,res_size);
+    return (void *) res;
 }
 
 
