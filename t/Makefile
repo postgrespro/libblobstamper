@@ -6,9 +6,9 @@ DEBUG := -ggdb3 -DDEBUG
 CXXFLAGS := $(DEBUG) $(WARNINGS) -fPIC
 PREFIX := /usr/local
 LIBRARY_VAR := LD_LIBRARY_PATH
-TEST_GOALS := ./00-sanity.t ./001-blob-generic.t ./100-stamp-base.t ./110-stamp-atomic.t ./200-dict.t ./500-stamp-pg-type-geo.t ./700-wrapper-pg-type-geo.t 
+TEST_GOALS := ./00-sanity.t ./001-blob-generic.t ./100-stamp-base.t ./110-stamp-atomic.t ./200-dict.t ./300-galley.t ./500-stamp-pg-type-geo.t ./700-wrapper-pg-type-geo.t
 
-all: $(TEST_GOALS)
+all: build-libtappp $(TEST_GOALS)
 
 
 # FIXME this list dublicates same list in ../Makefile
@@ -25,7 +25,7 @@ BLOB_STAMPER_OBJ = ../blobstamper/blob.o \
 build-libtappp:
 	$(MAKE) -C ../libtappp
 
-%.t: %.cpp build-libtappp
+%.t: %.cpp
 	$(CXX) $(CXXFLAGS) -I../libtappp/include -I.. -o $@ $< $(BLOB_STAMPER_OBJ)  -L../libtappp -ltap++
 
 test: all
