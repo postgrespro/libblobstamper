@@ -4,4 +4,6 @@
 #include "stamp_atomic.h"
 #include "stamp_pg_type_geo.h"
 #include "dict.h"
+#include "galley.h"
+
 

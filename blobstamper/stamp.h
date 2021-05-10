@@ -12,9 +12,9 @@ class StampGeneric
      int  min_size;
      int  max_size;
   public:
-    bool isFixedSize() {return is_fixed_size;}
-    int  minSize() {return min_size;}
-    int  maxSize() {return max_size;}
+    virtual bool isFixedSize() {return is_fixed_size;}
+    virtual int  minSize() {return min_size;}
+    virtual int  maxSize() {return max_size;}
 
     virtual void *      Extract(Blob &blob);
     virtual std::string ExtractStr(Blob &blob)  {printf ("22222\n"); return "";}

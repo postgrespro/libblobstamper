@@ -26,19 +26,5 @@ class Blob
         std::string  ShiftSingleStampStr(StampGeneric &stmp);
 };
 
-class GalleyBase
-{
-
-};
-
-class GalleySeries : public GalleyBase
-{
-  protected:
-    StampGeneric &stamp;
-  public:
-    GalleySeries(StampGeneric & stamp_arg) : stamp(stamp_arg) {};
-    std::list<std::string> Extract(Blob &blob);
-};
-
 
 #endif /*BLOB_H*/

@@ -11,6 +11,7 @@ blobstamper/helpers.o \
 blobstamper/stamp.o \
 blobstamper/stamp_atomic.o \
 blobstamper/stamp_pg_type_geo.o \
+blobstamper/galley.o \
 blobstamper/dict.o \
 
 WRAPPERS_OBJ = pg_op_wrappers.o

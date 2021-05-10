@@ -4,6 +4,7 @@ helpers.o \
 stamp.o \
 stamp_atomic.o \
 stamp_pg_type_geo.o \
+galley.o \
 dict.o
 
 

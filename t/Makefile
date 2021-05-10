@@ -18,6 +18,7 @@ BLOB_STAMPER_OBJ = ../blobstamper/blob.o \
 ../blobstamper/dict.o \
 ../blobstamper/stamp.o \
 ../blobstamper/stamp_atomic.o \
+../blobstamper/galley.o \
 ../blobstamper/stamp_pg_type_geo.o \
 ../pg_op_wrappers.o \
 
