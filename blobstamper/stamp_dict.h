@@ -4,6 +4,9 @@
 
 #include <limits.h>
 
+#include "blob.h"
+#include "stamp.h"
+#include "stamp_atomic.h"
 #include "dict.h"
 
 class StampDict: public StampGeneric

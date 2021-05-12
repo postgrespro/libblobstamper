@@ -30,8 +30,8 @@ main()
 
     { /* 1..2 */
        DictTest dict;
-       ok(dict.size() == 3,"Dict size");
-       ok(dict.get(1) == "two","Dict content");
+       is(dict.size(), 3,"Dict size");
+       is(dict.get(1), "two","Dict content");
     }
 
     TEST_END;
