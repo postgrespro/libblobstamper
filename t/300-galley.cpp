@@ -6,7 +6,6 @@
 #define WANT_TEST_EXTRAS
 #include <tap++/tap++.h>
 
-
 #include "blobstamper/blobstamper.h"
 
 #include "two-chars-stamp.h"
@@ -51,7 +50,7 @@ char longer_sample[]="z1234567*89abcde&fghijklmnopqrstuvwxyzAB%CDEFGHIJKLMNOPQRS
 int
 main()
 {
-    TEST_START(9);
+    TEST_START(13);
     /* Test Galley Sereies with fixed size stampp*/
     { /* 1..4 */
         std::string expected1 = "12";
@@ -115,7 +114,7 @@ main()
         ok(res.empty(), "GalleySeries, unlimited size string stamp: The rest of the list is empty");
     }
 
-    { /* 1..4 */
+    { /* 10..13 */
 
         unsigned short int expected1 = (unsigned char) '2' * 256 +(unsigned char) '1';
         unsigned short int expected2 = (unsigned char) '4' * 256 +(unsigned char) '3';
