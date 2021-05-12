@@ -12,13 +12,28 @@ std::list<std::string>
 GalleySeries::Extract(Blob &blob)
 {
   std::list<std::string> res;
+  std::list<Blob> blobs = extract_internal(blob);
+  for(Blob blob : blobs)
+  {
+    std::string str= blob.ShiftSingleStampStr(stamp);
+    res.push_back(str);
+  }
+  return res;
+}
+
+
+std::list<Blob>
+GalleySeries::extract_internal(Blob &blob)
+{
+  std::list<Blob> res;
 
   if (stamp.isFixedSize())
   {
+    int size = stamp.minSize();
     while (1)
     {
-      std::string el = blob.ShiftSingleStampStr(stamp);
-      if (el.empty())
+      Blob el = blob.ShiftBytes(size);
+      if (el.isEmpty())
         break;
       res.push_back(el);
     }
@@ -77,8 +92,7 @@ GalleySeries::Extract(Blob &blob)
         remainder = el_size_f - el_size;
 
         Blob blob2 = blob.ShiftBytes(el_size);
-        std::string str = blob2.ShiftSingleStampStr(stamp);
-        res.push_back(str);
+        res.push_back(blob2);
       }
       free(count_oracle);
     }

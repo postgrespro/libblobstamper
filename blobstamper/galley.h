@@ -25,6 +25,7 @@ class GalleySeries : public GalleyBase
     StampGeneric &stamp;
   public:
     GalleySeries(StampGeneric & stamp_arg) : stamp(stamp_arg) {};
+    std::list<Blob> extract_internal(Blob &blob);
     std::list<std::string> Extract(Blob &blob);
     int minSize() override;
     int maxSize() override {return -1;}; /* Sereies always takes as much data as it can take */
