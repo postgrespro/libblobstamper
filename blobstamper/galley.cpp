@@ -21,6 +21,19 @@ GalleySeries::Extract(Blob &blob)
   return res;
 }
 
+std::list<void *>
+GalleySeries::ExtractBin(Blob &blob)
+{
+  std::list<void *> res;
+  std::list<Blob> blobs = extract_internal(blob);
+  for(Blob blob : blobs)
+  {
+    void * data= blob.ShiftSingleStampBin(stamp);
+    res.push_back(data);
+  }
+  return res;
+}
+
 
 std::list<Blob>
 GalleySeries::extract_internal(Blob &blob)

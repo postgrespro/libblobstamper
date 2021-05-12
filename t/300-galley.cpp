@@ -66,18 +66,18 @@ main()
         std::string str;
 
         str = res.front();
-        is(str, expected1, "GalleySeries, fixed size stamp: First element of shifted list is ok");
+        is(str, expected1, "GalleySeries, fixed size string stamp: First element of shifted list is ok");
         res.pop_front();
 
         str = res.front();
-        is(str, expected2, "GalleySeries, fixed size stamp: Second element of shifted list is ok");
+        is(str, expected2, "GalleySeries, fixed size string  stamp: Second element of shifted list is ok");
         res.pop_front();
 
         str = res.front();
-        is(str, expected3, "GalleySeries, fixed size stamp: Third element of shifted list is ok");
+        is(str, expected3, "GalleySeries, fixed size string  stamp: Third element of shifted list is ok");
         res.pop_front();
 
-        ok(res.empty(), "GalleySeries, fixed size stamp: The rest of the list is empty");
+        ok(res.empty(), "GalleySeries, fixed size string stamp: The rest of the list is empty");
     }
     /* Test Galley Sereies with unlimited size stampp*/
     {  /* 5 .. 9*/
@@ -97,22 +97,53 @@ main()
         std::string str;
 
         str = res.front();
-        is(str, expected1, "GalleySeries, unlimited size stamp: First element of shifted list is ok");
+        is(str, expected1, "GalleySeries, unlimited size string stamp: First element of shifted list is ok");
         res.pop_front();
 
         str = res.front();
-        is(str, expected2, "GalleySeries, unlimited size stamp: Second element of shifted list is ok");
+        is(str, expected2, "GalleySeries, unlimited size string stamp: Second element of shifted list is ok");
         res.pop_front();
 
         str = res.front();
-        is(str, expected3, "GalleySeries, unlimited size stamp: Third element of shifted list is ok");
+        is(str, expected3, "GalleySeries, unlimited size string stamp: Third element of shifted list is ok");
         res.pop_front();
 
         str = res.front();
-        is(str, expected4, "GalleySeries, unlimited size stamp: Fourth element of shifted list is ok");
+        is(str, expected4, "GalleySeries, unlimited size string stamp: Fourth element of shifted list is ok");
         res.pop_front();
 
-        ok(res.empty(), "GalleySeries, unlimited size stamp: The rest of the list is empty");
+        ok(res.empty(), "GalleySeries, unlimited size string stamp: The rest of the list is empty");
+    }
+
+    { /* 1..4 */
+
+        unsigned short int expected1 = (unsigned char) '2' * 256 +(unsigned char) '1';
+        unsigned short int expected2 = (unsigned char) '4' * 256 +(unsigned char) '3';
+        unsigned short int expected3 = (unsigned char) '6' * 256 +(unsigned char) '5';
+
+        StampBinInt16 stamp;
+        GalleySeries galley(stamp);
+        Blob blob(short_sample, strlen(short_sample));
+        std::list<void * > res = galley.ExtractBin(blob);
+
+        unsigned short int * data;
+
+        data = (unsigned short int *) res.front();
+        is(*data, expected1, "GalleySeries, fixed size binary stamp: First element of shifted list is ok");
+        res.pop_front();
+        free(data);
+
+        data = (unsigned short int *) res.front();
+        is(*data, expected2, "GalleySeries, fixed size binary stamp: Second element of shifted list is ok");
+        res.pop_front();
+        free(data);
+
+        data = (unsigned short int *) res.front();
+        is(*data, expected3, "GalleySeries, fixed size binary stamp: Third element of shifted list is ok");
+        res.pop_front();
+        free(data);
+
+        ok(res.empty(), "GalleySeries, fixed size binary stamp: The rest of the list is empty");
     }
 
     TEST_END;
