@@ -1,3 +1,7 @@
+#ifndef DICT_H
+#define DICT_H
+
+
 #include<string>
 #include<vector>
 
@@ -17,3 +21,5 @@ class DictLCAlphaSmall : public DictBase
   public:
      DictLCAlphaSmall();
 };
+
+#endif /* DICT_H */

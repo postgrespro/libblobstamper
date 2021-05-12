@@ -10,9 +10,11 @@ BLOB_STAMPER_OBJ = blobstamper/blob.o \
 blobstamper/helpers.o \
 blobstamper/stamp.o \
 blobstamper/stamp_atomic.o \
-blobstamper/stamp_pg_type_geo.o \
+blobstamper/stamp_dict.o \
 blobstamper/galley.o \
 blobstamper/dict.o \
+blobstamper/stamp_pg_type_geo.o \
+
 
 WRAPPERS_OBJ = pg_op_wrappers.o
 
