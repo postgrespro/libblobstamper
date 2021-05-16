@@ -12,7 +12,7 @@
 
 using namespace TAP;
 
-class StampTwoCharsList: public StampGeneric
+class StampTwoCharsList: public StampUnbounded
 {
   protected:
     StampTwoChars el_stamp;
@@ -20,8 +20,7 @@ class StampTwoCharsList: public StampGeneric
   public:
     std::string ExtractStr(Blob &blob) override;
     StampTwoCharsList(): el_stamp {}, galley {el_stamp} {};
-    virtual bool isFixedSize() override {return false;};
-    virtual int maxSize() override {return -1;};
+
     virtual int minSize() override {return el_stamp.minSize();};
 };
 

@@ -2,18 +2,16 @@
 /* This stamps chops first two bytes and treat them as string */
 /* Never do this in real live, as blob is binary and may have \0 in the middle of it*/
 
-class StampTwoChars: public StampGeneric
+class StampTwoChars: public StampFixed
 {
   public:
     StampTwoChars();
     std::string ExtractStr(Blob &blob) override;
 };
 
-StampTwoChars::StampTwoChars() : StampGeneric()
+StampTwoChars::StampTwoChars() : StampFixed()
 {
-    min_size = 2;  /* This stamp shifts two characters only */
-    max_size = 2;
-    is_fixed_size = true;
+    size = 2;  /* This stamp shifts two characters only */
 }
 
 std::string
@@ -22,7 +20,7 @@ StampTwoChars::ExtractStr(Blob &blob)
     char * buf;
     size_t buf_size;
 
-    Blob blob2 = blob.ShiftBytes(min_size);
+    Blob blob2 = blob.ShiftBytes(size);
     if (blob2.isEmpty())
         return "";
 

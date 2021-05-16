@@ -3,11 +3,9 @@
 #include "stamp_atomic.h"
 
 
-StampBinChar::StampBinChar() : StampGeneric()
+StampBinChar::StampBinChar() : StampFixed()
 {
-    min_size = sizeof(char);
-    max_size = sizeof(char);
-    is_fixed_size = true;
+    size = sizeof(char);
 }
 
 
@@ -24,11 +22,9 @@ StampStrUInt8::ExtractStr(Blob &blob)
 }
 /* ---- */
 
-StampBinInt16::StampBinInt16() : StampGeneric()
+StampBinInt16::StampBinInt16() : StampFixed()
 {
-    min_size = sizeof(short int);
-    max_size = sizeof(short int);
-    is_fixed_size = true;
+    size = sizeof(short int);
 }
 
 std::string
@@ -57,11 +53,9 @@ StampStrSInt16::ExtractStr(Blob &blob)
 
 /* ---- */
 
-StampBinInt32::StampBinInt32() : StampGeneric()
+StampBinInt32::StampBinInt32() : StampFixed()
 {
-    min_size = sizeof(int);
-    max_size = sizeof(int);
-    is_fixed_size = true;
+    size = sizeof(int);
 }
 
 std::string
@@ -90,11 +84,9 @@ StampStrSInt32::ExtractStr(Blob &blob)
 
 /* ---- */
 
-StampBinInt64::StampBinInt64() : StampGeneric()
+StampBinInt64::StampBinInt64() : StampFixed()
 {
-    min_size = sizeof(long long);
-    max_size = sizeof(long long);
-    is_fixed_size = true;
+    size = sizeof(long long);
 }
 
 std::string
@@ -123,11 +115,9 @@ StampStrSInt64::ExtractStr(Blob &blob)
 
 /* ---- */
 
-StampBinDouble::StampBinDouble() : StampGeneric()
+StampBinDouble::StampBinDouble() : StampFixed()
 {
-    min_size = sizeof(double);
-    max_size = sizeof(double);
-    is_fixed_size = true;
+    size = sizeof(double);
 }
 
 std::string

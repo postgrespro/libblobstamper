@@ -5,28 +5,41 @@
 #include <string>
 #include <list>
 
-class StampGeneric
+class StampBase
+{
+  public:
+    virtual int  minSize() = 0;
+    virtual int  maxSize() = 0;
+
+    bool isFixedSize() {return minSize()==maxSize();}
+    bool isUnbounded() {return maxSize() == -1;}
+
+    virtual void *      Extract(Blob &blob)     {printf ("Not implemented"); exit(1);}
+    virtual std::string ExtractStr(Blob &blob)  {printf ("Not implemented"); exit(1);}
+};
+
+
+class StampFixed : public StampBase
 {
   protected:
-     bool is_fixed_size;
+     int  size;
+  public:
+    virtual int  minSize() {return size;}
+    virtual int  maxSize() {return size;}
+
+    void *      Extract(Blob &blob) override;
+};
+
+class StampUnbounded : public StampBase
+{
+  protected:
      int  min_size;
-     int  max_size;
   public:
-    virtual bool isFixedSize() {return is_fixed_size;}
     virtual int  minSize() {return min_size;}
-    virtual int  maxSize() {return max_size;}
-
-    virtual void *      Extract(Blob &blob);
-    virtual std::string ExtractStr(Blob &blob)  {printf ("22222\n"); return "";}
-
+    virtual int  maxSize() {return -1;}
 };
 
-class StampList: public StampGeneric
-{
-  protected:
-    StampGeneric& target_stamp;
-  public:
-    StampList(StampGeneric &stamp) : target_stamp(stamp) {};
-};
+
+
 
 #endif  /* STAMP_H */

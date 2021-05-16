@@ -22,9 +22,9 @@ class GalleyBase
 class GalleySeries : public GalleyBase
 {
   protected:
-    StampGeneric &stamp;
+    StampBase &stamp;
   public:
-    GalleySeries(StampGeneric & stamp_arg) : stamp(stamp_arg) {};
+    GalleySeries(StampBase & stamp_arg) : stamp(stamp_arg) {};
     std::list<Blob> extract_internal(Blob &blob);
     std::list<std::string> Extract(Blob &blob);
     std::list<void *> ExtractBin(Blob &blob);

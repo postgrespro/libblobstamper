@@ -5,7 +5,7 @@
 #include <string>
 #include <list>
 
-class StampGeneric;
+class StampBase;
 
 class Blob
 {
@@ -22,8 +22,8 @@ class Blob
         Blob ShiftBytes(size_t n);
         void DataDup(char *& data_out, size_t& size_out);
 
-        void * ShiftSingleStampBin(StampGeneric &stmp);
-        std::string  ShiftSingleStampStr(StampGeneric &stmp);
+        void * ShiftSingleStampBin(StampBase &stmp);
+        std::string  ShiftSingleStampStr(StampBase &stmp);
 };
 
 

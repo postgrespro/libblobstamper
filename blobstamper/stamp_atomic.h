@@ -4,7 +4,7 @@
 #include <string>
 
 
-class StampBinChar: public StampGeneric
+class StampBinChar: public StampFixed
 {
   public:
     StampBinChar();
@@ -18,7 +18,7 @@ class StampStrUInt8: public StampBinChar
 
 /* --- */
 
-class StampBinInt16: public StampGeneric
+class StampBinInt16: public StampFixed
 {
   public:
     StampBinInt16();
@@ -39,7 +39,7 @@ class StampStrSInt16: public StampBinInt16
 
 /* --- */
 
-class StampBinInt32: public StampGeneric
+class StampBinInt32: public StampFixed
 {
   public:
     StampBinInt32();
@@ -59,7 +59,7 @@ class StampStrSInt32: public StampBinInt32
 
 /* --- */
 
-class StampBinInt64: public StampGeneric
+class StampBinInt64: public StampFixed
 {
   public:
     StampBinInt64();
@@ -80,7 +80,7 @@ class StampStrSInt64: public StampBinInt64
 /* --- */
 
 
-class StampBinDouble: public StampGeneric
+class StampBinDouble: public StampFixed
 {
   public:
     StampBinDouble();

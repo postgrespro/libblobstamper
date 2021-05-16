@@ -4,7 +4,7 @@
 #include "stamp_atomic.h"
 #include "stamp_dict.h"
 
-StampGeneric&
+StampFixed&
 StampDict::GuessStamp(DictBase & dict)
 {
     if (dict.size()<= UCHAR_MAX+1)

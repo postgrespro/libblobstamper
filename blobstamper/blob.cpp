@@ -54,13 +54,13 @@ Blob::Size()
 }
 
 void *
-Blob::ShiftSingleStampBin(StampGeneric& stmp)
+Blob::ShiftSingleStampBin(StampBase& stmp)
 {
     return stmp.Extract(*this);
 }
 
 std::string
-Blob::ShiftSingleStampStr(StampGeneric& stmp)
+Blob::ShiftSingleStampStr(StampBase& stmp)
 {
     return stmp.ExtractStr(*this);
 }

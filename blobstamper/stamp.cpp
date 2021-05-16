@@ -10,15 +10,12 @@
 
 /*************************************************************************************/
 
+/* Generic Exrtact Bin function for fixed size stamp. In some cases we need just a chunk of raw blob data. */
+/* Use this method in such a case */
 void *
-StampGeneric::Extract(Blob &blob)
+StampFixed::Extract(Blob &blob)
 {
-    if (!is_fixed_size)
-    {
-       fprintf(stderr, "Something is really wrong. Default extract method does not support dynamic stamp size\n");
-       return NULL;
-    }
-    Blob blob2 = blob.ShiftBytes(min_size);
+    Blob blob2 = blob.ShiftBytes(size);
 
     if (blob2.isEmpty())  /* original blob does not have enought data */
         return NULL;
