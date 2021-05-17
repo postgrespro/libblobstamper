@@ -49,7 +49,7 @@ char longer_sample[]="z1234567*89abcde&fghijklmnopqrstuvwxyzAB%CDEFGHIJKLMNOPQRS
 int
 main()
 {
-    TEST_START(13);
+    TEST_START(18);
     /* Test Galley Sereies with fixed size stampp*/
     { /* 1..4 */
         std::string expected1 = "12";
@@ -77,7 +77,7 @@ main()
 
         ok(res.empty(), "GalleySeries, fixed size string stamp: The rest of the list is empty");
     }
-    /* Test Galley Sereies with unlimited size stampp*/
+    /* Test Galley Sereies with unlimited size stamp*/
     {  /* 5 .. 9*/
         /* This is not the best test, as we do not predict behavior by setting forged sample values,
           but at least here we check that it work the same way it worked before. May be this test should be improved later*/
@@ -143,6 +143,47 @@ main()
 
         ok(res.empty(), "GalleySeries, fixed size binary stamp: The rest of the list is empty");
     }
+
+    /* Test Galley Sereies with variated size stamp*/
+    {  /* 14 .. 18*/
+        /* This is not the best test, as we do not predict behavior by setting forged sample values,
+          but at least here we check that it work the same way it worked before. May be this test should be improved later*/
+
+        char sample[]="z1234567*89abcde&fghijklm";
+
+        std::string expected1 = "234";
+        std::string expected2 = "7*8";
+        std::string expected3 = "bcde";
+        std::string expected4 = "ghij";
+
+        Blob blob(sample, strlen(sample));
+        StampSeveralChars stamp;
+        GalleySeries galley(stamp);
+
+        std::list<std::string> res = galley.ExtractStr(blob);
+        std::string str;
+
+        str = res.front();
+        is(str, expected1, "GalleySeries, unlimited size string stamp: First element of shifted list is ok");
+        res.pop_front();
+
+        str = res.front();
+        is(str, expected2, "GalleySeries, unlimited size string stamp: Second element of shifted list is ok");
+        res.pop_front();
+
+        str = res.front();
+        is(str, expected3, "GalleySeries, unlimited size string stamp: Third element of shifted list is ok");
+        res.pop_front();
+
+        str = res.front();
+        is(str, expected4, "GalleySeries, unlimited size string stamp: Fourth element of shifted list is ok");
+        res.pop_front();
+
+        ok(res.empty(), "GalleySeries, unlimited size string stamp: The rest of the list is empty");
+    }
+
+
+
 
     TEST_END;
 }
