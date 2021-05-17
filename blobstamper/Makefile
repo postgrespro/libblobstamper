@@ -7,7 +7,7 @@ stamp_dict.o \
 galley.o \
 dict.o \
 stamp_pg_type_geo.o \
-
+stamp_pg_type_ts.o \
 
 
 %.o: %.cpp $(DEPS)

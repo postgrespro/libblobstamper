@@ -14,7 +14,7 @@ blobstamper/stamp_dict.o \
 blobstamper/galley.o \
 blobstamper/dict.o \
 blobstamper/stamp_pg_type_geo.o \
-
+blobstamper/stamp_pg_type_ts.o \
 
 WRAPPERS_OBJ = pg_op_wrappers.o
 
