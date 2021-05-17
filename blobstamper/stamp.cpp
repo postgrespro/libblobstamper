@@ -13,7 +13,7 @@
 /* Generic Exrtact Bin function for fixed size stamp. In some cases we need just a chunk of raw blob data. */
 /* Use this method in such a case */
 void *
-StampFixed::Extract(Blob &blob)
+StampFixed::ExtractBin(Blob &blob)
 {
     Blob blob2 = blob.ShiftBytes(size);
 

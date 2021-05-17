@@ -56,7 +56,7 @@ Blob::Size()
 void *
 Blob::ShiftSingleStampBin(StampBase& stmp)
 {
-    return stmp.Extract(*this);
+    return stmp.ExtractBin(*this);
 }
 
 std::string

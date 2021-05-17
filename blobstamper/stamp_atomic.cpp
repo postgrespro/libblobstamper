@@ -13,7 +13,7 @@ std::string
 StampStrUInt8::ExtractStr(Blob &blob)
 {
     std::string res;
-    char *pc = (char *)this->Extract(blob);
+    char *pc = (char *)this->ExtractBin(blob);
     if (! pc)
         return "";
     res = std::to_string((int) *pc);
@@ -31,7 +31,7 @@ std::string
 StampStrUInt16::ExtractStr(Blob &blob)
 {
     std::string res;
-    unsigned short int *pi = (unsigned short int *)this->Extract(blob);
+    unsigned short int *pi = (unsigned short int *)this->ExtractBin(blob);
     if (! pi)
         return "";
     res = std::to_string(*pi);
@@ -43,7 +43,7 @@ std::string
 StampStrSInt16::ExtractStr(Blob &blob)
 {
     std::string res;
-    signed short int *pi = (signed short int *)this->Extract(blob);
+    signed short int *pi = (signed short int *)this->ExtractBin(blob);
     if (! pi)
         return "";
     res = std::to_string(*pi);
@@ -62,7 +62,7 @@ std::string
 StampStrUInt32::ExtractStr(Blob &blob)
 {
     std::string res;
-    unsigned int *pi = (unsigned int *)this->Extract(blob);
+    unsigned int *pi = (unsigned int *)this->ExtractBin(blob);
     if (! pi)
         return "";
     res = std::to_string(*pi);
@@ -74,7 +74,7 @@ std::string
 StampStrSInt32::ExtractStr(Blob &blob)
 {
     std::string res;
-    signed int *pi = (signed int *)this->Extract(blob);
+    signed int *pi = (signed int *)this->ExtractBin(blob);
     if (! pi)
         return "";
     res = std::to_string(*pi);
@@ -93,7 +93,7 @@ std::string
 StampStrUInt64::ExtractStr(Blob &blob)
 {
     std::string res;
-    unsigned long long *pi = (unsigned long long *)this->Extract(blob);
+    unsigned long long *pi = (unsigned long long *)this->ExtractBin(blob);
     if (! pi)
         return "";
     res = std::to_string(*pi);
@@ -105,7 +105,7 @@ std::string
 StampStrSInt64::ExtractStr(Blob &blob)
 {
     std::string res;
-    signed long long *pi = (signed long long *)this->Extract(blob);
+    signed long long *pi = (signed long long *)this->ExtractBin(blob);
     if (! pi)
         return "";
     res = std::to_string(*pi);
@@ -124,7 +124,7 @@ std::string
 StampStrDouble::ExtractStr(Blob &blob)
 {
     std::string res = "";
-    double *pd = (double *)this->Extract(blob);
+    double *pd = (double *)this->ExtractBin(blob);
     if (! pd)
         return res;
 

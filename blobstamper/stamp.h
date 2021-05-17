@@ -11,10 +11,10 @@ class StampBase
     virtual int  minSize() = 0;
     virtual int  maxSize() = 0;
 
-    bool isFixedSize() {return minSize()==maxSize();}
+    bool isFixedSize() {return minSize() == maxSize();}
     bool isUnbounded() {return maxSize() == -1;}
 
-    virtual void *      Extract(Blob &blob)     {printf ("Not implemented"); exit(1);}
+    virtual void *      ExtractBin(Blob &blob)  {printf ("Not implemented"); exit(1);}
     virtual std::string ExtractStr(Blob &blob)  {printf ("Not implemented"); exit(1);}
 };
 
@@ -27,7 +27,7 @@ class StampFixed : public StampBase
     virtual int  minSize() {return size;}
     virtual int  maxSize() {return size;}
 
-    void *      Extract(Blob &blob) override;
+    void *      ExtractBin(Blob &blob) override;
 };
 
 class StampUnbounded : public StampBase

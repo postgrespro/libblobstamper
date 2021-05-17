@@ -28,7 +28,7 @@ std::string
 StampTwoCharsList::ExtractStr(Blob &blob)
 {
     std::string res = "";
-    std::list<std::string> list = galley.Extract(blob);
+    std::list<std::string> list = galley.ExtractStr(blob);
 
     for (std::string point : list)
     {
@@ -59,7 +59,7 @@ main()
         StampTwoChars stamp;
         GalleySeries galley(stamp);
         Blob blob(short_sample, strlen(short_sample));
-        std::list<std::string> res = galley.Extract(blob);
+        std::list<std::string> res = galley.ExtractStr(blob);
 
         std::string str;
 
@@ -91,7 +91,7 @@ main()
         StampTwoCharsList stamp_charlist;
         GalleySeries galley(stamp_charlist);
 
-        std::list<std::string> res = galley.Extract(blob);
+        std::list<std::string> res = galley.ExtractStr(blob);
         std::string str;
 
         str = res.front();

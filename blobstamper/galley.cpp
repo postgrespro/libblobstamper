@@ -1,6 +1,3 @@
-
-
-
 #include "blob.h"
 #include "stamp.h"
 #include "stamp_atomic.h"
@@ -9,7 +6,7 @@
 
 
 std::list<std::string>
-GalleySeries::Extract(Blob &blob)
+GalleySeries::ExtractStr(Blob &blob)
 {
   std::list<std::string> res;
   std::list<Blob> blobs = extract_internal(blob);
@@ -53,7 +50,7 @@ GalleySeries::extract_internal(Blob &blob)
   }
   else
   {
-    if (stamp.maxSize() == -1) // if unlimited size
+    if (stamp.isUnbounded())
     {
       /*
          The idea of this part is following:
