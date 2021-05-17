@@ -8,7 +8,7 @@
 
 #include "blobstamper/blobstamper.h"
 
-#include "two-chars-stamp.h"
+#include "test-chars-stamps.h"
 
 using namespace TAP;
 

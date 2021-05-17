@@ -11,7 +11,7 @@
 #include "blobstamper/blobstamper.h"
 #include "blobstamper/helpers.h"
 
-#include "two-chars-stamp.h"
+#include "test-chars-stamps.h"
 
 using namespace TAP;
 
@@ -28,7 +28,7 @@ main()
     char *ptr;
     size_t size;
 
-    TEST_START(4);
+    TEST_START(8);
 
     /* Test that ShiftSingleStampStr shifts ok with StampTwoChars stamp */
     { /* 1..3 */
@@ -39,7 +39,7 @@ main()
         Blob blob(short_sample, strlen(short_sample));
         StampTwoChars stamp;
         std::string str = blob.ShiftSingleStampStr(stamp);
-        ok(str == expected1, "ShiftSingleStampStr: shifts ok");
+        is(str, expected1, "ShiftSingleStampStr: shifts ok");
 
         blob.DataDup(ptr,size);
         ok(size == strlen(expected2), "ShiftSingleStampStr: Remaining blob data size ok");
@@ -47,15 +47,45 @@ main()
         free(ptr);
     }
 
-    /* Chekc that data is shifted till blob data is empty*/
-    {   /* 8 */
+    /* Check that data is shifted till blob data is empty*/
+    {   /* 4 */
         char sample_two_bytes[]="12";
         std::string expected1 = "12";
         Blob blob(sample_two_bytes, strlen(sample_two_bytes));
         StampTwoChars stamp;
         std::string str = blob.ShiftSingleStampStr(stamp);
-        ok(str == expected1, "ShiftSingleStampStr: shifts last two bytes ok");
+        is(str, expected1, "ShiftSingleStampStr: shifts first two bytes ok");
     }
+    /* Checks for variated size stamps*/
+
+    {  /* 5,6 */
+       char sample[]="1234567890";
+       Blob blob(sample, strlen(sample));
+       StampSeveralChars stamp; /* accepts from 2 to 8 bytes*/
+
+       /* If used alone, is shifts as much bytes as it can. When blob has a lot, it shifts maxSize bytes */
+        std::string str = blob.ShiftSingleStampStr(stamp);
+
+        is(str, "12345678", "variated size stamp shifts as much data as it can");
+
+        str = blob.ShiftSingleStampStr(stamp);
+        is(str, "90", "but will be satisfied with less, unless it is not less than minSize()");
+    }
+
+    {  /* 7,8 */
+       char sample[]="123456789";
+       Blob blob(sample, strlen(sample));
+       StampSeveralChars stamp; /* accepts from 2 to 8 bytes*/
+
+       /* If used alone, is shifts as much bytes as it can. When blob has a lot, it shifts maxSize bytes */
+        std::string str = blob.ShiftSingleStampStr(stamp);
+
+        is(str, "12345678", "variated size stamp shifts as much data as it can (take two)");
+
+        str = blob.ShiftSingleStampStr(stamp);
+        is(str, "", "variated size stamp refuses to stamp when it is offered too few data");
+    }
+
 
     TEST_END;
 }

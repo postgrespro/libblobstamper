@@ -5,6 +5,28 @@
 #include <vector>
 
 
+int
+GalleySeries::minSize()
+{
+  if (stamp.isFixedSize())
+  {
+    return stamp.minSize(); // When size is fixed, series can have only one member with no extra data used
+  }
+  else
+  {
+    if (stamp.isUnbounded())
+    {
+      return stamp.minSize() + ORACLE_SIZE * 2; // One -- count oracle, one -- size oracle
+    }
+    else
+    {
+      return stamp.minSize() + ORACLE_SIZE; // At leas one element with an oracle
+    }
+  }
+}
+
+
+
 std::list<std::string>
 GalleySeries::ExtractStr(Blob &blob)
 {
@@ -108,31 +130,25 @@ GalleySeries::extract_internal(Blob &blob)
     }
     else
     {
-      printf("Not implemented yet!");
-      exit(1);
+      /* Stamp is variated size */
+      int fixed_size = stamp.minSize();
+      int var_size = stamp.maxSize() - fixed_size;
+      ORACLE_STAMP stamp_oracle;
+      while(1)
+      {
+        if(stamp.minSize() + stamp_oracle.minSize() > blob.Size())
+          break;
+        ORACLE_TYPE *oracle = (ORACLE_TYPE *) blob.ShiftSingleStampBin(stamp_oracle);
+        int size = (double) *oracle / ORACLE_MAX * (var_size + 1); /* +1 -- это грубая эмуляция округления вверх. oracle == ORACLE_MAX-1 == 65534 должен дать count_max*/
+        if (size > var_size) size = var_size; // In case we've hit oracle == ORACLE_MAX boundary
+        size += fixed_size;
+        Blob blob2 = blob.ShiftBytes(size);
+        res.push_back(blob2);
+        free(oracle);
+      }
     }
   }
   return res;
 }
 
 
-int
-GalleySeries::minSize()
-{
-  if (stamp.isFixedSize())
-  {
-    return stamp.minSize(); // When size is fixed, series can have only one member with no extra data used
-  }
-  else
-  {
-    if (stamp.maxSize() == -1) // if unlimited size
-    {
-      return stamp.minSize() + ORACLE_SIZE * 2; // One -- count oracle, one -- size oracle
-    }
-    else
-    {
-      printf("Not implemented yet!");
-      exit(1);
-    }
-  }
-}

@@ -30,6 +30,16 @@ class StampFixed : public StampBase
     void *      ExtractBin(Blob &blob) override;
 };
 
+class StampVariated : public StampBase
+{
+  protected:
+     int  min_size;
+     int  max_size;
+  public:
+    virtual int  minSize() {return min_size;}
+    virtual int  maxSize() {return max_size;}
+};
+
 class StampUnbounded : public StampBase
 {
   protected:
@@ -38,8 +48,5 @@ class StampUnbounded : public StampBase
     virtual int  minSize() {return min_size;}
     virtual int  maxSize() {return -1;}
 };
-
-
-
 
 #endif  /* STAMP_H */
