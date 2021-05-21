@@ -4,6 +4,9 @@
 
 
 #include <limits.h>
+#include <vector>
+#include <functional> // for std::reference_wrapper
+
 
 #define ORACLE_STAMP StampBinInt16
 #define ORACLE_TYPE unsigned short int
@@ -13,9 +16,10 @@
 class GalleyBase
 {
   public:
-    virtual int minSize() {return 1;};
-    virtual int maxSize() {return 1;};
-    virtual bool isFixedSize() {return 0;}
+    virtual int minSize() = 0;
+    virtual int maxSize() = 0;
+    bool isFixedSize() {return minSize() == maxSize();}
+    bool isUnbounded() {return maxSize() == -1;}
 
 };
 
@@ -31,8 +35,21 @@ class GalleySeries : public GalleyBase
 
     int minSize() override;
     int maxSize() override {return -1;}; /* Sereies always takes as much data as it can take */
-    bool isFixedSize() override {return 0;} /* And not fixed size */
-
 };
+
+class GalleyVector : public GalleyBase
+{
+  protected:
+    std::vector<std::reference_wrapper<StampBase>> stamps;
+  public:
+    GalleyVector(std::vector<std::reference_wrapper<StampBase>> arg) : stamps(arg) {};
+    std::vector<Blob> extract_internal(Blob &blob);
+    std::vector<std::string> ExtractStr(Blob &blob);
+//    std::list<void *> ExtractBin(Blob &blob);
+
+    int minSize() override {return -2;}; // FIXME
+    int maxSize() override {return -3;}; //FIXME /* Sereies always takes as much data as it can take */
+};
+
 
 #endif /* GALLEY_H */

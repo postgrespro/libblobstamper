@@ -12,37 +12,6 @@
 
 using namespace TAP;
 
-class StampTwoCharsList: public StampUnbounded
-{
-  protected:
-    StampTwoChars el_stamp;
-    GalleySeries galley;
-  public:
-    std::string ExtractStr(Blob &blob) override;
-    StampTwoCharsList(): el_stamp {}, galley {el_stamp} {};
-
-    virtual int minSize() override {return el_stamp.minSize();};
-};
-
-std::string
-StampTwoCharsList::ExtractStr(Blob &blob)
-{
-    std::string res = "";
-    std::list<std::string> list = galley.ExtractStr(blob);
-
-    for (std::string point : list)
-    {
-        if (!res.empty()) res = res + ", ";
-        res = res + point;
-    }
-
-    if (res.empty())  return "";
-
-    res = "(" + res + ")";
-    return res;
-}
-
-
 char short_sample[]="1234567";
 char longer_sample[]="z1234567*89abcde&fghijklmnopqrstuvwxyzAB%CDEFGHIJKLMNOPQRSTUVWXYZ!";
 

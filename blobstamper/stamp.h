@@ -12,6 +12,7 @@ class StampBase
     virtual int  maxSize() = 0;
 
     bool isFixedSize() {return minSize() == maxSize();}
+    bool isVariated()  {return ! isFixedSize() && ! isUnbounded();}
     bool isUnbounded() {return maxSize() == -1;}
 
     virtual void *      ExtractBin(Blob &blob)  {printf ("Not implemented"); exit(1);}
