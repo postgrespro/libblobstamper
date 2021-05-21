@@ -322,4 +322,54 @@ GalleyVector::ExtractStr(Blob &blob)
     return res;
 }
 
+int
+GalleyVector::minSize()
+{
+    bool has_variated_stamps = false;
+    bool has_unbounded_stamps = false;
+
+    int res = 0;
+
+    /* Loop throight stamps calculating total sizes and seeing what kind of stamps do we have*/
+    for(StampBase & s : stamps)
+    {
+        res += s.minSize();
+        if (s.isVariated())
+        {
+            has_variated_stamps = true;
+            res += ORACLE_SIZE;  //Each variated stamp needs an oracle to predict it's size
+        }
+        if (s.isUnbounded())
+        {
+            has_unbounded_stamps = true;
+            res += ORACLE_SIZE;  //Each unbounded stamp needs an oracle to predict it's size
+        }
+    }
+    if (has_variated_stamps && has_unbounded_stamps)
+        res += ORACLE_SIZE;  // Need another oracle to predict how space is devided between variated and unbounded stamps
+
+   return res;
+}
+
+int
+GalleyVector::maxSize()
+{
+    int res = 0;
+
+    /* Loop throight stamps calculating total sizes and seeing what kind of stamps do we have*/
+    for(StampBase & s : stamps)
+    {
+        res += s.maxSize();
+        if (s.isVariated())
+        {
+            res += ORACLE_SIZE;  // Each variated stamp needs an oracle to predict it's size. It also affects max size
+        }
+        if (s.isUnbounded())
+        {
+            return -1; // Junst one unbounded stamp makes all thing unbounded
+        }
+    }
+   return res;
+}
+
 

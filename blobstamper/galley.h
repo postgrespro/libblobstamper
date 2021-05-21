@@ -47,8 +47,8 @@ class GalleyVector : public GalleyBase
     std::vector<std::string> ExtractStr(Blob &blob);
 //    std::list<void *> ExtractBin(Blob &blob);
 
-    int minSize() override {return -2;}; // FIXME
-    int maxSize() override {return -3;}; //FIXME /* Sereies always takes as much data as it can take */
+    int minSize() override;
+    int maxSize() override;
 };
 
 
