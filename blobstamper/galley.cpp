@@ -155,21 +155,6 @@ GalleySeries::extract_internal(Blob &blob)
   return res;
 }
 
-/*
-class GalleyVector : public GalleyBase
-{
-  protected:
-    std::vector<std::reference_wrapper<StampBase>> stamps;
-  public:
-    GalleyVector(std::vector<std::reference_wrapper<StampBase>> arg) : stamps(arg) {};
-    std::vector<Blob> extract_internal(Blob &blob);
-    std::vector<std::string> ExtractStr(Blob &blob);
-//    std::list<void *> ExtractBin(Blob &blob);
-
-    int minSize() override {return -2;}; // FIXME
-    int maxSize() override {return -3;}; //FIXME /* Sereies always takes as much data as it can take */
-/*};*/
-
 std::vector<Blob>
 GalleyVector::extract_internal(Blob &blob)
 {
@@ -181,6 +166,9 @@ GalleyVector::extract_internal(Blob &blob)
     bool has_variated_stamps = false;
     bool has_unbounded_stamps = false;
 
+    int unbounded_count = 0;
+    int variated_count = 0;
+
     /* Loop throight stamps calculating total sizes and seeing what kind of stamps do we have*/
     for(StampBase & s : stamps)
     {
@@ -189,14 +177,19 @@ GalleyVector::extract_internal(Blob &blob)
         {
             max_varited_total_size += s.maxSize() - s.minSize();
             has_variated_stamps = true;
-            fixed_total_size += ORACLE_SIZE;
+            variated_count++;
         }
         if (s.isUnbounded())
         {
             has_unbounded_stamps = true;
-            fixed_total_size += ORACLE_SIZE;
+            unbounded_count++;
         }
     }
+    fixed_total_size += ORACLE_SIZE * variated_count; /* We will predict stamp size for each variated stamp */
+
+    if (unbounded_count > 1) /* One unbounded stamp will take all data. Nothing to predict */
+        fixed_total_size += ORACLE_SIZE * unbounded_count;
+
 
     /* If we have both variated and unbounded stamp we will need oracle to devide availabe data between them */
     if (has_variated_stamps && has_unbounded_stamps)
@@ -236,10 +229,16 @@ GalleyVector::extract_internal(Blob &blob)
         double modifier = 0;
         if (!s.isFixedSize())
         {
-            ORACLE_TYPE * oracle = (ORACLE_TYPE *) blob.ShiftSingleStampBin(oracle_stamp);
-            o_value = * oracle;
-            free(oracle);
-            modifier = (double) o_value / (double) ORACLE_MAX;
+            if (s.isUnbounded() && unbounded_count <=1 )
+            {
+               modifier = 1; //Nothing to predict, it will use all space
+            } else
+            {
+              ORACLE_TYPE * oracle = (ORACLE_TYPE *) blob.ShiftSingleStampBin(oracle_stamp);
+              o_value = * oracle;
+              free(oracle);
+              modifier = (double) o_value / (double) ORACLE_MAX;
+            }
             if (s.isUnbounded())
             {
                 total_unbounded_modifiers += modifier;
@@ -328,6 +327,9 @@ GalleyVector::minSize()
     bool has_variated_stamps = false;
     bool has_unbounded_stamps = false;
 
+    int unbounded_count = 0;
+    int variated_count = 0;
+
     int res = 0;
 
     /* Loop throight stamps calculating total sizes and seeing what kind of stamps do we have*/
@@ -337,16 +339,21 @@ GalleyVector::minSize()
         if (s.isVariated())
         {
             has_variated_stamps = true;
-            res += ORACLE_SIZE;  //Each variated stamp needs an oracle to predict it's size
+            variated_count++;
         }
         if (s.isUnbounded())
         {
             has_unbounded_stamps = true;
-            res += ORACLE_SIZE;  //Each unbounded stamp needs an oracle to predict it's size
+            unbounded_count++;
         }
     }
     if (has_variated_stamps && has_unbounded_stamps)
         res += ORACLE_SIZE;  // Need another oracle to predict how space is devided between variated and unbounded stamps
+
+    res += ORACLE_SIZE * variated_count; /* We will predict stamp size for each variated stamp */
+
+    if (unbounded_count > 1) /* One unbounded stamp will take all data. Nothing to predict */
+        res += ORACLE_SIZE * unbounded_count;
 
    return res;
 }

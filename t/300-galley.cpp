@@ -18,7 +18,7 @@ char longer_sample[]="z1234567*89abcde&fghijklmnopqrstuvwxyzAB%CDEFGHIJKLMNOPQRS
 int
 main()
 {
-    TEST_START(46);
+    TEST_START(53);
     /* Test Galley Sereies with fixed size stampp*/
     { /* 1..4 */
         std::string expected1 = "12";
@@ -312,6 +312,48 @@ main()
 
         is(galley.minSize(), (f_stamp.minSize()+v_stamp.minSize()+u_stamp.minSize())*2 + ORACLE_SIZE * (2+2+1), "GalleyVector, mixed types stamps: galley min size is ok");
         is(galley.maxSize(), -1, "GalleyVector, mixed types stamps: galley max size is ok");
+    }
+
+    /* Test Galley Vector, single unbounded stamp will use all data with no oracle to predict it*/
+    {  /* 47 .. 53*/
+
+        char sample[]="z1234567*89abcde&fghijklmnopqrstuvwxyzAB%CDEFGHIJKLMNOPQRSTUVWXYZ!";
+
+        std::string expected1 = "z1";  // first f_stamp
+        std::string expected2 = "(23, 45, 67, *8, 9a, bc, de, &f, gh, ij, kl, mn, op, qr, st, uv, wx, yz, AB, %C, DE, FG, HI, JK, LM, NO, PQ, RS, TU, VW, XY)"; // u_stamp
+        std::string expected3 = "Z!"; // second f_stamp
+
+        Blob blob(sample, strlen(sample));
+
+
+        StampTwoChars f_stamp;
+        StampTwoCharsList u_stamp;
+
+        std::vector<std::reference_wrapper<StampBase>> stamps;
+        stamps.push_back(f_stamp);
+        stamps.push_back(u_stamp);
+        stamps.push_back(f_stamp);
+
+        GalleyVector galley(stamps);
+
+        std::vector<std::string> res = galley.ExtractStr(blob);
+        std::string str;
+
+        str = res[0];
+        is(str, expected1, "GalleyVector, mixed type stamps 2: First unbounded stamp is ok");
+
+        str = res[1];
+        is(str, expected2, "GalleyVector, mixed type stamps 2: Fist varieded stamp is ok");
+
+        str = res[2];
+        is(str, expected3, "GalleyVector, mixed type stamps 2: Second variated stamp is ok");
+
+        is(res.size(), 3, "GalleyVector, mixed type stamps 2: The vector has only three elements ");
+
+        is(blob.Size(), 0 , "GalleyVector 2: will use all data if we have at least one unbounded stamp");
+
+        is(galley.minSize(), f_stamp.minSize()*2 + u_stamp.minSize() , "GalleyVector 2, mixed types stamps: galley min size is ok");
+        is(galley.maxSize(), -1, "GalleyVector, mixed types stamps 2: galley max size is ok");
     }
 
     TEST_END;

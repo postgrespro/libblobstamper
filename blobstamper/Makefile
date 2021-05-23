@@ -11,10 +11,10 @@ stamp_pg_type_ts.o \
 
 
 %.o: %.cpp $(DEPS)
-	$(CXX) -c -g $(CFLAGS) $<
+	$(CXX) -c -g $(CXXFLAGS) $<
 
 %.o: %.c $(DEPS)
-	$(CC) -c -g $(CXXFLAGS) $<
+	$(CC) -c -g $(CFLAGS) $<
 
 
 all: $(ALL_OBJS)
