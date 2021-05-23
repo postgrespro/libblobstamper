@@ -57,7 +57,6 @@ GalleySeries::ExtractBin(Blob &blob)
   return res;
 }
 
-
 std::list<Blob>
 GalleySeries::extract_internal(Blob &blob)
 {
@@ -155,6 +154,8 @@ GalleySeries::extract_internal(Blob &blob)
   return res;
 }
 
+/**********************************************/
+
 std::vector<Blob>
 GalleyVector::extract_internal(Blob &blob)
 {
@@ -198,6 +199,11 @@ GalleyVector::extract_internal(Blob &blob)
     /* We will probably not use all data that can be teoretically consumed by variated stamps.
        This is a variable that will set limits to gariated stamps greed (will be rediced later */
     int varited_total_size_limit = max_varited_total_size;
+
+    if(fixed_total_size > blob.Size()) /* Not enought data case*/
+    {
+       return res;
+    }
 
     int avaliable_nonfixed_size = blob.Size() - fixed_total_size; /* The ammount of data available for non-fixed part of variated or unbounded stamps*/
     if (varited_total_size_limit > avaliable_nonfixed_size)
@@ -311,12 +317,12 @@ GalleyVector::ExtractStr(Blob &blob)
 {
     std::vector<std::string> res;
     std::vector<Blob> blobs = extract_internal(blob);
-    for(int i=0; i<stamps.size(); i++)
+    for(int i=0; i<blobs.size(); i++)
     {
         Blob blob = blobs[i];
         StampBase & stamp = stamps[i];
-      std::string str= blob.ShiftSingleStampStr(stamp);
-      res.push_back(str);
+        std::string str= blob.ShiftSingleStampStr(stamp);
+        res.push_back(str);
     }
     return res;
 }
@@ -378,5 +384,3 @@ GalleyVector::maxSize()
     }
    return res;
 }
-
-
