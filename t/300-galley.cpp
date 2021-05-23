@@ -18,7 +18,7 @@ char longer_sample[]="z1234567*89abcde&fghijklmnopqrstuvwxyzAB%CDEFGHIJKLMNOPQRS
 int
 main()
     {
-    TEST_START(63);
+    TEST_START(67);
     /* Test Galley Sereies with fixed size stampp*/
     { /* 1..4 */
         std::string expected1 = "12";
