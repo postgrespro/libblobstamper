@@ -255,6 +255,19 @@ GalleyVector::extract_internal(Blob &blob)
         }
         size_modifiers.push_back(modifier);
     }
+    if (total_unbounded_modifiers == 0) // If we got all zeros, will treat them as all 1. Will work well, and give same result of equal sizes of all parts
+    {
+        total_unbounded_modifiers = 0;
+        for(int i=0; i<stamps.size();i++)
+        {
+            StampBase &s = stamps[i];
+            if (s.isUnbounded())
+            {
+                size_modifiers[i] = 1;
+                total_unbounded_modifiers += 1;
+            }
+        }
+    }
     double k_variated = 1;
     double k_unbounded = 1;
 
