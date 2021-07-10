@@ -5,7 +5,7 @@
 
 #include "blob.h"
 #include "stamp.h"
-#include "stamp_atomic.h"
+#include "stamp_arithm.h"
 #include "galley.h"
 
 

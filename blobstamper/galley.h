@@ -7,9 +7,8 @@
 #include <vector>
 #include <functional> // for std::reference_wrapper
 
-
-#define ORACLE_STAMP StampBinInt16
 #define ORACLE_TYPE unsigned short int
+#define ORACLE_STAMP StampArithm<ORACLE_TYPE>
 #define ORACLE_SIZE sizeof(ORACLE_TYPE)
 #define ORACLE_MAX USHRT_MAX
 

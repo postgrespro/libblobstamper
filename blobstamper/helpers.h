@@ -1,3 +1,5 @@
+#ifndef HELPERS_H
+#define HELPERS_H
 
 void hexdump(void *pAddressIn, long  lSize);
 
@@ -74,3 +76,4 @@ max precision
 					   "%.999g", __val);
   }
 
+#endif  /*HELPERS_H*/

@@ -6,16 +6,16 @@
 
 #include "blob.h"
 #include "stamp.h"
-#include "stamp_atomic.h"
+#include "stamp_arithm.h"
 #include "dict.h"
 
 class StampDict: public StampFixed
 {
   protected:
-    StampBinChar  stamp8;
-    StampBinInt16 stamp16;
-    StampBinInt32 stamp32;
-    StampBinInt64 stamp64;
+    StampArithm<char>  stamp8;
+    StampArithm<unsigned short int> stamp16;
+    StampArithm<unsigned int> stamp32;
+    StampArithm<unsigned long long> stamp64;
     StampFixed& stamp;
     DictBase& dict;
     unsigned long long stamp_max_value;

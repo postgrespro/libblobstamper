@@ -2,7 +2,7 @@
 ALL_OBJS = blob.o \
 helpers.o \
 stamp.o \
-stamp_atomic.o \
+stamp_arithm.o \
 stamp_dict.o \
 galley.o \
 dict.o \

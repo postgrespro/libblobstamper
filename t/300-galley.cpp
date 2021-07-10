@@ -88,7 +88,7 @@ main()
         unsigned short int expected2 = (unsigned char) '4' * 256 +(unsigned char) '3';
         unsigned short int expected3 = (unsigned char) '6' * 256 +(unsigned char) '5';
 
-        StampBinInt16 stamp;
+        StampArithm<unsigned short int> stamp;
         GalleySeries galley(stamp);
         Blob blob(short_sample, strlen(short_sample));
         std::list<void * > res = galley.ExtractBin(blob);
