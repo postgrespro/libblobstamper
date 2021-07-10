@@ -1,6 +1,7 @@
 #include "blob.h"
 #include "stamp.h"
 #include "stamp_atomic.h"
+#include "helpers.h"
 
 
 StampBinChar::StampBinChar() : StampFixed()
@@ -16,7 +17,7 @@ StampStrUInt8::ExtractStr(Blob &blob)
     char *pc = (char *)this->ExtractBin(blob);
     if (! pc)
         return "";
-    res = std::to_string((int) *pc);
+    res = to_string_precise((int) *pc);
     free(pc);
     return res;
 }
@@ -34,7 +35,7 @@ StampStrUInt16::ExtractStr(Blob &blob)
     unsigned short int *pi = (unsigned short int *)this->ExtractBin(blob);
     if (! pi)
         return "";
-    res = std::to_string(*pi);
+    res = to_string_precise(*pi);
     free(pi);
     return res;
 }
@@ -46,7 +47,7 @@ StampStrSInt16::ExtractStr(Blob &blob)
     signed short int *pi = (signed short int *)this->ExtractBin(blob);
     if (! pi)
         return "";
-    res = std::to_string(*pi);
+    res = to_string_precise(*pi);
     free(pi);
     return res;
 }
@@ -65,7 +66,7 @@ StampStrUInt32::ExtractStr(Blob &blob)
     unsigned int *pi = (unsigned int *)this->ExtractBin(blob);
     if (! pi)
         return "";
-    res = std::to_string(*pi);
+    res = to_string_precise(*pi);
     free(pi);
     return res;
 }
@@ -77,7 +78,7 @@ StampStrSInt32::ExtractStr(Blob &blob)
     signed int *pi = (signed int *)this->ExtractBin(blob);
     if (! pi)
         return "";
-    res = std::to_string(*pi);
+    res = to_string_precise(*pi);
     free(pi);
     return res;
 }
@@ -96,7 +97,7 @@ StampStrUInt64::ExtractStr(Blob &blob)
     unsigned long long *pi = (unsigned long long *)this->ExtractBin(blob);
     if (! pi)
         return "";
-    res = std::to_string(*pi);
+    res = to_string_precise(*pi);
     free(pi);
     return res;
 }
@@ -108,7 +109,7 @@ StampStrSInt64::ExtractStr(Blob &blob)
     signed long long *pi = (signed long long *)this->ExtractBin(blob);
     if (! pi)
         return "";
-    res = std::to_string(*pi);
+    res = to_string_precise(*pi);
     free(pi);
     return res;
 }
@@ -126,32 +127,11 @@ StampStrDouble::ExtractStr(Blob &blob)
     std::string res = "";
     double *pd = (double *)this->ExtractBin(blob);
     if (! pd)
-        return res;
-
-    int size_s = snprintf( nullptr, 0, "%.999g", *pd) + 1;
-    if (size_s <= 0)
-    {
-        printf("ai-ai-ai\n");
         return "";
-    }
 
-    char * resc =(char *) malloc(size_s);
-    if (! resc)
-    {
-        printf("oh-oh-oh\n");
-        return "";
-    }
-
-    int ret = snprintf(resc,size_s,"%.999g", *pd);
-    if (ret <= 0)
-    {
-        printf("oi-oi-oi\n");
-        free(resc);
-        return "";
-    }
-    res = resc;
-    free(resc);
+    res = to_string_precise(*pd);
     free(pd);
     return res;
 }
+
 /* ---- */
