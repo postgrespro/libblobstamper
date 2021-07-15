@@ -3,14 +3,14 @@
 #define GALLEY_H
 
 
-#include <limits.h>
+#include <limits>
 #include <vector>
 #include <functional> // for std::reference_wrapper
 
 #define ORACLE_TYPE unsigned short int
 #define ORACLE_STAMP StampArithm<ORACLE_TYPE>
 #define ORACLE_SIZE sizeof(ORACLE_TYPE)
-#define ORACLE_MAX USHRT_MAX
+#define ORACLE_MAX std::numeric_limits<ORACLE_TYPE>::max()
 
 class GalleyBase
 {
@@ -30,7 +30,7 @@ class GalleySeries : public GalleyBase
     GalleySeries(StampBase & stamp_arg) : stamp(stamp_arg) {};
     std::list<Blob> extract_internal(Blob &blob);
     std::list<std::string> ExtractStr(Blob &blob);
-    std::list<void *> ExtractBin(Blob &blob);
+    std::list<std::vector<char>> ExtractBin(Blob &blob);
 
     int minSize() override;
     int maxSize() override {return -1;}; /* Sereies always takes as much data as it can take */
@@ -44,7 +44,6 @@ class GalleyVector : public GalleyBase
     GalleyVector(std::vector<std::reference_wrapper<StampBase>> arg) : stamps(arg) {};
     std::vector<Blob> extract_internal(Blob &blob);
     std::vector<std::string> ExtractStr(Blob &blob);
-//    std::list<void *> ExtractBin(Blob &blob);
 
     int minSize() override;
     int maxSize() override;

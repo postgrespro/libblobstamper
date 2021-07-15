@@ -11,18 +11,17 @@
 /*************************************************************************************/
 
 /* Generic Exrtact Bin function for fixed size stamp. In some cases we need just a chunk of raw blob data. */
-/* Use this method in such a case */
-void *
+/* Use this method in those cases */
+std::vector<char>
 StampFixed::ExtractBin(Blob &blob)
 {
     Blob blob2 = blob.ShiftBytes(size);
 
     if (blob2.isEmpty())  /* original blob does not have enought data */
-        return NULL;
-
-    size_t res_size;
-    char *res;
-    blob2.DataDup(res,res_size);
-    return (void *) res;
+    {
+        std::vector<char> empty(0);
+        return empty;
+    }
+    return blob2.asVector();
 }
 

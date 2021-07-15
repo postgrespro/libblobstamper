@@ -3,6 +3,7 @@
 #include <exception>
 #include <string>
 #include <cstdlib>
+#include <vector>
 #define WANT_TEST_EXTRAS
 #include <tap++/tap++.h>
 
@@ -91,24 +92,25 @@ main()
         StampArithm<unsigned short int> stamp;
         GalleySeries galley(stamp);
         Blob blob(short_sample, strlen(short_sample));
-        std::list<void * > res = galley.ExtractBin(blob);
+        std::list<std::vector<char>> res = galley.ExtractBin(blob);
 
+        std::vector<char> v;
         unsigned short int * data;
 
-        data = (unsigned short int *) res.front();
+        v = res.front();
+        data = (unsigned short int *) &v[0];
         is(*data, expected1, "GalleySeries, fixed size binary stamp: First element of shifted list is ok");
         res.pop_front();
-        free(data);
 
-        data = (unsigned short int *) res.front();
+        v = res.front();
+        data = (unsigned short int *) &v[0];
         is(*data, expected2, "GalleySeries, fixed size binary stamp: Second element of shifted list is ok");
         res.pop_front();
-        free(data);
 
-        data = (unsigned short int *) res.front();
+        v = res.front();
+        data = (unsigned short int *) &v[0];
         is(*data, expected3, "GalleySeries, fixed size binary stamp: Third element of shifted list is ok");
         res.pop_front();
-        free(data);
 
         ok(res.empty(), "GalleySeries, fixed size binary stamp: The rest of the list is empty");
     }

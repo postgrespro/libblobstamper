@@ -44,14 +44,14 @@ GalleySeries::ExtractStr(Blob &blob)
   return res;
 }
 
-std::list<void *>
+std::list<std::vector<char>>
 GalleySeries::ExtractBin(Blob &blob)
 {
-  std::list<void *> res;
+  std::list<std::vector<char>> res;
   std::list<Blob> blobs = extract_internal(blob);
   for(Blob blob : blobs)
   {
-    void * data= blob.ShiftSingleStampBin(stamp);
+    std::vector<char> data = blob.ShiftSingleStampBin(stamp);
     res.push_back(data);
   }
   return res;
@@ -97,7 +97,9 @@ GalleySeries::extract_internal(Blob &blob)
       size_t count_max = (blob.Size() - ORACLE_SIZE) / (stamp.minSize() + ORACLE_SIZE);  //First oracle - for number of items, and second one is oracle for each item size
       ORACLE_STAMP stamp_oracle;
       ORACLE_TYPE *count_oracle;
-      count_oracle = (ORACLE_TYPE *) blob.ShiftSingleStampBin(stamp_oracle);
+
+      std::vector<char> v = blob.ShiftSingleStampBin(stamp_oracle);
+      count_oracle = (ORACLE_TYPE *) &v[0];
 
       ORACLE_TYPE count_target = count_max * (*count_oracle) / ORACLE_MAX + 1; /* +1 -- это грубая эмуляция округления вверх. oracle == ORACLE_MAX-1 == 65534 должен дать count_max*/
       if (count_target > count_max) count_target = count_max; // В случае если oracle оказался рваен ORACLE_MAX
@@ -107,10 +109,10 @@ GalleySeries::extract_internal(Blob &blob)
       int size_oracle_total = 0;
       for(int i = 0; i<count_target; i++)
       {
-        ORACLE_TYPE *o = (ORACLE_TYPE *) blob.ShiftSingleStampBin(stamp_oracle);
+        std::vector<char> v = blob.ShiftSingleStampBin(stamp_oracle);
+        ORACLE_TYPE *o = (ORACLE_TYPE *) &v[0];
         size_oracles.push_back(*o);
         size_oracle_total += *o;
-        free(o);
       }
 
       /* Calculating available vairable size, that will be destributed between parts according to size oracles */
@@ -129,7 +131,6 @@ GalleySeries::extract_internal(Blob &blob)
         Blob blob2 = blob.ShiftBytes(el_size);
         res.push_back(blob2);
       }
-      free(count_oracle);
     }
     else
     {
@@ -141,13 +142,13 @@ GalleySeries::extract_internal(Blob &blob)
       {
         if(stamp.minSize() + stamp_oracle.minSize() > blob.Size())
           break;
-        ORACLE_TYPE *oracle = (ORACLE_TYPE *) blob.ShiftSingleStampBin(stamp_oracle);
+        std::vector<char> v = blob.ShiftSingleStampBin(stamp_oracle);
+        ORACLE_TYPE *oracle = (ORACLE_TYPE *) &v[0];
         int size = (double) *oracle / ORACLE_MAX * (var_size + 1); /* +1 -- это грубая эмуляция округления вверх. oracle == ORACLE_MAX-1 == 65534 должен дать count_max*/
         if (size > var_size) size = var_size; // In case we've hit oracle == ORACLE_MAX boundary
         size += fixed_size;
         Blob blob2 = blob.ShiftBytes(size);
         res.push_back(blob2);
-        free(oracle);
       }
     }
   }
@@ -215,9 +216,10 @@ GalleyVector::extract_internal(Blob &blob)
         /* try do devide available data between variated and unbounded stamps */
         /* if predicted variated size is smaller than varited_total_size_limit we will decrice that limit */
 
-        ORACLE_TYPE * oracle = (ORACLE_TYPE *) blob.ShiftSingleStampBin(oracle_stamp);
+        std::vector<char> v = blob.ShiftSingleStampBin(oracle_stamp);
+
+        ORACLE_TYPE * oracle = (ORACLE_TYPE *) &v[0];
         int predicted_variated_limit =  round ((double) *oracle / (double) ORACLE_MAX * (double) (avaliable_nonfixed_size));
-        free(oracle);
 
         if (varited_total_size_limit > predicted_variated_limit)
             varited_total_size_limit = predicted_variated_limit;
@@ -240,9 +242,9 @@ GalleyVector::extract_internal(Blob &blob)
                modifier = 1; //Nothing to predict, it will use all space
             } else
             {
-              ORACLE_TYPE * oracle = (ORACLE_TYPE *) blob.ShiftSingleStampBin(oracle_stamp);
+              std::vector<char> v = blob.ShiftSingleStampBin(oracle_stamp);
+              ORACLE_TYPE * oracle = (ORACLE_TYPE *) &v[0];
               o_value = * oracle;
-              free(oracle);
               modifier = (double) o_value / (double) ORACLE_MAX;
             }
             if (s.isUnbounded())

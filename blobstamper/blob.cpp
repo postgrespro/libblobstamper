@@ -53,7 +53,7 @@ Blob::Size()
   return end - begin + 1;
 }
 
-void *
+std::vector<char>
 Blob::ShiftSingleStampBin(StampBase& stmp)
 {
     return stmp.ExtractBin(*this);
@@ -73,3 +73,13 @@ Blob::DataDup(char *& data_out, size_t& size_out)
   //FIXME add out of memory check here!!!!
   memcpy(data_out, data + begin, size_out);
 }
+
+std::vector<char>
+Blob::asVector()
+{
+  std::vector<char> res(Size());
+
+  memcpy(&res[0], data + begin, Size());
+  return res;
+}
+

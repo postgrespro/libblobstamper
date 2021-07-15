@@ -4,6 +4,8 @@
 
 #include <string>
 #include <list>
+#include <vector>
+
 
 class StampBase;
 
@@ -21,8 +23,9 @@ class Blob
         void Dump();
         Blob ShiftBytes(size_t n);
         void DataDup(char *& data_out, size_t& size_out);
+        std::vector<char> asVector();
 
-        void * ShiftSingleStampBin(StampBase &stmp);
+        std::vector<char> ShiftSingleStampBin(StampBase &stmp);
         std::string  ShiftSingleStampStr(StampBase &stmp);
 };
 

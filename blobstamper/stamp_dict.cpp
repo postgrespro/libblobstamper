@@ -36,31 +36,30 @@ StampDict::ExtractStr(Blob &blob)
     {
        case 1:
        {
-          unsigned char * i =  (unsigned char *) blob.ShiftSingleStampBin(stamp);
+          std::vector<char> v = blob.ShiftSingleStampBin(stamp);
+          unsigned char * i =  (unsigned char *) &v[0];
           index_oracle = * i;
-          free(i);
           break;
        }
        case 2:
        {
-          unsigned short int * i = (unsigned short int *) blob.ShiftSingleStampBin(stamp);
+          std::vector<char> v = blob.ShiftSingleStampBin(stamp);
+          unsigned short int * i = (unsigned short int *) &v[0];
           index_oracle = * i;
-          free(i);
           break;
        }
        case 4:
        {
-          unsigned int * i = ( unsigned int *) blob.ShiftSingleStampBin(stamp);
+          std::vector<char> v = blob.ShiftSingleStampBin(stamp);
+          unsigned int * i = ( unsigned int *) &v[0];
           index_oracle = * i;
-          free(i);
           break;
        }
-
        case 8:
        {
-          unsigned long long * i = ( unsigned long long *) blob.ShiftSingleStampBin(stamp);
+          std::vector<char> v = blob.ShiftSingleStampBin(stamp);
+          unsigned long long * i = ( unsigned long long *) &v[0];
           index_oracle = * i;
-          free(i);
           break;
        }
        default:

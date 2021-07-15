@@ -4,6 +4,8 @@
 
 #include <string>
 #include <list>
+#include <vector>
+
 
 class StampBase
 {
@@ -15,7 +17,7 @@ class StampBase
     bool isVariated()  {return ! isFixedSize() && ! isUnbounded();}
     bool isUnbounded() {return maxSize() == -1;}
 
-    virtual void *      ExtractBin(Blob &blob)  {printf ("Not implemented"); exit(1);}
+    virtual std::vector<char> ExtractBin(Blob &blob)  {printf ("Not implemented"); exit(1);}
     virtual std::string ExtractStr(Blob &blob)  {printf ("Not implemented"); exit(1);}
 };
 
@@ -28,7 +30,7 @@ class StampFixed : public StampBase
     virtual int  minSize() {return size;}
     virtual int  maxSize() {return size;}
 
-    void *      ExtractBin(Blob &blob) override;
+    std::vector<char> ExtractBin(Blob &blob) override;
 };
 
 class StampVariated : public StampBase

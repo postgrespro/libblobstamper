@@ -15,12 +15,14 @@ template<class T> std::string
 StampArithm<T>::ExtractStr(Blob &blob)
 {
     std::string res;
-    T *pT = (T *)this->ExtractBin(blob);
-    if (! pT)
+    std::vector<char> bin = this->ExtractBin(blob);
+
+    if (bin.size() == 0)
         return "";
-    res = to_string_precise(*pT);
-    free(pT);
-    return res;
+
+    T *pT = (T *) &bin[0];
+
+    return to_string_precise(*pT);
 }
 
 #endif  /* STAMP_ATOMIC_H */

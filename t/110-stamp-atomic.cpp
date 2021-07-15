@@ -36,9 +36,9 @@ main()
     { /* 1, 2  */
         Blob blob(sample_data_char, strlen(sample_data_char));
         StampArithm<char> stamp;
-        char * c = (char *) blob.ShiftSingleStampBin(stamp);
+        std::vector<char> v = blob.ShiftSingleStampBin(stamp);
+        char * c = (char *) &v[0];
         is(*c, 'S' , "Bin Char stamp works well");
-        free(c);
 
 //        StampStrUInt8 stamp2;
         StampArithm<char> stamp2;
@@ -50,9 +50,9 @@ main()
     { /* 3, 4, 5 */
         Blob blob((char *)sample_data_int16, sample_data_int16_size);
         StampArithm<short int> stamp;
-        short int * i = (short int *) blob.ShiftSingleStampBin(stamp);
+        std::vector<char> v = blob.ShiftSingleStampBin(stamp);
+        short int * i = (short int *) &v[0];
         is(*i,  1 , "Bin Int16 stamp works well");
-        free(i);
 
         StampArithm<unsigned short int> stamp2;
         std::string s = blob.ShiftSingleStampStr(stamp2);
@@ -67,9 +67,11 @@ main()
     { /* 6, 7, 8 */
         Blob blob((char *)sample_data_int32, sample_data_int32_size);
         StampArithm<int> stamp;
-        int * i = (int *) blob.ShiftSingleStampBin(stamp);
+
+        std::vector<char> v = blob.ShiftSingleStampBin(stamp);
+
+        int * i = (int *) &v[0];
         is(*i,  10 , "Bin Int32 stamp works well");
-        free(i);
 
         StampArithm<unsigned int> stamp2;
         std::string s = blob.ShiftSingleStampStr(stamp2);
@@ -85,9 +87,11 @@ main()
     { /* 9, 10, 11 */
         Blob blob((char *)sample_data_int64, sample_data_int64_size);
         StampArithm<long long> stamp;
-        long long * i = (long long *) blob.ShiftSingleStampBin(stamp);
+
+        std::vector<char> v = blob.ShiftSingleStampBin(stamp);
+
+        long long * i = (long long *) &v[0];
         is(*i,  100 , "Bin Int64 stamp works well");
-        free(i);
 
         StampArithm<unsigned long long> stamp2;
         std::string s = blob.ShiftSingleStampStr(stamp2);
@@ -104,9 +108,9 @@ main()
     { /* 12 */
         Blob blob((char *)sample_data_double, sample_data_double_size);
         StampArithm<double> stamp;
-        double *d = (double *) blob.ShiftSingleStampBin(stamp);
+        std::vector<char> v = blob.ShiftSingleStampBin(stamp);
+        double *d = (double *) &v[0];
         is(*d, 1.4142, "Bin Double stamp works well");
-        free(d);
     }
 
     /* Check that Str Double stamp works well */
