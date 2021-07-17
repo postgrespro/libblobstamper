@@ -9,7 +9,7 @@ LIBRARY_VAR := LD_LIBRARY_PATH
 TEST_GOALS := ./00-sanity.t \
 ./001-blob-generic.t \
 ./100-stamp-base.t \
-./110-stamp-atomic.t \
+./110-stamp-arithm.t \
 ./120-stamp_dict.t \
 ./200-dict.t \
 ./300-galley.t \

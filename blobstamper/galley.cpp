@@ -95,13 +95,11 @@ GalleySeries::extract_internal(Blob &blob)
 
       /* Getting count oracle and normalze it to fit available size */
       size_t count_max = (blob.Size() - ORACLE_SIZE) / (stamp.minSize() + ORACLE_SIZE);  //First oracle - for number of items, and second one is oracle for each item size
+
       ORACLE_STAMP stamp_oracle;
-      ORACLE_TYPE *count_oracle;
+      ORACLE_TYPE count_oracle = stamp_oracle.ExtractValue(blob);
 
-      std::vector<char> v = blob.ShiftSingleStampBin(stamp_oracle);
-      count_oracle = (ORACLE_TYPE *) &v[0];
-
-      ORACLE_TYPE count_target = count_max * (*count_oracle) / ORACLE_MAX + 1; /* +1 -- это грубая эмуляция округления вверх. oracle == ORACLE_MAX-1 == 65534 должен дать count_max*/
+      ORACLE_TYPE count_target = count_max * count_oracle / ORACLE_MAX + 1; /* +1 -- это грубая эмуляция округления вверх. oracle == ORACLE_MAX-1 == 65534 должен дать count_max*/
       if (count_target > count_max) count_target = count_max; // В случае если oracle оказался рваен ORACLE_MAX
 
       /* Getting size oracles for each part */
@@ -109,10 +107,9 @@ GalleySeries::extract_internal(Blob &blob)
       int size_oracle_total = 0;
       for(int i = 0; i<count_target; i++)
       {
-        std::vector<char> v = blob.ShiftSingleStampBin(stamp_oracle);
-        ORACLE_TYPE *o = (ORACLE_TYPE *) &v[0];
-        size_oracles.push_back(*o);
-        size_oracle_total += *o;
+        ORACLE_TYPE o = stamp_oracle.ExtractValue(blob);
+        size_oracles.push_back(o);
+        size_oracle_total += o;
       }
 
       /* Calculating available vairable size, that will be destributed between parts according to size oracles */
@@ -142,9 +139,10 @@ GalleySeries::extract_internal(Blob &blob)
       {
         if(stamp.minSize() + stamp_oracle.minSize() > blob.Size())
           break;
-        std::vector<char> v = blob.ShiftSingleStampBin(stamp_oracle);
-        ORACLE_TYPE *oracle = (ORACLE_TYPE *) &v[0];
-        int size = (double) *oracle / ORACLE_MAX * (var_size + 1); /* +1 -- это грубая эмуляция округления вверх. oracle == ORACLE_MAX-1 == 65534 должен дать count_max*/
+
+        ORACLE_TYPE oracle = stamp_oracle.ExtractValue(blob);
+
+        int size = (double) oracle / ORACLE_MAX * (var_size + 1); /* +1 -- это грубая эмуляция округления вверх. oracle == ORACLE_MAX-1 == 65534 должен дать count_max*/
         if (size > var_size) size = var_size; // In case we've hit oracle == ORACLE_MAX boundary
         size += fixed_size;
         Blob blob2 = blob.ShiftBytes(size);
@@ -216,10 +214,8 @@ GalleyVector::extract_internal(Blob &blob)
         /* try do devide available data between variated and unbounded stamps */
         /* if predicted variated size is smaller than varited_total_size_limit we will decrice that limit */
 
-        std::vector<char> v = blob.ShiftSingleStampBin(oracle_stamp);
-
-        ORACLE_TYPE * oracle = (ORACLE_TYPE *) &v[0];
-        int predicted_variated_limit =  round ((double) *oracle / (double) ORACLE_MAX * (double) (avaliable_nonfixed_size));
+        ORACLE_TYPE  oracle = oracle_stamp.ExtractValue(blob);
+        int predicted_variated_limit =  round ((double) oracle / (double) ORACLE_MAX * (double) (avaliable_nonfixed_size));
 
         if (varited_total_size_limit > predicted_variated_limit)
             varited_total_size_limit = predicted_variated_limit;
@@ -242,9 +238,7 @@ GalleyVector::extract_internal(Blob &blob)
                modifier = 1; //Nothing to predict, it will use all space
             } else
             {
-              std::vector<char> v = blob.ShiftSingleStampBin(oracle_stamp);
-              ORACLE_TYPE * oracle = (ORACLE_TYPE *) &v[0];
-              o_value = * oracle;
+              o_value = oracle_stamp.ExtractValue(blob);
               modifier = (double) o_value / (double) ORACLE_MAX;
             }
             if (s.isUnbounded())
