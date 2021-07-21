@@ -29,5 +29,4 @@ class Blob
         std::string  ShiftSingleStampStr(StampBase &stmp);
 };
 
-
 #endif /*BLOB_H*/

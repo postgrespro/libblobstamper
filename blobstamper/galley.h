@@ -44,6 +44,7 @@ class GalleyVector : public GalleyBase
     GalleyVector(std::vector<std::reference_wrapper<StampBase>> arg) : stamps(arg) {};
     std::vector<Blob> extract_internal(Blob &blob);
     std::vector<std::string> ExtractStr(Blob &blob);
+    std::vector<std::vector<char>> ExtractBin(Blob &blob);
 
     int minSize() override;
     int maxSize() override;

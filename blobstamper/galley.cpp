@@ -336,6 +336,21 @@ GalleyVector::ExtractStr(Blob &blob)
     return res;
 }
 
+std::vector<std::vector<char>>
+GalleyVector::ExtractBin(Blob &blob)
+{
+    std::vector<std::vector<char>> res;
+    std::vector<Blob> blobs = extract_internal(blob);
+    for(int i=0; i<blobs.size(); i++)
+    {
+        Blob blob = blobs[i];
+        StampBase & stamp = stamps[i];
+        std::vector<char> v = stamp.ExtractBin(blob);
+        res.push_back(v);
+    }
+    return res;
+}
+
 int
 GalleyVector::minSize()
 {
