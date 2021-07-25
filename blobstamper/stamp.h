@@ -27,8 +27,8 @@ class StampFixed : public StampBase
   protected:
      int  size;
   public:
-    virtual int  minSize() {return size;}
-    virtual int  maxSize() {return size;}
+    virtual int  minSize() override {return size;}
+    virtual int  maxSize() override {return size;}
 
     std::vector<char> ExtractBin(Blob &blob) override;
 };
@@ -39,8 +39,8 @@ class StampVariated : public StampBase
      int  min_size;
      int  max_size;
   public:
-    virtual int  minSize() {return min_size;}
-    virtual int  maxSize() {return max_size;}
+    virtual int  minSize() override {return min_size;}
+    virtual int  maxSize() override {return max_size;}
 };
 
 class StampUnbounded : public StampBase
@@ -48,8 +48,8 @@ class StampUnbounded : public StampBase
   protected:
      int  min_size;
   public:
-    virtual int  minSize() {return min_size;}
-    virtual int  maxSize() {return -1;}
+    virtual int  minSize() override {return min_size;}
+    virtual int  maxSize() override {return -1;}
 };
 
 #endif  /* STAMP_H */

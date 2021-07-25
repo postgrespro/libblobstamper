@@ -33,7 +33,7 @@ main()
     /* Test that ShiftSingleStampStr shifts ok with StampTwoChars stamp */
     { /* 1..3 */
         std::string expected1 = "12";
-        char* expected2 = "34567";
+        char expected2[] = "34567";
 
 
         Blob blob(short_sample, strlen(short_sample));
