@@ -60,16 +60,17 @@ GalleySeries::ExtractBin(Blob &blob)
 std::list<Blob>
 GalleySeries::extract_internal(Blob &blob)
 {
+  if (blob.Size()<stamp.minSize())
+  {
+     throw OutOfData(); /* FIXME: May be later add option that allows empty lists if needed*/
+  }
   std::list<Blob> res;
-
   if (stamp.isFixedSize())
   {
     int size = stamp.minSize();
-    while (1)
+    while (blob.Size() >= size)
     {
       Blob el = blob.ShiftBytes(size);
-      if (el.isEmpty())
-        break;
       res.push_back(el);
     }
   }
@@ -201,7 +202,7 @@ GalleyVector::extract_internal(Blob &blob)
 
     if(fixed_total_size > blob.Size()) /* Not enought data case*/
     {
-       return res;
+       throw OutOfData();
     }
 
     int avaliable_nonfixed_size = blob.Size() - fixed_total_size; /* The ammount of data available for non-fixed part of variated or unbounded stamps*/

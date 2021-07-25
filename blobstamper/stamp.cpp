@@ -15,13 +15,7 @@
 std::vector<char>
 StampFixed::ExtractBin(Blob &blob)
 {
-    Blob blob2 = blob.ShiftBytes(size);
-
-    if (blob2.isEmpty())  /* original blob does not have enought data */
-    {
-        std::vector<char> empty(0);
-        return empty;
-    }
-    return blob2.asVector();
+    std::vector<char> res = blob.ChopBlank(*this);
+    return res;
 }
 

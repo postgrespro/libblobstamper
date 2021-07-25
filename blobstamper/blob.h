@@ -22,11 +22,20 @@ class Blob
         size_t Size();
         void Dump();
         Blob ShiftBytes(size_t n);
+        std::vector<char> ChopBlank(StampBase &stmp);
         void DataDup(char *& data_out, size_t& size_out);
         std::vector<char> asVector();
 
+
         std::vector<char> ShiftSingleStampBin(StampBase &stmp);
         std::string  ShiftSingleStampStr(StampBase &stmp);
+
+
+};
+
+class OutOfData  /*An exeption. Experemental for now*/
+{
+
 };
 
 #endif /*BLOB_H*/

@@ -31,13 +31,12 @@ Blob::Dump()
 Blob
 Blob::ShiftBytes(size_t n)
 {
-    if (begin + n - 1 > end)
+    if (this->Size() < n)
     {
-        Blob empty(NULL, -1);
-        return empty; /* not enough data */
+        throw OutOfData();
     }
 
-    Blob new_blob(data, size);
+    Blob new_blob(this->data, size);
 
     new_blob.begin = begin;   /* FIXME this should go private once */
     new_blob.end = begin + n - 1;
@@ -46,6 +45,29 @@ Blob::ShiftBytes(size_t n)
 
     return new_blob;
 }
+
+std::vector<char>
+Blob::ChopBlank(StampBase &stamp)
+{
+    if (stamp.minSize() > this->Size())
+    {
+        throw OutOfData();
+    }
+    size_t res_size;
+    if (stamp.isUnbounded())
+    {
+        res_size = this->Size();
+    } else
+    {
+        res_size = stamp.maxSize();
+        if (res_size > this->Size())
+            res_size = this->Size();
+    }
+    std::vector<char> res((char*)this->data + this->begin, (char*)this->data + this->begin + res_size);
+    this->begin += res_size;
+    return res;
+}
+
 
 size_t
 Blob::Size()
@@ -77,9 +99,9 @@ Blob::DataDup(char *& data_out, size_t& size_out)
 std::vector<char>
 Blob::asVector()
 {
-  std::vector<char> res(Size());
+  std::vector<char> res( (char *)data + begin, (char*)data + begin + Size());
 
-  memcpy(&res[0], data + begin, Size());
+//  memcpy(&res[0], data + begin, Size());
   return res;
 }
 

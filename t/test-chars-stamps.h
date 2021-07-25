@@ -51,23 +51,15 @@ StampSeveralChars::StampSeveralChars()
 std::string
 StampSeveralChars::ExtractStr(Blob &blob)
 {
-    if (blob.Size() < min_size)
-        return "";
-    char * buf;
-    size_t size = max_size;
-    if (blob.Size() < max_size)
-        size = blob.Size();
 
-    Blob blob2 = blob.ShiftBytes(size);
-    if (blob2.isEmpty())
-        return "";
-
-    /* Save shited data as string */
+    std::vector<char> data = blob.ChopBlank(*this);
+    /* Save optained data as string */
     /* NEVER do this in prod, as in real live blob is binary and may have 0 in the middle of it */
-    size_t buf_size;
-    blob2.DataDup(buf, buf_size);
-    buf = (char *) realloc((void *)buf, buf_size + 1);
-    buf[buf_size] = '\0';
+    char * buf;
+    buf = (char *) malloc(data.size() + 1);
+    memcpy((void *) buf, (void *) &data[0], data.size());
+    buf[data.size()] = '\0';
+
     std::string res = buf;
     free(buf);
 
@@ -97,8 +89,6 @@ StampTwoCharsList::ExtractStr(Blob &blob)
         if (!res.empty()) res = res + ", ";
         res = res + point;
     }
-
-    if (res.empty())  return "";
 
     res = "(" + res + ")";
     return res;

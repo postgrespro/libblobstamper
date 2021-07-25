@@ -53,8 +53,19 @@ main()
     { /* 7 */
         /* Check that shifting too many bytes return empty result */
         Blob blob(my_data, strlen(my_data));
-        Blob blob_res = blob.ShiftBytes(99999);
-        ok(blob_res.isEmpty(), "Shifting too many bytes gives empty result");
+        try
+        {
+          Blob blob_res = blob.ShiftBytes(99999);
+          ok(false, "Shift too many bytes");
+        }
+        catch (OutOfData)
+        {
+          ok(true, "Shift too many bytes");
+        }
+        catch (...) //Any othe exeption
+        {
+          ok(false, "Shift too many bytes");
+        }
     }
 
 

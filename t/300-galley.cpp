@@ -434,10 +434,18 @@ main()
         stamps.push_back(f_stamp);
 
         GalleyVector galley(stamps);
-        std::vector<std::string> res = galley.ExtractStr(blob);
-        std::string str;
-
-        is(res.size(), 0, "GalleyVector, mixed type stamps 4: Fails when not enught data");
+        try{
+          std::vector<std::string> res = galley.ExtractStr(blob);
+          ok(false, "Galley Vector, not enough data");
+        }
+        catch (OutOfData)
+        {
+          ok(true, "Galley Vector, not enough data");
+        }
+        catch (...) //Any other exeption
+        {
+          ok(false, "Galley Vector, not enough data");
+        }
 
         is(blob.Size(), strlen(sample) , "GalleyVector 4: will use keep all data when applying galley fails");
 

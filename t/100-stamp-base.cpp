@@ -28,7 +28,7 @@ main()
     char *ptr;
     size_t size;
 
-    TEST_START(8);
+    TEST_START(10);
 
     /* Test that ShiftSingleStampStr shifts ok with StampTwoChars stamp */
     { /* 1..3 */
@@ -82,10 +82,54 @@ main()
 
         is(str, "12345678", "variated size stamp shifts as much data as it can (take two)");
 
-        str = blob.ShiftSingleStampStr(stamp);
-        is(str, "", "variated size stamp refuses to stamp when it is offered too few data");
+        try {
+          std::string str = blob.ShiftSingleStampStr(stamp);
+          ok(false, "Variated stamp, not enough data");
+        }
+        catch (OutOfData)
+        {
+          ok(true, "Variated stamp, not enough data");
+        }
+        catch (...) //Any other exeption
+        {
+          ok(false, "Variated stamp, not enough data");
+        }
     }
 
+    {  /* 9 */
+        char sample[]="1";
+        Blob blob(sample, strlen(sample));
+        StampTwoChars stamp;
+        try {
+          std::string str = blob.ShiftSingleStampStr(stamp);
+          ok(false, "Fixed stamp, not enough data");
+        }
+        catch (OutOfData)
+        {
+          ok(true, "Fixed stamp, not enough data");
+        }
+        catch (...) //Any other exeption
+        {
+          ok(false, "Fixed stamp, not enough data");
+        }
+    }
 
+    {  /* 10 */
+        char sample[]="1";
+        Blob blob(sample, strlen(sample));
+        StampTwoCharsList stamp;
+        try {
+          std::string str = blob.ShiftSingleStampStr(stamp);
+          ok(false, "Unbounded stamp, not enough data");
+        }
+        catch (OutOfData)
+        {
+          ok(true, "Unbounded stamp, not enough data");
+        }
+        catch (...) //Any other exeption
+        {
+          ok(false, "Unbounded stamp, not enough data");
+        }
+    }
     TEST_END;
 }
