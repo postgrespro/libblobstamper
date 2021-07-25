@@ -15,6 +15,7 @@ TEST_GOALS := ./00-sanity.t \
 ./300-galley.t \
 ./500-stamp-pg-type-geo.t \
 ./501-stamp-pg-type-ts.t \
+./700-pg-type-wrapper.t\
 
 all: build-libtappp $(TEST_GOALS)
 
