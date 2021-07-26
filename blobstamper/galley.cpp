@@ -157,7 +157,7 @@ GalleySeries::extract_internal(Blob &blob)
 /**********************************************/
 
 std::vector<Blob>
-GalleyVector::extract_internal(Blob &blob)
+GalleySet::extract_internal(Blob &blob)
 {
     std::vector<Blob> res;
     int fixed_total_size = 0;       // Summ of sizes of fixed parts of all stamps
@@ -323,7 +323,7 @@ GalleyVector::extract_internal(Blob &blob)
 }
 
 std::vector<std::string>
-GalleyVector::ExtractStr(Blob &blob)
+GalleySet::ExtractStr(Blob &blob)
 {
     std::vector<std::string> res;
     std::vector<Blob> blobs = extract_internal(blob);
@@ -338,7 +338,7 @@ GalleyVector::ExtractStr(Blob &blob)
 }
 
 std::vector<std::vector<char>>
-GalleyVector::ExtractBin(Blob &blob)
+GalleySet::ExtractBin(Blob &blob)
 {
     std::vector<std::vector<char>> res;
     std::vector<Blob> blobs = extract_internal(blob);
@@ -353,7 +353,7 @@ GalleyVector::ExtractBin(Blob &blob)
 }
 
 int
-GalleyVector::minSize()
+GalleySet::minSize()
 {
     bool has_variated_stamps = false;
     bool has_unbounded_stamps = false;
@@ -390,7 +390,7 @@ GalleyVector::minSize()
 }
 
 int
-GalleyVector::maxSize()
+GalleySet::maxSize()
 {
     int res = 0;
 

@@ -154,7 +154,7 @@ main()
 
     }
 
-    /* Test Galley Vector with fixed size stamps*/
+    /* Test GalleySet with fixed size stamps*/
     {  /* 19 .. 22*/
 
         char sample[]="z1234567*89abcde&fghijklm";
@@ -170,25 +170,25 @@ main()
         stamps.push_back(stamp);
         stamps.push_back(stamp);
 
-        GalleyVector galley(stamps);
+        GalleySet galley(stamps);
 
         std::vector<std::string> res = galley.ExtractStr(blob);
         std::string str;
         str = res[0];
-        is(str, expected1, "GalleyVector, fixed size string stamps: First element of vector is ok");
+        is(str, expected1, "GalleySet, fixed size string stamps: First element of vector is ok");
 
         str = res[1];
-        is(str, expected2, "GalleyVector, fixed size string stamps: Second element of vector is ok");
+        is(str, expected2, "GalleySet, fixed size string stamps: Second element of vector is ok");
 
-        is(res.size(), 2, "GalleyVector, fixed size string stamps: The vector has only two elements ");
+        is(res.size(), 2, "GalleySet, fixed size string stamps: The vector has only two elements ");
 
-        is(blob.Size(), strlen(sample) - res[0].length() - res[1].length(), "GalleyVector: shifts no extra bytes for fixed stamps");
+        is(blob.Size(), strlen(sample) - res[0].length() - res[1].length(), "GalleySet: shifts no extra bytes for fixed stamps");
 
-        is(galley.minSize(), stamp.minSize()*2, "GalleyVector, fixed size string stamps: galley min size is ok");
-        is(galley.maxSize(), stamp.maxSize()*2, "GalleyVector, fixed size string stamps: galley max size is ok");
+        is(galley.minSize(), stamp.minSize()*2, "GalleySet, fixed size string stamps: galley min size is ok");
+        is(galley.maxSize(), stamp.maxSize()*2, "GalleySet, fixed size string stamps: galley max size is ok");
     }
 
-    /* Test Galley Vector with variated size stamps*/
+    /* Test Galley Set with variated size stamps*/
     {  /* 25 .. 30*/
 
         char sample[]="z1234567*89abcde&fghijklm";
@@ -203,26 +203,26 @@ main()
         stamps.push_back(stamp);
         stamps.push_back(stamp);
 
-        GalleyVector galley(stamps);
+        GalleySet galley(stamps);
 
         std::vector<std::string> res = galley.ExtractStr(blob);
         std::string str;
 
         str = res[0];
-        is(str, expected1, "GalleyVector, variated size string stamp: First element of vector is ok");
+        is(str, expected1, "GalleySet, variated size string stamp: First element of vector is ok");
 
         str = res[1];
-        is(str, expected2, "GalleyVector, variated size string stamp: Second element of vector is ok");
+        is(str, expected2, "GalleySet, variated size string stamp: Second element of vector is ok");
 
-        is(res.size(), 2, "GalleyVector, variated size string stamp: The vector has only two elements ");
+        is(res.size(), 2, "GalleySet, variated size string stamp: The vector has only two elements ");
 
-        is(blob.Size(), strlen(sample) - res[0].length() - res[1].length() - ORACLE_SIZE*2, "GalleyVector: shifts one oracle for each variated stamps");
+        is(blob.Size(), strlen(sample) - res[0].length() - res[1].length() - ORACLE_SIZE*2, "GalleySet: shifts one oracle for each variated stamps");
 
-        is(galley.minSize(), stamp.minSize()*2 + ORACLE_SIZE * 2, "GalleyVector, variated size string stamps: galley min size is ok");
-        is(galley.maxSize(), stamp.maxSize()*2 + ORACLE_SIZE * 2, "GalleyVector, variated size string stamps: galley max size is ok");
+        is(galley.minSize(), stamp.minSize()*2 + ORACLE_SIZE * 2, "GalleySet, variated size string stamps: galley min size is ok");
+        is(galley.maxSize(), stamp.maxSize()*2 + ORACLE_SIZE * 2, "GalleySet, variated size string stamps: galley max size is ok");
     }
 
-    /* Test Galley Vector with unbounded size stamps*/
+    /* Test Galley Set with unbounded size stamps*/
     {  /* 31 .. 36*/
 
         char sample[]="z1234567*89abcde&fghijklm";
@@ -237,27 +237,27 @@ main()
         stamps.push_back(stamp);
         stamps.push_back(stamp);
 
-        GalleyVector galley(stamps);
+        GalleySet galley(stamps);
 
         std::vector<std::string> res = galley.ExtractStr(blob);
         std::string str;
 
         str = res[0];
-        is(str, expected1, "GalleyVector, unbounded size string stamp: First element of vector is ok");
+        is(str, expected1, "GalleySet, unbounded size string stamp: First element of vector is ok");
 
         str = res[1];
-        is(str, expected2, "GalleyVector, unbounded size string stamp: Second element of vector is ok");
+        is(str, expected2, "GalleySet, unbounded size string stamp: Second element of vector is ok");
 
-        is(res.size(), 2, "GalleyVector, unbounded size string stamp: The vector has only two elements ");
+        is(res.size(), 2, "GalleySet, unbounded size string stamp: The vector has only two elements ");
 
-        is(blob.Size(), 0 , "GalleyVector: will use all data for unbounded stamp");
+        is(blob.Size(), 0 , "GalleySet: will use all data for unbounded stamp");
 
-        is(galley.minSize(), stamp.minSize()*2 + ORACLE_SIZE * 2, "GalleyVector, unbounded size string stamps: galley min size is ok");
-        is(galley.maxSize(), -1, "GalleyVector, unbounded size string stamps: galley max size is ok");
+        is(galley.minSize(), stamp.minSize()*2 + ORACLE_SIZE * 2, "GalleySet, unbounded size string stamps: galley min size is ok");
+        is(galley.maxSize(), -1, "GalleySet, unbounded size string stamps: galley max size is ok");
 
     }
 
-    /* Test Galley Vector with mixed stam types */
+    /* Test Galley Set with mixed stam types */
     {  /* 37 .. 46*/
 
         char sample[]="z1234567*89abcde&fghijklmnopqrstuvwxyzAB%CDEFGHIJKLMNOPQRSTUVWXYZ!";
@@ -284,38 +284,38 @@ main()
         stamps.push_back(u_stamp);
         stamps.push_back(f_stamp);
 
-        GalleyVector galley(stamps);
+        GalleySet galley(stamps);
 
         std::vector<std::string> res = galley.ExtractStr(blob);
         std::string str;
 
         str = res[0];
-        is(str, expected1, "GalleyVector, mixed type stamps: First unbounded stamp is ok");
+        is(str, expected1, "GalleySet, mixed type stamps: First unbounded stamp is ok");
 
         str = res[1];
-        is(str, expected2, "GalleyVector, mixed type stamps: Fist varieded stamp is ok");
+        is(str, expected2, "GalleySet, mixed type stamps: Fist varieded stamp is ok");
 
         str = res[2];
-        is(str, expected3, "GalleyVector, mixed type stamps: Second variated stamp is ok");
+        is(str, expected3, "GalleySet, mixed type stamps: Second variated stamp is ok");
 
         str = res[3];
-        is(str, expected4, "GalleyVector, mixed type stamps: First fixed stamp is ok");
+        is(str, expected4, "GalleySet, mixed type stamps: First fixed stamp is ok");
 
         str = res[4];
-        is(str, expected5, "GalleyVector, mixed type stamps: Second unbounded stamp is ok");
+        is(str, expected5, "GalleySet, mixed type stamps: Second unbounded stamp is ok");
 
         str = res[5];
-        is(str, expected6, "GalleyVector, mixed type stamps: Second fixed stamp is ok");
+        is(str, expected6, "GalleySet, mixed type stamps: Second fixed stamp is ok");
 
-        is(res.size(), 6, "GalleyVector, mixed type stamps: The vector has only six elements ");
+        is(res.size(), 6, "GalleySet, mixed type stamps: The vector has only six elements ");
 
-        is(blob.Size(), 0 , "GalleyVector: will use all data if we have at least one unbounded stamp");
+        is(blob.Size(), 0 , "GalleySet: will use all data if we have at least one unbounded stamp");
 
-        is(galley.minSize(), (f_stamp.minSize()+v_stamp.minSize()+u_stamp.minSize())*2 + ORACLE_SIZE * (2+2+1), "GalleyVector, mixed types stamps: galley min size is ok");
-        is(galley.maxSize(), -1, "GalleyVector, mixed types stamps: galley max size is ok");
+        is(galley.minSize(), (f_stamp.minSize()+v_stamp.minSize()+u_stamp.minSize())*2 + ORACLE_SIZE * (2+2+1), "GalleySet, mixed types stamps: galley min size is ok");
+        is(galley.maxSize(), -1, "GalleySet, mixed types stamps: galley max size is ok");
     }
 
-    /* Test Galley Vector, single unbounded stamp will use all data with no oracle to predict it*/
+    /* Test Galley Set, single unbounded stamp will use all data with no oracle to predict it*/
     {  /* 47 .. 53*/
 
         char sample[]="z1234567*89abcde&fghijklmnopqrstuvwxyzAB%CDEFGHIJKLMNOPQRSTUVWXYZ!";
@@ -335,29 +335,29 @@ main()
         stamps.push_back(u_stamp);
         stamps.push_back(f_stamp);
 
-        GalleyVector galley(stamps);
+        GalleySet galley(stamps);
 
         std::vector<std::string> res = galley.ExtractStr(blob);
         std::string str;
 
         str = res[0];
-        is(str, expected1, "GalleyVector, mixed type stamps 2: First unbounded stamp is ok");
+        is(str, expected1, "GalleySet, mixed type stamps 2: First unbounded stamp is ok");
 
         str = res[1];
-        is(str, expected2, "GalleyVector, mixed type stamps 2: Fist varieded stamp is ok");
+        is(str, expected2, "GalleySet, mixed type stamps 2: Fist varieded stamp is ok");
 
         str = res[2];
-        is(str, expected3, "GalleyVector, mixed type stamps 2: Second variated stamp is ok");
+        is(str, expected3, "GalleySet, mixed type stamps 2: Second variated stamp is ok");
 
-        is(res.size(), 3, "GalleyVector, mixed type stamps 2: The vector has only three elements ");
+        is(res.size(), 3, "GalleySet, mixed type stamps 2: The vector has only three elements ");
 
-        is(blob.Size(), 0 , "GalleyVector 2: will use all data if we have at least one unbounded stamp");
+        is(blob.Size(), 0 , "GalleySet 2: will use all data if we have at least one unbounded stamp");
 
-        is(galley.minSize(), f_stamp.minSize()*2 + u_stamp.minSize() , "GalleyVector 2, mixed types stamps: galley min size is ok");
-        is(galley.maxSize(), -1, "GalleyVector, mixed types stamps 2: galley max size is ok");
+        is(galley.minSize(), f_stamp.minSize()*2 + u_stamp.minSize() , "GalleySet 2, mixed types stamps: galley min size is ok");
+        is(galley.maxSize(), -1, "GalleySet, mixed types stamps 2: galley max size is ok");
     }
 
-    /* Test Galley Vector, when there are only minimal amound of data available */
+    /* Test Galley Set, when there are only minimal amound of data available */
     {  /* 54 .. 63*/
 
         char sample[] = "oo" "oo" "oo" "oo" "oo" "z1" "23" "45" "67" "89" "ab";
@@ -383,38 +383,38 @@ main()
         stamps.push_back(u_stamp);
         stamps.push_back(f_stamp);
 
-        GalleyVector galley(stamps);
+        GalleySet galley(stamps);
 
         std::vector<std::string> res = galley.ExtractStr(blob);
         std::string str;
 
         str = res[0];
-        is(str, expected1, "GalleyVector, mixed type stamps 3: First unbounded stamp is ok");
+        is(str, expected1, "GalleySet, mixed type stamps 3: First unbounded stamp is ok");
 
         str = res[1];
-        is(str, expected2, "GalleyVector, mixed type stamps 3: Fist varieded stamp is ok");
+        is(str, expected2, "GalleySet, mixed type stamps 3: Fist varieded stamp is ok");
 
         str = res[2];
-        is(str, expected3, "GalleyVector, mixed type stamps 3: Second variated stamp is ok");
+        is(str, expected3, "GalleySet, mixed type stamps 3: Second variated stamp is ok");
 
         str = res[3];
-        is(str, expected4, "GalleyVector, mixed type stamps 3: First fixed stamp is ok");
+        is(str, expected4, "GalleySet, mixed type stamps 3: First fixed stamp is ok");
 
         str = res[4];
-        is(str, expected5, "GalleyVector, mixed type stamps 3: Second unbounded stamp is ok");
+        is(str, expected5, "GalleySet, mixed type stamps 3: Second unbounded stamp is ok");
 
         str = res[5];
-        is(str, expected6, "GalleyVector, mixed type stamps 3: Second fixed stamp is ok");
+        is(str, expected6, "GalleySet, mixed type stamps 3: Second fixed stamp is ok");
 
-        is(res.size(), 6, "GalleyVector, mixed type stamps 3: The vector has only six elements ");
+        is(res.size(), 6, "GalleySet, mixed type stamps 3: The vector has only six elements ");
 
-        is(blob.Size(), 0 , "GalleyVector 3: will use all data if we have at least one unbounded stamp");
+        is(blob.Size(), 0 , "GalleySet 3: will use all data if we have at least one unbounded stamp");
 
-        is(galley.minSize(), (f_stamp.minSize()+v_stamp.minSize()+u_stamp.minSize())*2 + ORACLE_SIZE * (2+2+1), "GalleyVector, mixed types stamps 3: galley min size is ok");
-        is(galley.maxSize(), -1, "GalleyVector, mixed types stamps 3: galley max size is ok");
+        is(galley.minSize(), (f_stamp.minSize()+v_stamp.minSize()+u_stamp.minSize())*2 + ORACLE_SIZE * (2+2+1), "GalleySet, mixed types stamps 3: galley min size is ok");
+        is(galley.maxSize(), -1, "GalleySet, mixed types stamps 3: galley max size is ok");
     }
 
-    /* Test Galley Vector, when there are not enought data */
+    /* Test Galley Set, when there are not enought data */
     {  /* 64 .. 67*/
 
         char sample[] = "oo" "oo" "oo" "oo" "oo" "z1" "23" "45" "67" "89" "a";
@@ -433,24 +433,24 @@ main()
         stamps.push_back(u_stamp);
         stamps.push_back(f_stamp);
 
-        GalleyVector galley(stamps);
+        GalleySet galley(stamps);
         try{
           std::vector<std::string> res = galley.ExtractStr(blob);
-          ok(false, "Galley Vector, not enough data");
+          ok(false, "GalleySet, not enough data");
         }
         catch (OutOfData)
         {
-          ok(true, "Galley Vector, not enough data");
+          ok(true, "GalleySet, not enough data");
         }
         catch (...) //Any other exeption
         {
-          ok(false, "Galley Vector, not enough data");
+          ok(false, "GalleySet, not enough data");
         }
 
-        is(blob.Size(), strlen(sample) , "GalleyVector 4: will use keep all data when applying galley fails");
+        is(blob.Size(), strlen(sample) , "GalleySet 4: will use keep all data when applying galley fails");
 
-        is(galley.minSize(), (f_stamp.minSize()+v_stamp.minSize()+u_stamp.minSize())*2 + ORACLE_SIZE * (2+2+1), "GalleyVector, mixed types stamps 4: galley min size is ok");
-        is(galley.maxSize(), -1, "GalleyVector, mixed types stamps 4: galley max size is ok");
+        is(galley.minSize(), (f_stamp.minSize()+v_stamp.minSize()+u_stamp.minSize())*2 + ORACLE_SIZE * (2+2+1), "GalleySet, mixed types stamps 4: galley min size is ok");
+        is(galley.maxSize(), -1, "GalleySet, mixed types stamps 4: galley max size is ok");
     }
     TEST_END;
 }

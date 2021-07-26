@@ -36,12 +36,12 @@ class GalleySeries : public GalleyBase
     int maxSize() override {return -1;}; /* Sereies always takes as much data as it can take */
 };
 
-class GalleyVector : public GalleyBase
+class GalleySet : public GalleyBase
 {
   protected:
     std::vector<std::reference_wrapper<StampBase>> stamps;
   public:
-    GalleyVector(std::vector<std::reference_wrapper<StampBase>> arg) : stamps(arg) {};
+    GalleySet(std::vector<std::reference_wrapper<StampBase>> arg) : stamps(arg) {};
     std::vector<Blob> extract_internal(Blob &blob);
     std::vector<std::string> ExtractStr(Blob &blob);
     std::vector<std::vector<char>> ExtractBin(Blob &blob);
