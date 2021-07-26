@@ -31,11 +31,11 @@ GalleySeries::minSize()
 
 
 
-std::list<std::string>
+std::vector<std::string>
 GalleySeries::ExtractStr(Blob &blob)
 {
-  std::list<std::string> res;
-  std::list<Blob> blobs = extract_internal(blob);
+  std::vector<std::string> res;
+  std::vector<Blob> blobs = extract_internal(blob);
   for(Blob blob : blobs)
   {
     std::string str= blob.ShiftSingleStampStr(stamp);
@@ -44,11 +44,11 @@ GalleySeries::ExtractStr(Blob &blob)
   return res;
 }
 
-std::list<std::vector<char>>
+std::vector<std::vector<char>>
 GalleySeries::ExtractBin(Blob &blob)
 {
-  std::list<std::vector<char>> res;
-  std::list<Blob> blobs = extract_internal(blob);
+  std::vector<std::vector<char>> res;
+  std::vector<Blob> blobs = extract_internal(blob);
   for(Blob blob : blobs)
   {
     std::vector<char> data = blob.ShiftSingleStampBin(stamp);
@@ -57,14 +57,14 @@ GalleySeries::ExtractBin(Blob &blob)
   return res;
 }
 
-std::list<Blob>
+std::vector<Blob>
 GalleySeries::extract_internal(Blob &blob)
 {
   if (blob.Size()<stamp.minSize())
   {
      throw OutOfData(); /* FIXME: May be later add option that allows empty lists if needed*/
   }
-  std::list<Blob> res;
+  std::vector<Blob> res;
   if (stamp.isFixedSize())
   {
     int size = stamp.minSize();

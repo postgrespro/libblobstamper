@@ -28,9 +28,9 @@ class GalleySeries : public GalleyBase
     StampBase &stamp;
   public:
     GalleySeries(StampBase & stamp_arg) : stamp(stamp_arg) {};
-    std::list<Blob> extract_internal(Blob &blob);
-    std::list<std::string> ExtractStr(Blob &blob);
-    std::list<std::vector<char>> ExtractBin(Blob &blob);
+    std::vector<Blob> extract_internal(Blob &blob);
+    std::vector<std::string> ExtractStr(Blob &blob);
+    std::vector<std::vector<char>> ExtractBin(Blob &blob);
 
     int minSize() override;
     int maxSize() override {return -1;}; /* Sereies always takes as much data as it can take */
