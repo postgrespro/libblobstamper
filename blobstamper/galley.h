@@ -36,6 +36,29 @@ class GalleyVector : public GalleyBase
     int maxSize() override {return -1;}; /* Sereies always takes as much data as it can take */
 };
 
+template<class T, class StampT> class GalleyVectorV: public GalleyVector
+{
+    StampT& v_stamp;
+  public:
+    GalleyVectorV(StampT stamp_arg): GalleyVector(stamp_arg), v_stamp(stamp_arg)  {};
+    std::vector<T> ExtractValues(Blob &blob);
+};
+
+
+template<class T, class StampT> std::vector<T>
+GalleyVectorV<T, StampT>::ExtractValues(Blob &blob)
+{
+  std::vector<Blob> blobs = extract_internal(blob);
+  std::vector<T> res(blobs.size());
+
+  for(int i=0; i<blobs.size(); i++)
+  {
+    res[i] = v_stamp.ExtractValue(blobs[i]);
+  }
+  return res;
+}
+
+
 class GalleySet : public GalleyBase
 {
   protected:

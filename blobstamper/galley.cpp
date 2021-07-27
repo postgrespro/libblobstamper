@@ -34,12 +34,12 @@ GalleyVector::minSize()
 std::vector<std::string>
 GalleyVector::ExtractStr(Blob &blob)
 {
-  std::vector<std::string> res;
   std::vector<Blob> blobs = extract_internal(blob);
-  for(Blob blob : blobs)
+  std::vector<std::string> res(blobs.size());
+
+  for(int i = 0; i<blobs.size(); i++)
   {
-    std::string str= blob.ShiftSingleStampStr(stamp);
-    res.push_back(str);
+    res[i] = blobs[i].ShiftSingleStampStr(stamp);
   }
   return res;
 }
@@ -47,12 +47,12 @@ GalleyVector::ExtractStr(Blob &blob)
 std::vector<std::vector<char>>
 GalleyVector::ExtractBin(Blob &blob)
 {
-  std::vector<std::vector<char>> res;
   std::vector<Blob> blobs = extract_internal(blob);
-  for(Blob blob : blobs)
+  std::vector<std::vector<char>> res(blobs.size());
+
+  for(int i = 0; i<blobs.size(); i++)
   {
-    std::vector<char> data = blob.ShiftSingleStampBin(stamp);
-    res.push_back(data);
+    res[i] = blobs[i].ShiftSingleStampBin(stamp);
   }
   return res;
 }

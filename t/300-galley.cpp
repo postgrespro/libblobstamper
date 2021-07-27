@@ -19,7 +19,7 @@ char longer_sample[]="z1234567*89abcde&fghijklmnopqrstuvwxyzAB%CDEFGHIJKLMNOPQRS
 int
 main()
     {
-    TEST_START(67);
+    TEST_START(68);
     /* Test Galley Sereies with fixed size stampp*/
     { /* 1..4 */
         std::string expected1 = "12";
@@ -89,8 +89,18 @@ main()
         is(res.size(),3, "GalleyVector, fixed size binary stamp: result has 3 elements");
     }
 
+    { /* 14 */
+
+        signed int sample[] = {1, -2, -30, 40, -55, 6};
+        StampArithm<signed int> stamp;
+        GalleyVectorV<signed int, StampArithm<signed int>> galley(stamp);
+        Blob blob((char*)sample, sizeof(sample));
+        std::vector<signed int> res = galley.ExtractValues(blob);
+        ok(!memcmp((void*) &sample, (void *) &res[0], sizeof(sample)), "GalleyVectorV returns ok");
+    }
+
     /* Test Galley Sereies with variated size stamp*/
-    {  /* 14 .. 18*/
+    {  /* 15 .. 19*/
         /* This is not the best test, as we do not predict behavior by setting forged sample values,
           but at least here we check that it work the same way it worked before. May be this test should be improved later*/
 
@@ -118,7 +128,7 @@ main()
     }
 
     /* Test GalleySet with fixed size stamps*/
-    {  /* 19 .. 22*/
+    {  /* 20 .. 23*/
 
         char sample[]="z1234567*89abcde&fghijklm";
 
@@ -152,7 +162,7 @@ main()
     }
 
     /* Test Galley Set with variated size stamps*/
-    {  /* 25 .. 30*/
+    {  /* 26 .. 31*/
 
         char sample[]="z1234567*89abcde&fghijklm";
 
@@ -186,7 +196,7 @@ main()
     }
 
     /* Test Galley Set with unbounded size stamps*/
-    {  /* 31 .. 36*/
+    {  /* 32 .. 37*/
 
         char sample[]="z1234567*89abcde&fghijklm";
 
@@ -219,7 +229,7 @@ main()
     }
 
     /* Test Galley Set with mixed stam types */
-    {  /* 37 .. 46*/
+    {  /* 38 .. 47*/
 
         char sample[]="z1234567*89abcde&fghijklmnopqrstuvwxyzAB%CDEFGHIJKLMNOPQRSTUVWXYZ!";
 
@@ -277,7 +287,7 @@ main()
     }
 
     /* Test Galley Set, single unbounded stamp will use all data with no oracle to predict it*/
-    {  /* 47 .. 53*/
+    {  /* 48 .. 54*/
 
         char sample[]="z1234567*89abcde&fghijklmnopqrstuvwxyzAB%CDEFGHIJKLMNOPQRSTUVWXYZ!";
 
@@ -319,7 +329,7 @@ main()
     }
 
     /* Test Galley Set, when there are only minimal amound of data available */
-    {  /* 54 .. 63*/
+    {  /* 55 .. 64*/
 
         char sample[] = "oo" "oo" "oo" "oo" "oo" "z1" "23" "45" "67" "89" "ab";
 
@@ -376,7 +386,7 @@ main()
     }
 
     /* Test Galley Set, when there are not enought data */
-    {  /* 64 .. 67*/
+    {  /* 65 .. 68*/
 
         char sample[] = "oo" "oo" "oo" "oo" "oo" "z1" "23" "45" "67" "89" "a";
 

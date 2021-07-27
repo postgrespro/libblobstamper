@@ -21,7 +21,6 @@ class StampBase
     virtual std::string ExtractStr(Blob &blob)  {printf ("Not implemented"); exit(1);}
 };
 
-
 class StampFixed : public StampBase
 {
   protected:
