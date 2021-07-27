@@ -22,12 +22,12 @@ class GalleyBase
 
 };
 
-class GalleySeries : public GalleyBase
+class GalleyVector : public GalleyBase
 {
   protected:
     StampBase &stamp;
   public:
-    GalleySeries(StampBase & stamp_arg) : stamp(stamp_arg) {};
+    GalleyVector(StampBase & stamp_arg) : stamp(stamp_arg) {};
     std::vector<Blob> extract_internal(Blob &blob);
     std::vector<std::string> ExtractStr(Blob &blob);
     std::vector<std::vector<char>> ExtractBin(Blob &blob);

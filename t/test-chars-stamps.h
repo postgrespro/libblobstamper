@@ -70,7 +70,7 @@ class StampTwoCharsList: public StampUnbounded
 {
   protected:
     StampTwoChars el_stamp;
-    GalleySeries galley;
+    GalleyVector galley;
   public:
     std::string ExtractStr(Blob &blob) override;
     StampTwoCharsList(): el_stamp {}, galley {el_stamp} {};

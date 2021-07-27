@@ -10,7 +10,7 @@
 
 
 int
-GalleySeries::minSize()
+GalleyVector::minSize()
 {
   if (stamp.isFixedSize())
   {
@@ -32,7 +32,7 @@ GalleySeries::minSize()
 
 
 std::vector<std::string>
-GalleySeries::ExtractStr(Blob &blob)
+GalleyVector::ExtractStr(Blob &blob)
 {
   std::vector<std::string> res;
   std::vector<Blob> blobs = extract_internal(blob);
@@ -45,7 +45,7 @@ GalleySeries::ExtractStr(Blob &blob)
 }
 
 std::vector<std::vector<char>>
-GalleySeries::ExtractBin(Blob &blob)
+GalleyVector::ExtractBin(Blob &blob)
 {
   std::vector<std::vector<char>> res;
   std::vector<Blob> blobs = extract_internal(blob);
@@ -58,7 +58,7 @@ GalleySeries::ExtractBin(Blob &blob)
 }
 
 std::vector<Blob>
-GalleySeries::extract_internal(Blob &blob)
+GalleyVector::extract_internal(Blob &blob)
 {
   if (blob.Size()<stamp.minSize())
   {
