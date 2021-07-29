@@ -29,11 +29,14 @@ class Blob
 
         std::vector<char> ShiftSingleStampBin(StampBase &stmp);
         std::string  ShiftSingleStampStr(StampBase &stmp);
-
-
 };
 
 class OutOfData  /*An exeption. Experemental for now*/
+{
+
+};
+
+class NotImplemented  /*An exeption */
 {
 
 };

@@ -93,7 +93,7 @@ main()
 
         signed int sample[] = {1, -2, -30, 40, -55, 6};
         StampArithm<signed int> stamp;
-        GalleyVectorV<signed int, StampArithm<signed int>> galley(stamp);
+        GalleyVectorV<signed int> galley(stamp);
         Blob blob((char*)sample, sizeof(sample));
         std::vector<signed int> res = galley.ExtractValues(blob);
         ok(!memcmp((void*) &sample, (void *) &res[0], sizeof(sample)), "GalleyVectorV returns ok");

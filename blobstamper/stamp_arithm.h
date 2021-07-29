@@ -3,13 +3,14 @@
 
 #include <string>
 #include "helpers.h"
+#include "stamp.h"
 
-template<class T> class StampArithm: public StampFixed
+template<class T> class StampArithm: public StampFixed, public StampBaseT<T>
 {
   public:
     StampArithm() { size = sizeof(T);};
-    std::string ExtractStr(Blob &blob) override;
-    T ExtractValue(Blob &blob);
+    virtual std::string ExtractStr(Blob &blob) override;
+    virtual T ExtractValue(Blob &blob) override;
 };
 
 template<class T> std::string
@@ -30,10 +31,6 @@ template<class T> T
 StampArithm<T>::ExtractValue(Blob &blob)
 {
   std::vector<char> v = ExtractBin(blob);
-  if (v.size() == 0)
-  {
-    /* FIXME exeption should be here */
-  }
   T *pT = (T *) &v[0];
   return *pT;
 }

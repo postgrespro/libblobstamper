@@ -17,11 +17,18 @@ class StampBase
     bool isVariated()  {return ! isFixedSize() && ! isUnbounded();}
     bool isUnbounded() {return maxSize() == -1;}
 
-    virtual std::vector<char> ExtractBin(Blob &blob)  {printf ("Not implemented"); exit(1);}
-    virtual std::string ExtractStr(Blob &blob)  {printf ("Not implemented"); exit(1);}
+    virtual std::vector<char> ExtractBin(Blob &blob)  {throw NotImplemented();};
+    virtual std::string ExtractStr(Blob &blob)  {throw NotImplemented();};
 };
 
-class StampFixed : public StampBase
+
+template<class T> class StampBaseT: public virtual StampBase
+{
+  public:
+    virtual T ExtractValue(Blob &blob) = 0;/* Shoud be defined by derived classes*/
+};
+
+class StampFixed : public virtual StampBase
 {
   protected:
      int  size;
@@ -32,7 +39,7 @@ class StampFixed : public StampBase
     std::vector<char> ExtractBin(Blob &blob) override;
 };
 
-class StampVariated : public StampBase
+class StampVariated : public virtual StampBase
 {
   protected:
      int  min_size;
@@ -42,7 +49,7 @@ class StampVariated : public StampBase
     virtual int  maxSize() override {return max_size;}
 };
 
-class StampUnbounded : public StampBase
+class StampUnbounded : public virtual StampBase
 {
   protected:
      int  min_size;
