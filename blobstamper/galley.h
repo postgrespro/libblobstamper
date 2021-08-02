@@ -38,9 +38,9 @@ class GalleyVector : public GalleyBase
 
 template<class T> class GalleyVectorV: public GalleyVector
 {
-    StampBaseT<T>& v_stamp;
+    StampBaseV<T>& v_stamp;
   public:
-    GalleyVectorV(StampBaseT<T> & stamp_arg): GalleyVector(stamp_arg), v_stamp(stamp_arg)  {};
+    GalleyVectorV(StampBaseV<T> & stamp_arg): GalleyVector(stamp_arg), v_stamp(stamp_arg)  {};
     std::vector<T> ExtractValues(Blob &blob);
 };
 

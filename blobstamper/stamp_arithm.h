@@ -5,7 +5,7 @@
 #include "helpers.h"
 #include "stamp.h"
 
-template<class T> class StampArithm: public StampFixed, public StampBaseT<T>
+template<class T> class StampArithm: public StampFixed, public StampBaseV<T>
 {
   public:
     StampArithm() { size = sizeof(T);};

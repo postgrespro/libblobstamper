@@ -22,11 +22,18 @@ class StampBase
 };
 
 
-template<class T> class StampBaseT: public virtual StampBase
+template<class T> class StampBaseV: public virtual StampBase
 {
   public:
     virtual T ExtractValue(Blob &blob) = 0;/* Shoud be defined by derived classes*/
 };
+
+template<class T> class StampBasePV: public virtual StampBase
+{
+  public:
+    virtual T* ExtractValue(Blob &blob) = 0;/* Shoud be defined by derived classes*/
+};
+
 
 class StampFixed : public virtual StampBase
 {
