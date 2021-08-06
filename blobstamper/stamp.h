@@ -28,8 +28,18 @@ template<class T> class StampBasePV: public virtual StampBase
 {
   public:
     virtual sized_ptr<T> ExtractPValue(Blob &blob) = 0;/* Shoud be defined by derived classes*/
+    virtual std::vector<char> ExtractBin(Blob &blob) override;
 };
 
+/* If we have pointer and size, we can represent it std::vector<char> for free */
+template<class T> std::vector<char>
+StampBasePV<T>::ExtractBin(Blob &blob)
+{
+  sized_ptr<T> sp = this->ExtractPValue(blob);
+  T* pval = sp;
+  std::vector<char> v((char *) pval, (char *) pval + sp.size());
+  return v;
+}
 
 template<class T> class StampBaseV: public StampBasePV<T>
 {
