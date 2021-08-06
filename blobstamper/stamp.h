@@ -6,6 +6,8 @@
 #include <list>
 #include <vector>
 
+#include "helpers.h"
+
 
 class StampBase
 {
@@ -22,17 +24,32 @@ class StampBase
 };
 
 
-template<class T> class StampBaseV: public virtual StampBase
-{
-  public:
-    virtual T ExtractValue(Blob &blob) = 0;/* Shoud be defined by derived classes*/
-};
-
 template<class T> class StampBasePV: public virtual StampBase
 {
   public:
-    virtual T* ExtractValue(Blob &blob) = 0;/* Shoud be defined by derived classes*/
+    virtual sized_ptr<T> ExtractPValue(Blob &blob) = 0;/* Shoud be defined by derived classes*/
 };
+
+
+template<class T> class StampBaseV: public StampBasePV<T>
+{
+  public:
+    virtual T ExtractValue(Blob &blob) = 0;/* Shoud be defined by derived classes*/
+    virtual sized_ptr<T> ExtractPValue(Blob &blob) override;
+};
+
+template<class T> sized_ptr<T>
+StampBaseV<T>::ExtractPValue(Blob &blob)
+{
+  T* p = (T*) malloc(sizeof(T));
+  *p = ExtractValue(blob);
+  sized_ptr<T> res(p,sizeof(T));
+  return res;
+}
+
+
+
+
 
 
 class StampFixed : public virtual StampBase

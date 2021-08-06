@@ -17,10 +17,10 @@ using namespace TAP;
 /* Tests for atomic type stamps */
 
 char      sample_data_char[] = "Some string";
-short int sample_data_int16[] = {1,     -2,   -3,   4, 555, 66};
-int       sample_data_int32[] = {10,   -20, - 30,  40, 500, 6};
-long long sample_data_int64[] = {100, -200, -300, 400, 5,   6};
-double    sample_data_double[] =  {1.4142, 2, 3.1415, 4.2e01, 5, 6, 7};
+short int sample_data_int16[] =  {1,     -2,     -3,     4, 555, 66,  777, 8};
+int       sample_data_int32[] =  {10,   -20,   - 30,    40, 500,  6,   77, 888};
+long long sample_data_int64[] =  {100, -200,   -300,   400,   5,  6, 7000, 808};
+double    sample_data_double[] = {1.4142, 2, 3.1415, 4.2e01,  5,  6, 7};
 
 int
 main()
@@ -30,10 +30,10 @@ main()
     size_t sample_data_int64_size = sizeof(sample_data_int64);
     size_t sample_data_double_size = sizeof(double) * 7;
 
-    TEST_START(21);
+    TEST_START(29);
 
     /* Check that Bin and Str Char stamps works well */
-    { /* 1, 2, 3 */
+    { /* 1..4 */
         Blob blob(sample_data_char, strlen(sample_data_char));
         StampArithm<char> stamp;
         std::vector<char> v = blob.ShiftSingleStampBin(stamp);
@@ -45,10 +45,14 @@ main()
 
         char c = stamp.ExtractValue(blob);
         is(c, 'm' , "extract char as value works well");
+
+        sized_ptr<char> sp =stamp.ExtractPValue(blob);
+        char * p = sp;
+        is(*p, 'e', "Extract poiner to value works well");
     }
 
     /* Check that Bin and Srt Int16 stamps works well */
-    { /* 4, 5, 6, 7, 8 */
+    { /* 5..11 */
         Blob blob((char *)sample_data_int16, sample_data_int16_size);
         StampArithm<short int> stamp;
         std::vector<char> v = blob.ShiftSingleStampBin(stamp);
@@ -68,10 +72,18 @@ main()
 
         signed short int si = stamp_signed.ExtractValue(blob);
         is(si, 555, "Extract signed int16 as value");
+
+        sized_ptr<unsigned short int> usp =stamp_unsigned.ExtractPValue(blob);
+        unsigned short int * up = usp;
+        is(*up, 66, "Extract poiner to value for unsigned int16 works well");
+
+        sized_ptr<signed short int> ssp =stamp_signed.ExtractPValue(blob);
+        signed short int * sp = ssp;
+        is(*sp, 777, "Extract poiner to value for signed int16 works well");
     }
 
     /* Check that Bin and Srt Int32 stamps works well */
-    { /* 9, 10, 11, 12, 13 */
+    { /*  12..18 */
         Blob blob((char *)sample_data_int32, sample_data_int32_size);
         StampArithm<int> stamp;
 
@@ -94,11 +106,18 @@ main()
         signed int si = stamp_signed.ExtractValue(blob);
         is(si, 500, "Extract signed int32 as value");
 
+        sized_ptr<unsigned int> usp =stamp_unsigned.ExtractPValue(blob);
+        unsigned int * up = usp;
+        is(*up, 6, "Extract poiner to value for unsigned int32 works well");
+
+        sized_ptr<signed int> ssp =stamp_signed.ExtractPValue(blob);
+        signed int * sp = ssp;
+        is(*sp, 77, "Extract poiner to value for signed int32 works well");
     }
 
 
     /* Check that Bin and Srt Int64 stamps works well */
-    { /* 14, 15, 16, 17, 18 */
+    { /* 19..25 */
         Blob blob((char *)sample_data_int64, sample_data_int64_size);
         StampArithm<long long> stamp;
 
@@ -120,10 +139,19 @@ main()
 
         signed long long si = stamp_signed.ExtractValue(blob);
         is(si, 5, "Extract signed int32 as value");
+
+        sized_ptr<unsigned long long> usp =stamp_unsigned.ExtractPValue(blob);
+        unsigned  long long * up = usp;
+        is(*up, 6, "Extract poiner to value for unsigned int64 works well");
+
+        sized_ptr<signed  long long> ssp =stamp_signed.ExtractPValue(blob);
+        signed  long long * sp = ssp;
+        is(*sp, 7000, "Extract poiner to value for signed int64 works well");
+
     }
 
     /* Test Double stamp */
-    { /* 19, 20, 21 */
+    { /* 26..29 */
         Blob blob((char *)sample_data_double, sample_data_double_size);
         StampArithm<double> stamp;
         std::vector<char> v = blob.ShiftSingleStampBin(stamp);
@@ -135,6 +163,11 @@ main()
 
         double d = stamp.ExtractValue(blob);
         is(d, 3.1415, "Extract double as value");
+
+        sized_ptr<double> sp =stamp.ExtractPValue(blob);
+        double * p = sp;
+        is(*p, 42, "Extract poiner to value for double works well");
+
     }
     TEST_END;
 }
