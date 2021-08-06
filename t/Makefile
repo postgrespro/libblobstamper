@@ -8,6 +8,7 @@ PREFIX := /usr/local
 LIBRARY_VAR := LD_LIBRARY_PATH
 TEST_GOALS := ./00-sanity.t \
 ./001-blob-generic.t \
+./050-sized_prt_and_vsato_ptr.t \
 ./100-stamp-base.t \
 ./110-stamp-arithm.t \
 ./120-stamp_dict.t \
