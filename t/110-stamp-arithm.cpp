@@ -36,6 +36,7 @@ main()
     { /* 1..4 */
         Blob blob(sample_data_char, strlen(sample_data_char));
         StampArithm<char> stamp;
+
         std::vector<char> v = blob.ShiftSingleStampBin(stamp);
         char * pc = (char *) &v[0];
         is(*pc, 'S' , "Bin Char stamp works well");

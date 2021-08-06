@@ -30,8 +30,8 @@ StampArithm<T>::ExtractStr(Blob &blob)
 template<class T> T
 StampArithm<T>::ExtractValue(Blob &blob)
 {
-  std::vector<char> v = ExtractBin(blob);
-  T *pT = (T *) &v[0];
+  std::vector<char> v = blob.ChopBlank(*this);  /* Chop out blank of maxSize */
+  T *pT = (T *) &v[0]; /* And interpret it as value of arithmetic type */
   return *pT;
 }
 

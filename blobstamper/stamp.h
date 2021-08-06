@@ -35,6 +35,7 @@ template<class T> class StampBaseV: public StampBasePV<T>
 {
   public:
     virtual T ExtractValue(Blob &blob) = 0;/* Shoud be defined by derived classes*/
+    virtual std::vector<char> ExtractBin(Blob &blob) override;
     virtual sized_ptr<T> ExtractPValue(Blob &blob) override;
 };
 
@@ -47,10 +48,14 @@ StampBaseV<T>::ExtractPValue(Blob &blob)
   return res;
 }
 
-
-
-
-
+/* If we have value, we can represent it as binary */
+template<class T> std::vector<char>
+StampBaseV<T>::ExtractBin(Blob &blob)
+{
+  T value = this->ExtractValue(blob);
+  std::vector<char> v((char *) &value, (char *) &value + sizeof(T));
+  return v;
+}
 
 class StampFixed : public virtual StampBase
 {
@@ -59,8 +64,6 @@ class StampFixed : public virtual StampBase
   public:
     virtual int  minSize() override {return size;}
     virtual int  maxSize() override {return size;}
-
-    std::vector<char> ExtractBin(Blob &blob) override;
 };
 
 class StampVariated : public virtual StampBase
