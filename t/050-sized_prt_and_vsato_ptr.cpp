@@ -27,7 +27,7 @@ typedef struct
 
 
 int main() {
-    TEST_START(10);
+    TEST_START(9);
 
     // #tests for sized_ptr
     { /* 1..3 */
@@ -45,17 +45,16 @@ int main() {
 //      free(l); /*Do not need to free it. sized_ptr will do it for you*/
     }
     { /* 4..10 */
-       is(sizeof(FixedLengthObject), sizeof(VariableLengthObject), "sizes sainity check VLATO_prt expects this to be true");
-       VLATO_ptr<VariableLengthObject, short int> vp(5);
+       VLATO_ptr<VariableLengthObject, short int> vp(offsetof(VariableLengthObject,arr), 5);
        is(vp.length(), 5, "Number of elements is ok");
-       is(vp.size(), sizeof(VariableLengthObject) + sizeof(short int) *5, "Size of object is ok");
+       is(vp.size(), offsetof(VariableLengthObject,arr) + sizeof(short int) *5, "Size of object is ok");
        VariableLengthObject *p1 = vp;
        p1->arr[4]=100;
 
        sized_ptr<VariableLengthObject> sp = vp; // from now on vp does not exit
        VariableLengthObject *p2 = vp;
        ok(!p2, "now vp should not point anywere");
-       is(sp.size(), sizeof(VariableLengthObject) + sizeof(short int) *5, "Size of sized object is ok");
+       is(sp.size(), offsetof(VariableLengthObject,arr) + sizeof(short int) *5, "Size of sized object is ok");
 
        VariableLengthObject *p3 = sp;
        ok(p1 == p3, "Still same object");

@@ -95,24 +95,28 @@ template<class T, class ArrayT> class VLATO_ptr
   private:
     T* _ptr{nullptr};
     size_t _length;
+    size_t _offset;
   public:
 
     operator T*() const {return _ptr;};
     operator sized_ptr<T>() {sized_ptr<T> res(_ptr,size()); _ptr=NULL; return res;};
 
     size_t length() {return _length;};
-    size_t size()   {return sizeof(T) + _length * sizeof(ArrayT);};
-    VLATO_ptr(size_t length);
-    VLATO_ptr(T* ptr, size_t length): _ptr{ptr}, _length{length} {};
+    size_t offset() {return _offset;};
+    size_t size()   {return _offset + _length * sizeof(ArrayT);};
+
+    VLATO_ptr(size_t offsrt, size_t length);
+    VLATO_ptr(T* ptr, size_t offset, size_t length): _ptr{ptr}, _offset{offset}, _length{length} {};
     ~VLATO_ptr() {if (_ptr) free(_ptr);}
 };
 
 
 template<class T, class ArrayT>
-VLATO_ptr<T,ArrayT>::VLATO_ptr(size_t length)
+VLATO_ptr<T,ArrayT>::VLATO_ptr(size_t offset, size_t length)
 {
-  _ptr = (T*) malloc(sizeof(T) + sizeof(ArrayT) * length);
+  _ptr = (T*) malloc( offset + sizeof(ArrayT) * length);
   _length = length;
+  _offset = offset;
 }
 
 
