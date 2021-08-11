@@ -13,16 +13,11 @@ blobstamper/stamp_arithm.o \
 blobstamper/stamp_dict.o \
 blobstamper/galley.o \
 blobstamper/dict.o \
-blobstamper/stamp_pg_type_geo.o \
-blobstamper/stamp_pg_type_ts.o \
-
-WRAPPERS_OBJ = pg_op_wrappers.o
-
 
 .PHONY: all blob-stamper-all blob-stamper-clean clean test
 
 #all: blob-stamper-all test_dict $(WRAPPERS_OBJ)
-all: blob-stamper-all $(WRAPPERS_OBJ)
+all: blob-stamper-all
 	@echo All done!
 
 blob-stamper-all:
