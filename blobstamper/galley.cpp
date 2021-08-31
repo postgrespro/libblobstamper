@@ -129,6 +129,14 @@ GalleyVector::extract_internal(Blob &blob)
         size_oracles.push_back(o);
         size_oracle_total += o;
       }
+      if (size_oracle_total == 0) /* special case: if total size is zero (means all oracles are zero) we will spread data evenly between all items*/
+      {
+        for(int i = 0; i<count_target; i++)
+        {
+          size_oracles[i] = 1;
+          size_oracle_total += 1;
+        }
+      }
 
       /* Calculating available vairable size, that will be destributed between parts according to size oracles */
       int data_size = blob.Size();
