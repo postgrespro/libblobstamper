@@ -132,7 +132,7 @@ template<class T, class ArrayT> class VLATO_ptr
 template<class T, class ArrayT>
 VLATO_ptr<T,ArrayT>::VLATO_ptr(size_t offset, size_t length)
 {
-  _ptr = (T*) malloc( offset + sizeof(ArrayT) * length);
+  _ptr = (T*) malloc( offset + sizeof(ArrayT) * length -1);
   _length = length;
   _offset = offset;
 }
