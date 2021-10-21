@@ -27,7 +27,7 @@
 
 
 int
-GalleyVector::minSize()
+GalleyVectorBase::minSize()
 {
   if (stamp.isFixedSize())
   {
@@ -49,33 +49,33 @@ GalleyVector::minSize()
 
 
 std::vector<std::string>
-GalleyVector::ExtractStr(Blob &blob)
+GalleyVectorStr::ExtractStr(Blob &blob)
 {
   std::vector<Blob> blobs = extract_internal(blob);
   std::vector<std::string> res(blobs.size());
 
   for(int i = 0; i<blobs.size(); i++)
   {
-    res[i] = blobs[i].ShiftSingleStampStr(stamp);
+    res[i] = s_stamp.ExtractStr(blobs[i]);
   }
   return res;
 }
 
 std::vector<std::vector<char>>
-GalleyVector::ExtractBin(Blob &blob)
+GalleyVectorBin::ExtractBin(Blob &blob)
 {
   std::vector<Blob> blobs = extract_internal(blob);
   std::vector<std::vector<char>> res(blobs.size());
 
   for(int i = 0; i<blobs.size(); i++)
   {
-    res[i] = blobs[i].ShiftSingleStampBin(stamp);
+    res[i] = b_stamp.ExtractBin(blobs[i]);
   }
   return res;
 }
 
 std::vector<Blob>
-GalleyVector::extract_internal(Blob &blob)
+GalleyVectorBase::extract_internal(Blob &blob)
 {
   if (blob.Size()<stamp.minSize())
   {
@@ -182,7 +182,7 @@ GalleyVector::extract_internal(Blob &blob)
 /**********************************************/
 
 std::vector<Blob>
-GalleySet::extract_internal(Blob &blob)
+GalleySetBase::extract_internal(Blob &blob)
 {
     std::vector<Blob> res;
     int fixed_total_size = 0;       // Summ of sizes of fixed parts of all stamps
@@ -348,29 +348,29 @@ GalleySet::extract_internal(Blob &blob)
 }
 
 std::vector<std::string>
-GalleySet::ExtractStr(Blob &blob)
+GalleySetStr::ExtractStr(Blob &blob)
 {
     std::vector<std::string> res;
     std::vector<Blob> blobs = extract_internal(blob);
     for(int i=0; i<blobs.size(); i++)
     {
         Blob blob = blobs[i];
-        StampBase & stamp = stamps[i];
-        std::string str= blob.ShiftSingleStampStr(stamp);
+        StampBaseStr & stamp = s_stamps[i];
+        std::string str= stamp.ExtractStr(blob);
         res.push_back(str);
     }
     return res;
 }
 
 std::vector<std::vector<char>>
-GalleySet::ExtractBin(Blob &blob)
+GalleySetBin::ExtractBin(Blob &blob)
 {
     std::vector<std::vector<char>> res;
     std::vector<Blob> blobs = extract_internal(blob);
     for(int i=0; i<blobs.size(); i++)
     {
         Blob blob = blobs[i];
-        StampBase & stamp = stamps[i];
+        StampBaseBin & stamp = b_stamps[i];
         std::vector<char> v = stamp.ExtractBin(blob);
         res.push_back(v);
     }
@@ -378,7 +378,7 @@ GalleySet::ExtractBin(Blob &blob)
 }
 
 int
-GalleySet::minSize()
+GalleySetBase::minSize()
 {
     bool has_variated_stamps = false;
     bool has_unbounded_stamps = false;
@@ -415,7 +415,7 @@ GalleySet::minSize()
 }
 
 int
-GalleySet::maxSize()
+GalleySetBase::maxSize()
 {
     int res = 0;
 

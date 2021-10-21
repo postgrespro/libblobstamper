@@ -23,7 +23,7 @@
 #include "helpers.h"
 #include "stamp.h"
 
-template<class T> class StampArithm: public StampFixed, public StampBaseV<T>
+template<class T> class StampArithm: public StampFixed, public StampBaseStr, public StampBaseV<T>
 {
   public:
     StampArithm() { size = sizeof(T);};

@@ -26,24 +26,24 @@
 #include "stamp_arithm.h"
 #include "dict.h"
 
-class StampDict: public StampFixed
+class StampDict: public StampFixed, public StampBaseStr
 {
   protected:
-    StampArithm<char>  stamp8;
+    StampArithm<unsigned char>  stamp8;
     StampArithm<unsigned short int> stamp16;
     StampArithm<unsigned int> stamp32;
     StampArithm<unsigned long long> stamp64;
-    StampFixed& stamp;
+    int stamp_size;
     DictBase& dict;
     unsigned long long stamp_max_value;
 
-    StampFixed& GuessStamp(DictBase & dict);
+    int ChooseStampSize(DictBase & dict);
 
   public:
-    StampDict(DictBase & dict_arg) : dict{dict_arg},  stamp{GuessStamp(dict_arg)} {};
+    StampDict(DictBase & dict_arg) : dict{dict_arg},  stamp_size{ChooseStampSize(dict_arg)} {};
     std::string ExtractStr(Blob &blob) override;
-    int  minSize() override {return stamp.minSize();}
-    int  maxSize() override {return stamp.maxSize();}
+    int  minSize() override {return stamp_size;}
+    int  maxSize() override {return stamp_size;}
 };
 
 #endif /* STAMP_DICT_H */

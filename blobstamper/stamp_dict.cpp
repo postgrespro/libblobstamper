@@ -21,26 +21,26 @@
 #include "stamp_arithm.h"
 #include "stamp_dict.h"
 
-StampFixed&
-StampDict::GuessStamp(DictBase & dict)
+int
+StampDict::ChooseStampSize(DictBase & dict)
 {
     if (dict.size()<= UCHAR_MAX+1)
     {
         stamp_max_value = UCHAR_MAX;
-        return stamp8;
+        return 1;
     }
     if (dict.size()<= USHRT_MAX+1)
     {
         stamp_max_value = USHRT_MAX;
-        return stamp16;
+        return 2;
     }
     if (dict.size()<= UINT_MAX+1)
     {
         stamp_max_value = UINT_MAX;
-        return stamp32;
+        return 4;
     }
     stamp_max_value = ULONG_MAX;
-    return stamp64;
+    return 8;
 }
 
 std::string
@@ -49,38 +49,30 @@ StampDict::ExtractStr(Blob &blob)
     unsigned long long index_oracle;
 
     /* Shifting index oracle according to size of dictionary index variable*/
-    switch (stamp.minSize())
+    switch (stamp_size)
     {
        case 1:
        {
-          std::vector<char> v = blob.ShiftSingleStampBin(stamp);
-          unsigned char * i =  (unsigned char *) &v[0];
-          index_oracle = * i;
+          index_oracle = stamp8.ExtractValue(blob);
           break;
        }
        case 2:
        {
-          std::vector<char> v = blob.ShiftSingleStampBin(stamp);
-          unsigned short int * i = (unsigned short int *) &v[0];
-          index_oracle = * i;
+          index_oracle = stamp16.ExtractValue(blob);
           break;
        }
        case 4:
        {
-          std::vector<char> v = blob.ShiftSingleStampBin(stamp);
-          unsigned int * i = ( unsigned int *) &v[0];
-          index_oracle = * i;
+          index_oracle = stamp32.ExtractValue(blob);
           break;
        }
        case 8:
        {
-          std::vector<char> v = blob.ShiftSingleStampBin(stamp);
-          unsigned long long * i = ( unsigned long long *) &v[0];
-          index_oracle = * i;
+          index_oracle = stamp64.ExtractValue(blob);
           break;
        }
        default:
-         printf("StampDict::ExtractStr: Something is really wrong\n");
+         printf("StampDict::ExtractStr: Something is really wrong\n"); // FIXME better to throw something here :-)
          exit(1);
     }
     long long actual_index = ((double) index_oracle) / stamp_max_value * dict.size();

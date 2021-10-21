@@ -35,13 +35,24 @@ class StampBase
     bool isFixedSize() {return minSize() == maxSize();}
     bool isVariated()  {return ! isFixedSize() && ! isUnbounded();}
     bool isUnbounded() {return maxSize() == -1;}
-
-    virtual std::vector<char> ExtractBin(Blob &blob)  {throw NotImplemented();};
-    virtual std::string ExtractStr(Blob &blob)  {throw NotImplemented();};
 };
 
 
-template<class T> class StampBasePV: public virtual StampBase
+class StampBaseStr: public virtual StampBase
+{
+  public:
+    virtual std::string ExtractStr(Blob &blob) = 0;
+};
+
+
+class StampBaseBin: public virtual StampBase
+{
+  public:
+    virtual std::vector<char> ExtractBin(Blob &blob) = 0;
+};
+
+
+template<class T> class StampBasePV: public StampBaseBin
 {
   public:
     virtual sized_ptr<T> ExtractPValue(Blob &blob) = 0;/* Shoud be defined by derived classes*/

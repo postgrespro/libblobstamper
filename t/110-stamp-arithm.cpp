@@ -55,11 +55,13 @@ main()
         Blob blob(sample_data_char, strlen(sample_data_char));
         StampArithm<char> stamp;
 
-        std::vector<char> v = blob.ShiftSingleStampBin(stamp);
+        std::vector<char> v = stamp.ExtractBin(blob);
+
         char * pc = (char *) &v[0];
         is(*pc, 'S' , "Bin Char stamp works well");
 
-        std::string s = blob.ShiftSingleStampStr(stamp);
+        std::string s = stamp.ExtractStr(blob);
+
         is(s, "111" , "Str UInt8 stamp works well");  // 'o'==111
 
         char c = stamp.ExtractValue(blob);
@@ -74,16 +76,16 @@ main()
     { /* 5..11 */
         Blob blob((char *)sample_data_int16, sample_data_int16_size);
         StampArithm<short int> stamp;
-        std::vector<char> v = blob.ShiftSingleStampBin(stamp);
+        std::vector<char> v = stamp.ExtractBin(blob);
         short int * pi = (short int *) &v[0];
         is(*pi,  1 , "Bin Int16 stamp works well");
 
         StampArithm<unsigned short int> stamp_unsigned;
-        std::string s = blob.ShiftSingleStampStr(stamp_unsigned);
+        std::string s = stamp_unsigned.ExtractStr(blob);
         is(s, "65534" , "Str UInt16 stamp works well");  // (unsigned short int)-2 == 65534
 
         StampArithm<signed short int> stamp_signed;
-        s = blob.ShiftSingleStampStr(stamp_signed);
+        s = stamp_signed.ExtractStr(blob);
         is(s, "-3" , "Str SInt16 stamp works well");
 
         unsigned short int ui = stamp_unsigned.ExtractValue(blob);
@@ -106,17 +108,17 @@ main()
         Blob blob((char *)sample_data_int32, sample_data_int32_size);
         StampArithm<int> stamp;
 
-        std::vector<char> v = blob.ShiftSingleStampBin(stamp);
+        std::vector<char> v = stamp.ExtractBin(blob);
 
         int * i = (int *) &v[0];
         is(*i,  10 , "Bin Int32 stamp works well");
 
         StampArithm<unsigned int> stamp_unsigned;
-        std::string s = blob.ShiftSingleStampStr(stamp_unsigned);
+        std::string s = stamp_unsigned.ExtractStr(blob);
         is(s, "4294967276" , "Str UInt32 stamp works well");  // (unsigned short int)-20 == 4294967276
 
         StampArithm<signed int> stamp_signed;
-        s = blob.ShiftSingleStampStr(stamp_signed);
+        s = stamp_signed.ExtractStr(blob);
         is(s, "-30" , "Str SInt32 stamp works well");
 
         unsigned int ui = stamp_unsigned.ExtractValue(blob);
@@ -140,17 +142,17 @@ main()
         Blob blob((char *)sample_data_int64, sample_data_int64_size);
         StampArithm<long long> stamp;
 
-        std::vector<char> v = blob.ShiftSingleStampBin(stamp);
+        std::vector<char> v = stamp.ExtractBin(blob);
 
         long long * i = (long long *) &v[0];
         is(*i,  100 , "Bin Int64 stamp works well");
 
         StampArithm<unsigned long long> stamp_unsigned;
-        std::string s = blob.ShiftSingleStampStr(stamp_unsigned);
+        std::string s = stamp_unsigned.ExtractStr(blob);
         is(s, "18446744073709551416" , "Str UInt64 stamp works well");  // (unsigned short int)-200 == 18446744073709551416
 
         StampArithm<signed long long> stamp_signed;
-        s = blob.ShiftSingleStampStr(stamp_signed);
+        s = stamp_signed.ExtractStr(blob);;
         is(s, "-300" , "Str SInt64 stamp works well");
 
         unsigned long long ui = stamp_unsigned.ExtractValue(blob);
@@ -173,11 +175,11 @@ main()
     { /* 26..29 */
         Blob blob((char *)sample_data_double, sample_data_double_size);
         StampArithm<double> stamp;
-        std::vector<char> v = blob.ShiftSingleStampBin(stamp);
+        std::vector<char> v = stamp.ExtractBin(blob);
         double *pd = (double *) &v[0];
         is(*pd, 1.4142, "Bin Double stamp works well");
 
-        std::string res = blob.ShiftSingleStampStr(stamp);
+        std::string res = stamp.ExtractStr(blob);
         is(res, "2", "Str Double stamp works well");
 
         double d = stamp.ExtractValue(blob);

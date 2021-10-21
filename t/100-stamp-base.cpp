@@ -56,7 +56,7 @@ main()
 
         Blob blob(short_sample, strlen(short_sample));
         StampTwoChars stamp;
-        std::string str = blob.ShiftSingleStampStr(stamp);
+        std::string str = stamp.ExtractStr(blob);
         is(str, expected1, "ShiftSingleStampStr: shifts ok");
 
         blob.DataDup(ptr,size);
@@ -71,7 +71,7 @@ main()
         std::string expected1 = "12";
         Blob blob(sample_two_bytes, strlen(sample_two_bytes));
         StampTwoChars stamp;
-        std::string str = blob.ShiftSingleStampStr(stamp);
+        std::string str = stamp.ExtractStr(blob);
         is(str, expected1, "ShiftSingleStampStr: shifts first two bytes ok");
     }
     /* Checks for variated size stamps*/
@@ -82,11 +82,11 @@ main()
        StampSeveralChars stamp; /* accepts from 2 to 8 bytes*/
 
        /* If used alone, is shifts as much bytes as it can. When blob has a lot, it shifts maxSize bytes */
-        std::string str = blob.ShiftSingleStampStr(stamp);
+        std::string str = stamp.ExtractStr(blob);
 
         is(str, "12345678", "variated size stamp shifts as much data as it can");
 
-        str = blob.ShiftSingleStampStr(stamp);
+        str = stamp.ExtractStr(blob);
         is(str, "90", "but will be satisfied with less, unless it is not less than minSize()");
     }
 
@@ -96,12 +96,12 @@ main()
        StampSeveralChars stamp; /* accepts from 2 to 8 bytes*/
 
        /* If used alone, is shifts as much bytes as it can. When blob has a lot, it shifts maxSize bytes */
-        std::string str = blob.ShiftSingleStampStr(stamp);
+        std::string str = stamp.ExtractStr(blob);
 
         is(str, "12345678", "variated size stamp shifts as much data as it can (take two)");
 
         try {
-          std::string str = blob.ShiftSingleStampStr(stamp);
+          std::string str = stamp.ExtractStr(blob);
           ok(false, "Variated stamp, not enough data");
         }
         catch (OutOfData)
@@ -119,7 +119,7 @@ main()
         Blob blob(sample, strlen(sample));
         StampTwoChars stamp;
         try {
-          std::string str = blob.ShiftSingleStampStr(stamp);
+          std::string str = stamp.ExtractStr(blob);
           ok(false, "Fixed stamp, not enough data");
         }
         catch (OutOfData)
@@ -137,7 +137,7 @@ main()
         Blob blob(sample, strlen(sample));
         StampTwoCharsList stamp;
         try {
-          std::string str = blob.ShiftSingleStampStr(stamp);
+          std::string str = stamp.ExtractStr(blob);
           ok(false, "Unbounded stamp, not enough data");
         }
         catch (OutOfData)

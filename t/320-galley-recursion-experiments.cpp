@@ -104,7 +104,7 @@ VariantPicker(my_refvector<Variants> ref_vec, unsigned char seed)
   /* FIXME here we should solve case when there in no variants. Now it will segfault here */
   last_variant->SetVariantSelected(last_variant->GetVariantCount()-1);
 
-  return ref_vec.back(); /*FIXME here should set last variant!!!*/
+  return ref_vec.back(); 
 }
 
 std::vector<unsigned int>

@@ -45,7 +45,7 @@ main()
         std::string expected3 = "56";
 
         StampTwoChars stamp;
-        GalleyVector galley(stamp);
+        GalleyVectorStr galley(stamp);
         Blob blob(short_sample, strlen(short_sample));
         std::vector<std::string> res = galley.ExtractStr(blob);
 
@@ -66,7 +66,7 @@ main()
 
         Blob blob(longer_sample, strlen(longer_sample));
         StampTwoCharsList stamp_charlist;
-        GalleyVector galley(stamp_charlist);
+        GalleyVectorStr galley(stamp_charlist);
 
         std::vector<std::string> res = galley.ExtractStr(blob);
         std::string str;
@@ -85,7 +85,7 @@ main()
         unsigned short int expected3 = (unsigned char) '6' * 256 +(unsigned char) '5';
 
         StampArithm<unsigned short int> stamp;
-        GalleyVector galley(stamp);
+        GalleyVectorBin galley(stamp);
         Blob blob(short_sample, strlen(short_sample));
         std::vector<std::vector<char>> res = galley.ExtractBin(blob);
 
@@ -131,7 +131,7 @@ main()
 
         Blob blob(sample, strlen(sample));
         StampSeveralChars stamp;
-        GalleyVector galley(stamp);
+        GalleyVectorStr galley(stamp);
 
         std::vector<std::string> res = galley.ExtractStr(blob);
         std::string str;
@@ -157,11 +157,11 @@ main()
         Blob blob(sample, strlen(sample));
 
         StampTwoChars stamp;
-        std::vector<std::reference_wrapper<StampBase>> stamps;
+        std::vector<std::reference_wrapper<StampBaseStr>> stamps;
         stamps.push_back(stamp);
         stamps.push_back(stamp);
 
-        GalleySet galley(stamps);
+        GalleySetStr galley(stamps);
 
         std::vector<std::string> res = galley.ExtractStr(blob);
         std::string str;
@@ -190,11 +190,11 @@ main()
         Blob blob(sample, strlen(sample));
 
         StampSeveralChars stamp;
-        std::vector<std::reference_wrapper<StampBase>> stamps;
+        std::vector<std::reference_wrapper<StampBaseStr>> stamps;
         stamps.push_back(stamp);
         stamps.push_back(stamp);
 
-        GalleySet galley(stamps);
+        GalleySetStr galley(stamps);
 
         std::vector<std::string> res = galley.ExtractStr(blob);
         std::string str;
@@ -224,11 +224,11 @@ main()
         Blob blob(sample, strlen(sample));
 
         StampTwoCharsList stamp;
-        std::vector<std::reference_wrapper<StampBase>> stamps;
+        std::vector<std::reference_wrapper<StampBaseStr>> stamps;
         stamps.push_back(stamp);
         stamps.push_back(stamp);
 
-        GalleySet galley(stamps);
+        GalleySetStr galley(stamps);
 
         std::vector<std::string> res = galley.ExtractStr(blob);
         std::string str;
@@ -265,7 +265,7 @@ main()
         StampSeveralChars v_stamp;
         StampTwoCharsList u_stamp;
 
-        std::vector<std::reference_wrapper<StampBase>> stamps;
+        std::vector<std::reference_wrapper<StampBaseStr>> stamps;
         stamps.push_back(u_stamp);
         stamps.push_back(v_stamp);
         stamps.push_back(v_stamp);
@@ -273,7 +273,7 @@ main()
         stamps.push_back(u_stamp);
         stamps.push_back(f_stamp);
 
-        GalleySet galley(stamps);
+        GalleySetStr galley(stamps);
 
         std::vector<std::string> res = galley.ExtractStr(blob);
         std::string str;
@@ -319,12 +319,12 @@ main()
         StampTwoChars f_stamp;
         StampTwoCharsList u_stamp;
 
-        std::vector<std::reference_wrapper<StampBase>> stamps;
+        std::vector<std::reference_wrapper<StampBaseStr>> stamps;
         stamps.push_back(f_stamp);
         stamps.push_back(u_stamp);
         stamps.push_back(f_stamp);
 
-        GalleySet galley(stamps);
+        GalleySetStr galley(stamps);
 
         std::vector<std::string> res = galley.ExtractStr(blob);
         std::string str;
@@ -364,7 +364,7 @@ main()
         StampSeveralChars v_stamp;
         StampTwoCharsList u_stamp;
 
-        std::vector<std::reference_wrapper<StampBase>> stamps;
+        std::vector<std::reference_wrapper<StampBaseStr>> stamps;
         stamps.push_back(u_stamp);
         stamps.push_back(v_stamp);
         stamps.push_back(v_stamp);
@@ -372,7 +372,7 @@ main()
         stamps.push_back(u_stamp);
         stamps.push_back(f_stamp);
 
-        GalleySet galley(stamps);
+        GalleySetStr galley(stamps);
 
         std::vector<std::string> res = galley.ExtractStr(blob);
         std::string str;
@@ -414,7 +414,7 @@ main()
         StampSeveralChars v_stamp;
         StampTwoCharsList u_stamp;
 
-        std::vector<std::reference_wrapper<StampBase>> stamps;
+        std::vector<std::reference_wrapper<StampBaseStr>> stamps;
         stamps.push_back(u_stamp);
         stamps.push_back(v_stamp);
         stamps.push_back(v_stamp);
@@ -422,7 +422,7 @@ main()
         stamps.push_back(u_stamp);
         stamps.push_back(f_stamp);
 
-        GalleySet galley(stamps);
+        GalleySetStr galley(stamps);
         try{
           std::vector<std::string> res = galley.ExtractStr(blob);
           ok(false, "GalleySet, not enough data");

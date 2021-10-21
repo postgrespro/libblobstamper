@@ -53,16 +53,16 @@ main()
        Blob blob((char *) sample, 4);
        std::string s;
 
-       s =  blob.ShiftSingleStampStr(stamp);
+       s =  stamp.ExtractStr(blob);
        is(s, "one", "0 stamps as first element of dict");
 
-       s =  blob.ShiftSingleStampStr(stamp);
+       s =  stamp.ExtractStr(blob);
        is(s, "one", "63 still stamps as first element of dict, when dict has only four elements");
 
-       s =  blob.ShiftSingleStampStr(stamp);
+       s =  stamp.ExtractStr(blob);
        is(s, "two", "64 stamps as second element of dict");
 
-       s =  blob.ShiftSingleStampStr(stamp);
+       s =  stamp.ExtractStr(blob);
        is(s, "four", "255 stamps as last (fourth) element of dict");
 
     }

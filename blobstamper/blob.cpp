@@ -93,18 +93,6 @@ Blob::Size()
   return end - begin + 1;
 }
 
-std::vector<char>
-Blob::ShiftSingleStampBin(StampBase& stmp)
-{
-    return stmp.ExtractBin(*this);
-}
-
-std::string
-Blob::ShiftSingleStampStr(StampBase& stmp)
-{
-    return stmp.ExtractStr(*this);
-}
-
 void
 Blob::DataDup(char *& data_out, size_t& size_out)
 {

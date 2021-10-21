@@ -19,7 +19,7 @@
 /* This stamps chops first two bytes and treat them as string */
 /* Never do this in real live, as blob is binary and may have \0 in the middle of it*/
 
-class StampTwoChars: public StampFixed
+class StampTwoChars: public StampFixed, public StampBaseStr
 {
   public:
     StampTwoChars();
@@ -52,7 +52,7 @@ StampTwoChars::ExtractStr(Blob &blob)
     return res;
 }
 
-class StampSeveralChars: public StampVariated
+class StampSeveralChars: public StampVariated, public StampBaseStr
 {
   public:
     StampSeveralChars();
@@ -83,11 +83,11 @@ StampSeveralChars::ExtractStr(Blob &blob)
     return res;
 }
 
-class StampTwoCharsList: public StampUnbounded
+class StampTwoCharsList: public StampUnbounded, public StampBaseStr
 {
   protected:
     StampTwoChars el_stamp;
-    GalleyVector galley;
+    GalleyVectorStr galley;
   public:
     std::string ExtractStr(Blob &blob) override;
     StampTwoCharsList(): el_stamp {}, galley {el_stamp} {};

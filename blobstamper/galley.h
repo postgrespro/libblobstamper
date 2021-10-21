@@ -39,25 +39,40 @@ class GalleyBase
 
 };
 
-class GalleyVector : public GalleyBase
+class GalleyVectorBase : public GalleyBase
 {
   protected:
     StampBase &stamp;
   public:
-    GalleyVector(StampBase & stamp_arg) : stamp(stamp_arg) {};
+    GalleyVectorBase(StampBase & stamp_arg) : stamp(stamp_arg) {};
     std::vector<Blob> extract_internal(Blob &blob);
-    std::vector<std::string> ExtractStr(Blob &blob);
-    std::vector<std::vector<char>> ExtractBin(Blob &blob);
-
     int minSize() override;
     int maxSize() override {return -1;}; /* Sereies always takes as much data as it can take */
 };
 
-template<class T> class GalleyVectorV: public GalleyVector
+
+class GalleyVectorStr: public GalleyVectorBase
+{
+    StampBaseStr & s_stamp;
+  public:
+    GalleyVectorStr(StampBaseStr & stamp_arg): GalleyVectorBase(stamp_arg), s_stamp(stamp_arg)  {};
+    std::vector<std::string> ExtractStr(Blob &blob);
+};
+
+class GalleyVectorBin: public GalleyVectorBase
+{
+    StampBaseBin & b_stamp;
+  public:
+    GalleyVectorBin(StampBaseBin & stamp_arg): GalleyVectorBase(stamp_arg), b_stamp(stamp_arg)  {};
+    std::vector<std::vector<char>> ExtractBin(Blob &blob);
+};
+
+
+template<class T> class GalleyVectorV: public GalleyVectorBase
 {
     StampBaseV<T>& v_stamp;
   public:
-    GalleyVectorV(StampBaseV<T> & stamp_arg): GalleyVector(stamp_arg), v_stamp(stamp_arg)  {};
+    GalleyVectorV(StampBaseV<T> & stamp_arg): GalleyVectorBase(stamp_arg), v_stamp(stamp_arg)  {};
     std::vector<T> ExtractValues(Blob &blob);
 };
 
@@ -76,18 +91,53 @@ GalleyVectorV<T>::ExtractValues(Blob &blob)
 }
 
 
-class GalleySet : public GalleyBase
+class GalleySetBase : public GalleyBase
 {
   protected:
     std::vector<std::reference_wrapper<StampBase>> stamps;
   public:
-    GalleySet(std::vector<std::reference_wrapper<StampBase>> arg) : stamps(arg) {};
+    GalleySetBase(std::vector<std::reference_wrapper<StampBase>> arg) : stamps(arg) {};
     std::vector<Blob> extract_internal(Blob &blob);
-    std::vector<std::string> ExtractStr(Blob &blob);
-    std::vector<std::vector<char>> ExtractBin(Blob &blob);
 
     int minSize() override;
     int maxSize() override;
+};
+
+class GalleySetBin : public GalleySetBase
+{
+    std::vector<std::reference_wrapper<StampBaseBin>> b_stamps;
+  public:
+    GalleySetBin(std::vector<std::reference_wrapper<StampBaseBin>> arg) : GalleySetBase(cast_arg(arg)), b_stamps(arg) {};
+    std::vector<std::vector<char>> ExtractBin(Blob &blob);
+
+    std::vector<std::reference_wrapper<StampBase>> cast_arg(std::vector<std::reference_wrapper<StampBaseBin>> in)
+    {
+      std::vector<std::reference_wrapper<StampBase>> res;
+      for(StampBaseBin & s : in)
+      {
+        res.push_back(s);
+      }
+      return res;
+    };
+};
+
+
+class GalleySetStr : public GalleySetBase
+{
+    std::vector<std::reference_wrapper<StampBaseStr>> s_stamps;
+  public:
+    GalleySetStr(std::vector<std::reference_wrapper<StampBaseStr>> arg) : GalleySetBase(cast_arg(arg)), s_stamps(arg) {}; 
+    std::vector<std::string> ExtractStr(Blob &blob);
+
+    std::vector<std::reference_wrapper<StampBase>> cast_arg(std::vector<std::reference_wrapper<StampBaseStr>> in)
+    {
+      std::vector<std::reference_wrapper<StampBase>> res;
+      for(StampBaseStr & s : in)
+      {
+        res.push_back(s);
+      }
+      return res;
+    };
 };
 
 
