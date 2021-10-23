@@ -49,7 +49,7 @@ GalleyVectorBase::minSize()
 
 
 std::vector<std::string>
-GalleyVectorStr::ExtractStr(Blob &blob)
+GalleyVectorStr::ExtractStrVector(Blob &blob)
 {
   std::vector<Blob> blobs = extract_internal(blob);
   std::vector<std::string> res(blobs.size());
@@ -62,7 +62,7 @@ GalleyVectorStr::ExtractStr(Blob &blob)
 }
 
 std::vector<std::vector<char>>
-GalleyVectorBin::ExtractBin(Blob &blob)
+GalleyVectorBin::ExtractBinVector(Blob &blob)
 {
   std::vector<Blob> blobs = extract_internal(blob);
   std::vector<std::vector<char>> res(blobs.size());
@@ -348,7 +348,7 @@ GalleySetBase::extract_internal(Blob &blob)
 }
 
 std::vector<std::string>
-GalleySetStr::ExtractStr(Blob &blob)
+GalleySetStr::ExtractStrSet(Blob &blob)
 {
     std::vector<std::string> res;
     std::vector<Blob> blobs = extract_internal(blob);
@@ -363,7 +363,7 @@ GalleySetStr::ExtractStr(Blob &blob)
 }
 
 std::vector<std::vector<char>>
-GalleySetBin::ExtractBin(Blob &blob)
+GalleySetBin::ExtractBinSet(Blob &blob)
 {
     std::vector<std::vector<char>> res;
     std::vector<Blob> blobs = extract_internal(blob);

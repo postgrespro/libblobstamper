@@ -99,7 +99,7 @@ std::string
 StampTwoCharsList::ExtractStr(Blob &blob)
 {
     std::string res = "";
-    std::vector<std::string> list = galley.ExtractStr(blob);
+    std::vector<std::string> list = galley.ExtractStrVector(blob);
 
     for (std::string point : list)
     {

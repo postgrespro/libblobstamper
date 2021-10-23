@@ -47,7 +47,7 @@ main()
         StampTwoChars stamp;
         GalleyVectorStr galley(stamp);
         Blob blob(short_sample, strlen(short_sample));
-        std::vector<std::string> res = galley.ExtractStr(blob);
+        std::vector<std::string> res = galley.ExtractStrVector(blob);
 
         is(res[0], expected1, "GalleyVector, fixed size string stamp: First element of shifted list is ok");
         is(res[1], expected2, "GalleyVector, fixed size string  stamp: Second element of shifted list is ok");
@@ -68,7 +68,7 @@ main()
         StampTwoCharsList stamp_charlist;
         GalleyVectorStr galley(stamp_charlist);
 
-        std::vector<std::string> res = galley.ExtractStr(blob);
+        std::vector<std::string> res = galley.ExtractStrVector(blob);
         std::string str;
 
         is(res[0], expected1, "GalleyVector, unlimited size string stamp: First element of shifted list is ok");
@@ -87,7 +87,7 @@ main()
         StampArithm<unsigned short int> stamp;
         GalleyVectorBin galley(stamp);
         Blob blob(short_sample, strlen(short_sample));
-        std::vector<std::vector<char>> res = galley.ExtractBin(blob);
+        std::vector<std::vector<char>> res = galley.ExtractBinVector(blob);
 
         std::vector<char> v;
         unsigned short int * data;
@@ -113,7 +113,7 @@ main()
         StampArithm<signed int> stamp;
         GalleyVectorV<signed int> galley(stamp);
         Blob blob((char*)sample, sizeof(sample));
-        std::vector<signed int> res = galley.ExtractValues(blob);
+        std::vector<signed int> res = galley.ExtractValuesVector(blob);
         ok(!memcmp((void*) &sample, (void *) &res[0], sizeof(sample)), "GalleyVectorV returns ok");
     }
 
@@ -133,7 +133,7 @@ main()
         StampSeveralChars stamp;
         GalleyVectorStr galley(stamp);
 
-        std::vector<std::string> res = galley.ExtractStr(blob);
+        std::vector<std::string> res = galley.ExtractStrVector(blob);
         std::string str;
 
         is(res[0], expected1, "GalleyVector, unlimited size string stamp: First element of shifted list is ok");
@@ -163,7 +163,7 @@ main()
 
         GalleySetStr galley(stamps);
 
-        std::vector<std::string> res = galley.ExtractStr(blob);
+        std::vector<std::string> res = galley.ExtractStrSet(blob);
         std::string str;
         str = res[0];
         is(str, expected1, "GalleySet, fixed size string stamps: First element of vector is ok");
@@ -196,7 +196,7 @@ main()
 
         GalleySetStr galley(stamps);
 
-        std::vector<std::string> res = galley.ExtractStr(blob);
+        std::vector<std::string> res = galley.ExtractStrSet(blob);
         std::string str;
 
         str = res[0];
@@ -230,7 +230,7 @@ main()
 
         GalleySetStr galley(stamps);
 
-        std::vector<std::string> res = galley.ExtractStr(blob);
+        std::vector<std::string> res = galley.ExtractStrSet(blob);
         std::string str;
 
         is(res[0], expected1, "GalleySet, unbounded size string stamp: First element of vector is ok");
@@ -275,7 +275,7 @@ main()
 
         GalleySetStr galley(stamps);
 
-        std::vector<std::string> res = galley.ExtractStr(blob);
+        std::vector<std::string> res = galley.ExtractStrSet(blob);
         std::string str;
 
         str = res[0];
@@ -326,7 +326,7 @@ main()
 
         GalleySetStr galley(stamps);
 
-        std::vector<std::string> res = galley.ExtractStr(blob);
+        std::vector<std::string> res = galley.ExtractStrSet(blob);
         std::string str;
 
         str = res[0];
@@ -374,7 +374,7 @@ main()
 
         GalleySetStr galley(stamps);
 
-        std::vector<std::string> res = galley.ExtractStr(blob);
+        std::vector<std::string> res = galley.ExtractStrSet(blob);
         std::string str;
 
         str = res[0];
@@ -424,7 +424,7 @@ main()
 
         GalleySetStr galley(stamps);
         try{
-          std::vector<std::string> res = galley.ExtractStr(blob);
+          std::vector<std::string> res = galley.ExtractStrSet(blob);
           ok(false, "GalleySet, not enough data");
         }
         catch (OutOfData)
