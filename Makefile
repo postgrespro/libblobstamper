@@ -11,6 +11,10 @@ endif
 BLOBSTAMPER_SRC := $(wildcard  blobstamper/*.cpp)
 BLOBSTAMPER_OBJ := $(addsuffix .o, $(basename $(BLOBSTAMPER_SRC)))
 
+EXAMPLES_SRC = $(wildcard  examples/*.cpp)
+EXAMPLES_BIN = $(basename $(EXAMPLES_SRC))
+
+
 .PHONY: all blob-stamper-all blob-stamper-clean clean test gagaga
 
 all: $(BLOBSTAMPER_OBJ)
@@ -46,6 +50,8 @@ test:
 #test_dict: test_dict.o blob-stamper-all
 #	$(CXX) $(LDFLAGS) $@.o -o $@ $(BLOB_STAMPER_OBJ)
 
+examples: $(BLOBSTAMPER_OBJ)
+	$(MAKE) -C examples
 
 gagaga:
 	@echo ------- $(BLOBSTAMPER_OBJ)

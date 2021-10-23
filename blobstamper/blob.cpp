@@ -111,3 +111,10 @@ Blob::asVector()
   return res;
 }
 
+/* Do not use in prod. For tests and examples only */
+std::string
+Blob::asString()
+{
+  std::string res((char *)data + begin, Size());
+  return res;
+}

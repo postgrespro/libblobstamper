@@ -42,6 +42,7 @@ class Blob
         std::vector<char> ChopBlank(StampBase &stmp);
         void DataDup(char *& data_out, size_t& size_out);
         std::vector<char> asVector();
+        std::string asString(); /* Should not be used in prod, for tests and examples only*/
 };
 
 class OutOfData  /*An exeption. Experemental for now*/
