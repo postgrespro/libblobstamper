@@ -29,14 +29,10 @@
 #define ORACLE_SIZE sizeof(ORACLE_TYPE)
 #define ORACLE_MAX std::numeric_limits<ORACLE_TYPE>::max()
 
-class GalleyBase
+class GalleyBase: public virtual StampBase
+/* Galley is a kind of stamp, somwhere deep inside. */
+/* You can inherit it, and make a stamp out of it*/
 {
-  public:
-    virtual int minSize() = 0;
-    virtual int maxSize() = 0;
-    bool isFixedSize() {return minSize() == maxSize();}
-    bool isUnbounded() {return maxSize() == -1;}
-
 };
 
 class GalleyVectorBase : public GalleyBase

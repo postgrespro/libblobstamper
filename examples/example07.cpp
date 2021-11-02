@@ -52,20 +52,42 @@ Point3D StampPoint3D::ExtractValue(Blob &blob)
   return res;
 }
 
+
+class StampPolyLine3D:  public GalleyVectorStr, public StampBaseStr
+{
+  protected:
+    StampPoint3D * item_stamp_p;
+  public:
+    StampPolyLine3D(): GalleyVectorStr(*(item_stamp_p = new StampPoint3D())) {};
+    ~StampPolyLine3D() {delete item_stamp_p;};
+
+    virtual std::string ExtractStr(Blob &blob) override;
+};
+
+
+std::string StampPolyLine3D::ExtractStr(Blob &blob)
+{
+  std::vector<std::string> data = ExtractStrVector(blob);
+  std::string res = "";
+
+  for(std::string s : data)
+  {
+    if (!res.empty())
+    {
+      res+=", ";
+    }
+    res+= s;
+  }
+  res = "(" + res + ")";
+  return res;
+}
+
 int main()
 {
   char data[] = "abcdef" "abcdef" "ABCDEF" "012345";
   Blob blob(data, strlen(data));
-  StampPoint3D stamp;
+  StampPolyLine3D stamp;
 
-  GalleyVectorV<Point3D> galley(stamp);
-  std::vector<Point3D> res = galley.ExtractValuesVector(blob);
-
-  Point3D *p = &res[0];
-  int p_size = res.size();
-
-  for(int i=0; i<p_size; i++)
-  {
-      std::cout << "(" << p[i].X << ", " << p[i].Y << ", "  << p[i].Z << ")\n";
-  }
+  std::string s = stamp.ExtractStr(blob);
+  std::cout << s <<"\n";
 }

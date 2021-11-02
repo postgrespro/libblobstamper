@@ -9,3 +9,4 @@ export  LDFLAGS="-fsanitize=address -fsanitize=undefined -fno-sanitize-recover=u
 make clean
 make
 make test
+make examples
