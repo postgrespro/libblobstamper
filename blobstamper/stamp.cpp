@@ -24,3 +24,27 @@
 
 #include "blob.h"
 #include "stamp.h"
+
+
+void
+StampBase::Load(Blob &blob)
+{
+
+  if (minSize() > blob.Size())
+  {
+    throw OutOfData();
+  }
+
+  size_t res_size;
+  if (isUnbounded())
+  {
+    res_size = blob.Size();
+  } else
+  {
+    res_size = maxSize();
+    if (res_size > blob.Size())
+        res_size = blob.Size();
+  }
+  Blob *pb = new Blob(blob.ShiftBytes(res_size));
+  bitten_blob = std::unique_ptr<Blob>(pb);
+}

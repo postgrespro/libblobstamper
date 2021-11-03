@@ -22,15 +22,20 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <memory>
 
 #include "helpers.h"
 
 
 class StampBase
 {
+  protected:
+    std::unique_ptr<Blob> bitten_blob;
   public:
     virtual int  minSize() = 0;
     virtual int  maxSize() = 0;
+
+    void Load(Blob &blob);
 
     bool isFixedSize() {return minSize() == maxSize();}
     bool isVariated()  {return ! isFixedSize() && ! isUnbounded();}
@@ -42,6 +47,7 @@ class StampBaseStr: public virtual StampBase
 {
   public:
     virtual std::string ExtractStr(Blob &blob) = 0;
+    std::string UnloadStr() {return ExtractStr(*bitten_blob);};
 };
 
 
@@ -49,6 +55,7 @@ class StampBaseBin: public virtual StampBase
 {
   public:
     virtual std::vector<char> ExtractBin(Blob &blob) = 0;
+    std::vector<char> UnloadBin() {return ExtractBin(*bitten_blob);};
 };
 
 
@@ -56,6 +63,7 @@ template<class T> class StampBasePV: public StampBaseBin
 {
   public:
     virtual sized_ptr<T> ExtractPValue(Blob &blob) = 0;/* Shoud be defined by derived classes*/
+    sized_ptr<T> UnloadPValue() {return ExtractPValue(*bitten_blob);};
     virtual std::vector<char> ExtractBin(Blob &blob) override;
 };
 
@@ -70,9 +78,12 @@ StampBasePV<T>::ExtractBin(Blob &blob)
 }
 
 template<class T> class StampBaseV: public StampBasePV<T>
+,public virtual StampBase //FIXME I do not understand why do we need it here, but wihtout it, it does not build
 {
   public:
     virtual T ExtractValue(Blob &blob) = 0;/* Shoud be defined by derived classes*/
+    T UnloadValue() {return ExtractValue(*bitten_blob);};
+
     virtual std::vector<char> ExtractBin(Blob &blob) override;
     virtual sized_ptr<T> ExtractPValue(Blob &blob) override;
 };
