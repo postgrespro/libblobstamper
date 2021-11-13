@@ -24,6 +24,10 @@
 #include <vector>
 #include <functional> // for std::reference_wrapper
 
+#include "stamp.h"
+#include "blob.h"
+
+
 #define ORACLE_TYPE unsigned short int
 #define ORACLE_STAMP StampArithm<ORACLE_TYPE>
 #define ORACLE_SIZE sizeof(ORACLE_TYPE)
@@ -33,6 +37,7 @@ class GalleyBase: public virtual StampBase
 /* Galley is a kind of stamp, somwhere deep inside. */
 /* You can inherit it, and make a stamp out of it*/
 {
+
 };
 
 class GalleyVectorBase : public GalleyBase

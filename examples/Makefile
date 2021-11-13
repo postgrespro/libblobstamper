@@ -11,13 +11,6 @@ all: $(EXAMPLES_BIN)
 build-libtappp:
 	$(MAKE) -C ../libtappp
 
-../blobstamper-pg/%.o: ../blobstamper-pg/%.cpp
-	$(CXX) -c -g $(CXXFLAGS) -I .. $< -o $@
-
-../wrappers/%.o: ../wrappers/%.cpp
-	$(CXX) -c -g $(CXXFLAGS) -I .. $< -o $@
-
-
 %: %.cpp $(BLOBSTAMPER_OBJ) $(BLOBSTAMPER_PG_OBJ) $(WRAPPERS_OBJ)
 	$(CXX) $(CXXFLAGS) -I.. -o $@ $< $(BLOBSTAMPER_OBJ) 
 

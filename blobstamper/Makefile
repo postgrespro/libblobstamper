@@ -1,21 +1,14 @@
 
-ALL_OBJS = blob.o \
-helpers.o \
-stamp.o \
-stamp_arithm.o \
-stamp_dict.o \
-galley.o \
-dict.o \
+
+BLOBSTAMPER_SRC := $(wildcard  ./*.cpp)
+BLOBSTAMPER_OBJ := $(addsuffix .o, $(basename $(BLOBSTAMPER_SRC)))
 
 
-%.o: %.cpp $(DEPS)
-	$(CXX) -c -g $(CXXFLAGS) $<
-
-%.o: %.c $(DEPS)
-	$(CC) -c -g $(CFLAGS) $<
+%.o: %.cpp
+	$(CXX) -c -g $(CXXFLAGS) -I .. $< -o $@
 
 
-all: $(ALL_OBJS)
+all: $(BLOBSTAMPER_OBJ)
 
 .PHONY: clean
 clean:

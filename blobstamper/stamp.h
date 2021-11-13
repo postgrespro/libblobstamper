@@ -25,6 +25,7 @@
 #include <memory>
 
 #include "helpers.h"
+#include "blob.h"
 
 
 class StampBase
