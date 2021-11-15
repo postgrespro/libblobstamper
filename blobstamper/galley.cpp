@@ -347,6 +347,19 @@ GalleySetBase::extract_internal(Blob &blob)
     return res;
 }
 
+void
+GalleySetBase::LoadAll(Blob &blob)
+{
+    std::vector<Blob> blobs = extract_internal(blob);
+    for(int i=0; i<blobs.size(); i++)
+    {
+        Blob blob = blobs[i];
+        StampBase & stamp = stamps[i];
+        stamp.Load(blob);
+    }
+}
+
+
 std::vector<std::string>
 GalleySetStr::ExtractStrSet(Blob &blob)
 {
@@ -356,7 +369,7 @@ GalleySetStr::ExtractStrSet(Blob &blob)
     {
         Blob blob = blobs[i];
         StampBaseStr & stamp = s_stamps[i];
-        std::string str= stamp.ExtractStr(blob);
+        std::string str = stamp.ExtractStr(blob);
         res.push_back(str);
     }
     return res;

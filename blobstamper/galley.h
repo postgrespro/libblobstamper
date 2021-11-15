@@ -99,6 +99,7 @@ class GalleySetBase : public GalleyBase
   public:
     GalleySetBase(std::vector<std::reference_wrapper<StampBase>> arg) : stamps(arg) {};
     std::vector<Blob> extract_internal(Blob &blob);
+    void LoadAll(Blob &blob);
 
     int minSize() override;
     int maxSize() override;
