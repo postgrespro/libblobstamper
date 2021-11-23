@@ -21,6 +21,9 @@ class BinaryOp: public StampBaseStr, public GalleySetBase
         op_name(arg_op_name),
         stamp1(arg_stamp1),
         stamp2(arg_stamp2) {};
+
+    virtual int maxSize() override {return -1;};
+
 };
 
 std::string
@@ -54,7 +57,7 @@ char data[] =
   DictLCAlphaSmall dict;
   StampDict stamp_dict(dict);
 
-  StampLottery<StampBaseStr> stamp_lot({stampс, stamp_dict});
+  StampLottery4Recursion<StampBaseStr> stamp_lot({stampс, stamp_dict});
 
   for(std::string op_name : ops)
   {

@@ -1,3 +1,21 @@
+/******************************************************************************
+ *
+ * Copyright 2021 Nikolay Shaplov (Postgres Professional)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ******************************************************************************/
+
 template<class StampT> class StampLottery: public StampT
 {
   protected:
@@ -15,14 +33,38 @@ template<class StampT> class StampLottery: public StampT
                                                       oracle_size(init_oracle_size(stamps_arg)),
                                                       stored_min(init_stored_min(stamps_arg)),
                                                       stored_max(init_stored_max(stamps_arg)) {};
-    StampLottery(): stored_min(-1), stored_max(-2) {};
+    StampLottery(): stored_min(-1), stored_max(-2), oracle_size(1)  {};
 
     virtual int  minSize() override;
     virtual int  maxSize() override;
+
+    virtual bool soft_maxsize_filter(StampT &stamp, int data_size) {return true;}; /* Allow to skip stamps that would leave to much data unused. But not active here*/
+
     virtual std::string ExtractStr(Blob &blob) override;
     void Append(StampT & stamp);
 };
 
+
+template<class StampT> class StampLottery4Recursion: public StampLottery<StampT>
+{
+  public:
+    StampLottery4Recursion(std::ref_vector<StampT> stamps_arg): StampLottery<StampT>(stamps_arg) {};
+    StampLottery4Recursion(): StampLottery<StampT>()  {};
+    virtual bool soft_maxsize_filter(StampT &stamp, int data_size) override;
+};
+
+
+template<class StampT> bool
+StampLottery4Recursion<StampT>::
+soft_maxsize_filter(StampT &stamp, int data_size)
+{
+  if ( stamp.isUnbounded() ||            // Unbounded is always ok
+       stamp.maxSize() > data_size  ||  // Variated that can consume all data is ok
+       stamp.minSize() + stamp.maxSize() > data_size  // Fixed or variated stamp that lefts less data then it's min size will also do
+      )
+      return true;
+  return false;
+}
 
 template<class StampT> int
 StampLottery<StampT>::
@@ -136,14 +178,9 @@ StampLottery<StampT>::ExtractStr(Blob &blob)
   for(StampT & stamp : stamps)
   {
     if(blob.Size() < stamp.minSize())  // Skip all stamps that dose not fit
-       continue;
-    if ( stamp.isUnbounded() ||            // Unbounded is always ok
-         stamp.maxSize() > blob.Size()  ||  // Variated that can consume all data is ok
-         stamp.minSize() * 2 > blob.Size()  // Fixed or variated stamp that lefts less data then it's min size will also do
-       )
-    {
+      continue;
+    if (soft_maxsize_filter(stamp, blob.Size()))
       actual_stamps.push_back(stamp);
-    }
   }
   if (actual_stamps.empty())
   {

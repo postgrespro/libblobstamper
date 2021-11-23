@@ -30,7 +30,6 @@
 
 using namespace TAP;
 
-/* Test that dict works as expected*/
 unsigned char sample[]={1,63,64,255};
 
 int
