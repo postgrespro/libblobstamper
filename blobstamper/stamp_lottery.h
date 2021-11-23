@@ -7,10 +7,15 @@ template<class StampT> class StampLottery: public StampT
 
     int stored_min;
     int init_stored_min(std::ref_vector<StampT> stamps_arg);
+    int stored_max;
+    int init_stored_max(std::ref_vector<StampT> stamps_arg);
 
   public:
-    StampLottery(std::ref_vector<StampT> stamps_arg): stamps(stamps_arg), oracle_size(init_oracle_size(stamps_arg)), stored_min(init_stored_min(stamps_arg)) {};
-    StampLottery(): stored_min(-1) {};
+    StampLottery(std::ref_vector<StampT> stamps_arg): stamps(stamps_arg),
+                                                      oracle_size(init_oracle_size(stamps_arg)),
+                                                      stored_min(init_stored_min(stamps_arg)),
+                                                      stored_max(init_stored_max(stamps_arg)) {};
+    StampLottery(): stored_min(-1), stored_max(-2) {};
 
     virtual int  minSize() override;
     virtual int  maxSize() override;
@@ -35,6 +40,24 @@ init_stored_min(std::ref_vector<StampT> stamps_arg)
 }
 
 template<class StampT> int
+StampLottery<StampT>::
+init_stored_max(std::ref_vector<StampT> stamps_arg)
+{
+  int max = 0;
+
+  for(StampT & stamp : stamps)
+  {
+    if (stamp.maxSize() == -1)
+      return -1;
+
+    if (max < stamp.maxSize())
+        max = stamp.maxSize();
+  }
+  return max;
+}
+
+
+template<class StampT> int
 StampLottery<StampT>::init_oracle_size(std::ref_vector<StampT> stamps_arg)
 {
   unsigned long size = stamps_arg.size();
@@ -48,6 +71,11 @@ StampLottery<StampT>::init_oracle_size(std::ref_vector<StampT> stamps_arg)
 }
 
 
+
+/* StampLottery is used for recustion. Lottery contains trams that uses this very lottery
+ Calculating sizes on fly leads to infinite recrsion. So we calculate sizes when lottery 
+item is added, and use stored value, when it is needed */
+
 template<class StampT> int
 StampLottery<StampT>::minSize()
 {
@@ -57,7 +85,9 @@ StampLottery<StampT>::minSize()
 template<class StampT> int
 StampLottery<StampT>::maxSize()
 {
-  return -1;  // FIXME this is true only for recurion case. Should fix it somehow if Lottery is used in other cases
+  if (stored_max == -1)
+    return -1;
+  return stored_max + oracle_size;
 }
 
 
@@ -140,10 +170,21 @@ StampLottery<StampT>::ExtractStr(Blob &blob)
 template<class StampT> void
 StampLottery<StampT>::Append(StampT & stamp)
 {
-  if (stamp.minSize()<stored_min)
+  if (stamp.maxSize() == -1)
   {
-    stored_min = stamp.minSize();
+    stored_max = -1;
+  } else
+  {
+    if (stamp.maxSize() > stored_max)  /* this case includes case when stored_max have not beed initialized (==-2)*/
+      stored_max = stamp.maxSize();
   }
+
+  if (stored_min == -1) /* stored_min have not been initializes*/
+    stored_min = stamp.minSize();
+
+  if (stamp.minSize() < stored_min)
+    stored_min = stamp.minSize();
+
   stamps.push_back(stamp);
   oracle_size = init_oracle_size(stamps);
 }
