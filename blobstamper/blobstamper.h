@@ -23,4 +23,4 @@
 #include "dict.h"
 #include "galley.h"
 #include "stamp_enumerator.h"
-
+#include "stamp_lottery.h"

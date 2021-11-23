@@ -95,6 +95,12 @@ max precision
   }
 
 
+namespace std
+{
+  template<class T> using ref_vector = vector<reference_wrapper<T>>;
+}
+
+
 template<class T> class sized_ptr
 {
   private:
