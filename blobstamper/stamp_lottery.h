@@ -16,6 +16,9 @@
  *
  ******************************************************************************/
 
+#ifndef STAMP_LOTTERY_H
+#define STAMP_LOTTERY_H
+
 template<class StampT> class StampLottery: public StampT
 {
   protected:
@@ -225,3 +228,5 @@ StampLottery<StampT>::Append(StampT & stamp)
   stamps.push_back(stamp);
   oracle_size = init_oracle_size(stamps);
 }
+
+#endif  // STAMP_LOTTERY_H

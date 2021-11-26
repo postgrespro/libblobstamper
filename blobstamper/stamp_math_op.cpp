@@ -16,12 +16,20 @@
  *
  ******************************************************************************/
 
-#include "blob.h"
-#include "stamp.h"
-#include "stamp_arithm.h"
-#include "stamp_dict.h"
-#include "dict.h"
-#include "galley.h"
-#include "stamp_enumerator.h"
-#include "stamp_lottery.h"
-#include "stamp_math_op.h"
+#include <string>
+#include"stamp_math_op.h"
+
+std::string
+StampMathUnaryOp::ExtractStr(Blob &blob)
+{
+  return  op_name + "(" +  stamp.ExtractStr(blob) + ")";
+}
+
+
+std::string
+StampMathBinaryOp::ExtractStr(Blob &blob)
+{
+  std::vector<Blob> blobs = extract_internal(blob);
+  return (std::string)"(" +  stamp1.ExtractStr(blobs[0]) + " "+  op_name + " " + stamp2.ExtractStr(blobs[1]) + ")";
+}
+
