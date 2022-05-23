@@ -71,14 +71,14 @@ In your own stamp you will probably implement only extract methods you need, eit
 Amount of data that can be consumed by Stamp is called Stamp Size.
 Depending on Min Stamp Size and Max Stamp Size, Stamps cam be divided into three groups:
 
-* *Fixed Size Stamps*: Stamp consumes fixed amount of data (Min Stamp Size == Max Stamp Size). 
+* **Fixed Size Stamps**: Stamp consumes fixed amount of data (Min Stamp Size == Max Stamp Size). 
 For example `StampArithm<T>` stamp always consumes `sizeof(T)` bytes.
 
-* *Variated Size Stamp*: Min Stamp Size != Max Stamp Size.
+* **Variated Size Stamp**: Min Stamp Size != Max Stamp Size.
 For example stamp that generates string with random Latin letters 3 to 16 character long.
 It consumes 3..16 bytes and "normalizes" them to Latin character bytes.
 
-* *Unbounded Size Stamp*: Stamp that has Min Size, but will consume any amount of data if provided. 
+* **Unbounded Size Stamp**: Stamp that has Min Size, but will consume any amount of data if provided. 
 
 Min and Max Stamp Sizes are available via `minSize()` and `maxSize()` methods.
 For Unbound Size Stamps `maxSize()` is set to `-1`.
@@ -319,10 +319,10 @@ class ArrayOfComplexIntStamp:  public GalleyVectorStr, public StampBaseStr
     virtual std::string ExtractStr(Blob &blob) override;
 };
 ```
-Because of order initialization issue, we have to initialize the stamp inside the call of parent class constructor via `new` method, and then destroy in in the destructor.
+Because of initialization order issue, we have to initialize the stamp inside the call of parent class constructor via `new` method, and then destroy in in the destructor.
 
 Here do not need to implement `maxSize()` and `maxSize()`, as Galley properly implements them for us.
-So we need only to implement Extract method we need.
+We implement only the Extract method we need.
 
 
 ```
@@ -425,13 +425,11 @@ Code is quite clear (I hope), except for the code of Galley, that are a bit intr
 3. Read tests.
 Tests are located in `t` directory.
 Much effort were put into covering all LibBlobStamper functionality with tests.
-So if some functionality is not covered with this README, or with standalone examples,
-you can find examples of usage in the tests.
+So if some functionality is not covered with this README, or with standalone examples, you can find examples of usage in the tests.
 
 ## Authors
 
-LibBlobStamper were created by Nikolay Shaplov from Postgres Porfessional at
-2021-2022.
+LibBlobStamper were created by Nikolay Shaplov from Postgres Porfessional in 2021-2022.
 
 You can contact me via e-mail: `n.shaplov@postgrespro.ru` or via matrix: `@n.shaplov:postgrespro.ru`.
 E-mail lists and chat rooms will be created when they are needed.
