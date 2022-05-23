@@ -38,7 +38,7 @@ int
 main()
     {
     TEST_START(68);
-    /* Test Galley Sereies with fixed size stampp*/
+    /* Test Galley Vector with fixed size stamp*/
     { /* 1..4 */
         std::string expected1 = "12";
         std::string expected2 = "34";
@@ -117,7 +117,7 @@ main()
         ok(!memcmp((void*) &sample, (void *) &res[0], sizeof(sample)), "GalleyVectorV returns ok");
     }
 
-    /* Test Galley Sereies with variated size stamp*/
+    /* Test Galley Vector with variated size stamp*/
     {  /* 15 .. 19*/
         /* This is not the best test, as we do not predict behavior by setting forged sample values,
           but at least here we check that it work the same way it worked before. May be this test should be improved later*/

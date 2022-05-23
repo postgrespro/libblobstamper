@@ -63,7 +63,7 @@ class StampBaseBin: public virtual StampBase
 template<class T> class StampBasePV: public StampBaseBin
 {
   public:
-    virtual sized_ptr<T> ExtractPValue(Blob &blob) = 0;/* Shoud be defined by derived classes*/
+    virtual sized_ptr<T> ExtractPValue(Blob &blob) = 0;/* Should be defined by derived classes*/
     sized_ptr<T> UnloadPValue() {return ExtractPValue(*bitten_blob);};
     virtual std::vector<char> ExtractBin(Blob &blob) override;
 };
@@ -82,7 +82,7 @@ template<class T> class StampBaseV: public StampBasePV<T>
 ,public virtual StampBase //FIXME I do not understand why do we need it here, but wihtout it, it does not build
 {
   public:
-    virtual T ExtractValue(Blob &blob) = 0;/* Shoud be defined by derived classes*/
+    virtual T ExtractValue(Blob &blob) = 0;/* Should be defined by derived classes*/
     T UnloadValue() {return ExtractValue(*bitten_blob);};
 
     virtual std::vector<char> ExtractBin(Blob &blob) override;
