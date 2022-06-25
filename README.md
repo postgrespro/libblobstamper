@@ -308,13 +308,13 @@ So you may add Extract method to a Galley, and use this new object as a Stamp.
 To add extract method to Galley you should use multiple inheritance.
 
 ```
-class ArrayOfComplexIntStamp:  public GalleyVectorStr, public StampBaseStr
+class ArrayOfComplexIntStamp: public GalleyVectorStr, public StampBaseStr
 {
   protected:
     ComplexIntStamp * item_stamp_p;
   public:
-    ArrayOfComplexIntStamp(): GalleyVectorStr(*(item_stamp_p = new ComplexIntStamp())) {};
-    ~ArrayOfComplexIntStamp() {delete item_stamp_p;};
+    ComplexIntArrayStamp(): GalleyVectorStr(*(item_stamp_p = new ComplexIntStamp())) {};
+    ~ComplexIntArrayStamp() {delete item_stamp_p;};
 
     virtual std::string ExtractStr(Blob &blob) override;
 };
@@ -326,7 +326,7 @@ We implement only the Extract method we need.
 
 
 ```
-std::string ArrayOfComplexIntStamp::ExtractStr(Blob &blob)
+std::string ComplexIntArrayStamp::ExtractStr(Blob &blob)
 {
   std::vector<std::string> data = ExtractStrVector(blob);
   std::string res = "";
