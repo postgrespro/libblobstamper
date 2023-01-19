@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * Copyright 2021 Nikolay Shaplov (Postgres Professional)
+ * Copyright 2021-2023 Nikolay Shaplov (Postgres Professional)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,15 +106,6 @@ StampBaseV<T>::ExtractBin(Blob &blob)
   std::vector<char> v((char *) &value, (char *) &value + sizeof(T));
   return v;
 }
-
-class StampFixed : public virtual StampBase
-{
-  protected:
-     int  size;
-  public:
-    virtual int  minSize() override {return size;}
-    virtual int  maxSize() override {return size;}
-};
 
 class StampVariated : public virtual StampBase
 {

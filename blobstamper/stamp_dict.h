@@ -26,7 +26,7 @@
 #include "stamp_arithm.h"
 #include "dict.h"
 
-class StampDict: public StampFixed, public StampBaseStr
+class StampDict: public StampBaseStr
 {
   protected:
     StampArithm<unsigned char>  stamp8;

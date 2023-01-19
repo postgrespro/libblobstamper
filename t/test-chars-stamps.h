@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * Copyright 2021 Nikolay Shaplov (Postgres Professional)
+ * Copyright 2021-2023 Nikolay Shaplov (Postgres Professional)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,39 +19,35 @@
 /* This stamps chops first two bytes and treat them as string */
 /* Never do this in real live, as blob is binary and may have \0 in the middle of it*/
 
-class StampTwoChars: public StampFixed, public StampBaseStr
+class StampTwoChars: public StampBaseStr
 {
   public:
-    StampTwoChars();
     std::string ExtractStr(Blob &blob) override;
-};
+    virtual int  minSize() override {return 2;} /* This stamp shifts two characters only */
+    virtual int  maxSize() override {return 2;} /* This stamp shifts two characters only */
 
-StampTwoChars::StampTwoChars() : StampFixed()
-{
-    size = 2;  /* This stamp shifts two characters only */
-}
+};
 
 std::string
 StampTwoChars::ExtractStr(Blob &blob)
 {
-    char * buf;
-    size_t buf_size;
+    /* Chopping suitable data chunk from blob */
+    std::vector<char> data = blob.ChopBlank(*this);
 
-    Blob blob2 = blob.ShiftBytes(size);
-    if (blob2.isEmpty())
-        return "";
+    size_t buf_size = data.size() + 1;
+    char * buf = (char *) malloc(buf_size);
+    memcpy(buf, &data[0], data.size());
+    buf[buf_size-1] = '\0';
 
     /* Save shited data as string */
     /* NEVER do this in prod, as in real live blob is binary and may have 0 in the middle of it */
-    blob2.DataDup(buf, buf_size);
-    buf = (char *) realloc((void *)buf, buf_size + 1);
-    buf[buf_size] = '\0';
     std::string res = buf;
     free(buf);
 
     return res;
 }
 
+/*****************************************************************************/
 class StampSeveralChars: public StampVariated, public StampBaseStr
 {
   public:

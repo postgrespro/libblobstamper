@@ -23,10 +23,11 @@
 #include "helpers.h"
 #include "stamp.h"
 
-template<class T> class StampArithm: public StampFixed, public StampBaseStr, public StampBaseV<T>
+template<class T> class StampArithm: public StampBaseStr, public StampBaseV<T>
 {
   public:
-    StampArithm() { size = sizeof(T);};
+    virtual int  minSize() override {return sizeof(T);}
+    virtual int  maxSize() override {return sizeof(T);}
     virtual std::string ExtractStr(Blob &blob) override;
     virtual T ExtractValue(Blob &blob) override;
 };
