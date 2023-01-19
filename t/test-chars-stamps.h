@@ -74,7 +74,8 @@ StampSeveralChars::ExtractStr(Blob &blob)
     return res;
 }
 
-class StampTwoCharsList: public StampUnbounded, public StampBaseStr
+/*****************************************************************************/
+class StampTwoCharsList: public StampBaseStr
 {
   protected:
     StampTwoChars el_stamp;
@@ -84,6 +85,7 @@ class StampTwoCharsList: public StampUnbounded, public StampBaseStr
     StampTwoCharsList(): el_stamp {}, galley {el_stamp} {};
 
     virtual int minSize() override {return el_stamp.minSize();};
+    virtual int maxSize() override {return -1;};
 };
 
 std::string
