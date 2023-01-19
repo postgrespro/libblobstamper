@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * Copyright 2021 Nikolay Shaplov (Postgres Professional)
+ * Copyright 2021-2023 Nikolay Shaplov (Postgres Professional)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,15 +34,8 @@ template<class T> class StampArithm: public StampFixed, public StampBaseStr, pub
 template<class T> std::string
 StampArithm<T>::ExtractStr(Blob &blob)
 {
-    std::string res;
-    std::vector<char> v = this->ExtractBin(blob);
-
-    if (v.size() == 0)
-        return "";
-
-    T *pT = (T *) &v[0];
-
-    return to_string_precise(*pT);
+    T value = this->ExtractValue(blob);
+    return to_string_precise(value);
 }
 
 template<class T> T
