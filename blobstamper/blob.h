@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * Copyright 2021 Nikolay Shaplov (Postgres Professional)
+ * Copyright 2021-2023 Nikolay Shaplov (Postgres Professional)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,11 +30,11 @@ class Blob
 {
     protected:
         char*  data;
-        int    size;
-        int    begin;
-        int    end;
+        size_t    size;
+        size_t    begin;
+        size_t    end;
     public:
-        Blob(char * data, int size);
+        Blob(char * data, size_t size);
         bool isEmpty ();
         size_t Size();
         void Dump();

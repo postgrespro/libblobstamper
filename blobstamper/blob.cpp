@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * Copyright 2021 Nikolay Shaplov (Postgres Professional)
+ * Copyright 2021-2023 Nikolay Shaplov (Postgres Professional)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 #include "stamp.h"
 
 
-Blob::Blob (char * data_in, int size_in)
+Blob::Blob (char * data_in, size_t size_in)
 {
     data = data_in;
     size = size_in;
@@ -42,7 +42,7 @@ Blob::isEmpty ()
 void
 Blob::Dump()
 {
-    int length = end - begin +1 ;
+    size_t length = end - begin +1 ;
     hexdump(data + begin, length);
 }
 
