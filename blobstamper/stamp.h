@@ -107,16 +107,6 @@ StampBaseV<T>::ExtractBin(Blob &blob)
   return v;
 }
 
-class StampVariated : public virtual StampBase
-{
-  protected:
-     int  min_size;
-     int  max_size;
-  public:
-    virtual int  minSize() override {return min_size;}
-    virtual int  maxSize() override {return max_size;}
-};
-
 class StampUnbounded : public virtual StampBase
 {
   protected:

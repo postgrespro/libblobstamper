@@ -48,18 +48,13 @@ StampTwoChars::ExtractStr(Blob &blob)
 }
 
 /*****************************************************************************/
-class StampSeveralChars: public StampVariated, public StampBaseStr
+class StampSeveralChars: public StampBaseStr
 {
   public:
-    StampSeveralChars();
+    virtual int  minSize() override {return 2;} /* Minimal size of consumed data */
+    virtual int  maxSize() override {return 8;} /* Maximal size of consumed data */
     std::string ExtractStr(Blob &blob) override;
 };
-
-StampSeveralChars::StampSeveralChars()
-{
-    min_size = 2;
-    max_size = 8;
-}
 
 std::string
 StampSeveralChars::ExtractStr(Blob &blob)
