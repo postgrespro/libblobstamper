@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * Copyright 2021 Nikolay Shaplov (Postgres Professional)
+ * Copyright 2021-2023 Nikolay Shaplov (Postgres Professional)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,9 +54,8 @@ class GalleyVectorBase : public GalleyBase
 
 class GalleyVectorStr: public GalleyVectorBase
 {
-    StampBaseStr & s_stamp;
   public:
-    GalleyVectorStr(StampBaseStr & stamp_arg): GalleyVectorBase(stamp_arg), s_stamp(stamp_arg)  {};
+    GalleyVectorStr(StampBaseStr & stamp_arg): GalleyVectorBase(stamp_arg) {};
     std::vector<std::string> ExtractStrVector(Blob &blob);
 };
 

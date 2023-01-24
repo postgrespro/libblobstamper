@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * Copyright 2021 Nikolay Shaplov (Postgres Professional)
+ * Copyright 2021-2023 Nikolay Shaplov (Postgres Professional)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ GalleyVectorStr::ExtractStrVector(Blob &blob)
 
   for(int i = 0; i<blobs.size(); i++)
   {
-    res[i] = s_stamp.ExtractStr(blobs[i]);
+    res[i] = (dynamic_cast<StampBaseStr &>(stamp)).ExtractStr(blobs[i]);  // We know for sure that stamp is StampBaseStr
   }
   return res;
 }
