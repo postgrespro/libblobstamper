@@ -54,7 +54,7 @@ char data[] =
 
   StampArithm<unsigned char> stampс;
 
-  DictLCAlphaSmall dict;
+  auto dict = std::make_shared<DictLCAlphaSmall>();
   StampDict stamp_dict(dict);
 
   StampLottery4Recursion<StampBaseStr> stamp_lot({stampс, stamp_dict});

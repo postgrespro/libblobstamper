@@ -48,7 +48,7 @@ main()
 {
     TEST_START(4);
     { /* 1..4 */
-       DictTest dict;
+       auto dict = std::make_shared<DictTest>();
        StampDict stamp(dict);
        Blob blob((char *) sample, 4);
        std::string s;
