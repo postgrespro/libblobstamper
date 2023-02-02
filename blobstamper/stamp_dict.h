@@ -47,5 +47,4 @@ class StampDict: public StampBaseStr
     int  maxSize() override {return stamp_size;}
 };
 
-
 #endif /* STAMP_DICT_H */
