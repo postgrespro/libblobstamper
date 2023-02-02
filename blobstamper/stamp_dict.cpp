@@ -22,19 +22,19 @@
 #include "stamp_dict.h"
 
 int
-StampDict::ChooseStampSize(DictBase & dict)
+StampDict::ChooseStampSize(std::shared_ptr<DictBase> dict)
 {
-    if (dict.size()<= UCHAR_MAX+1)
+    if (dict->size() <= UCHAR_MAX+1)
     {
         stamp_max_value = UCHAR_MAX;
         return 1;
     }
-    if (dict.size()<= USHRT_MAX+1)
+    if (dict->size() <= USHRT_MAX+1)
     {
         stamp_max_value = USHRT_MAX;
         return 2;
     }
-    if (dict.size()<= UINT_MAX+1)
+    if (dict->size() <= UINT_MAX+1)
     {
         stamp_max_value = UINT_MAX;
         return 4;
@@ -75,7 +75,7 @@ StampDict::ExtractStr(Blob &blob)
          printf("StampDict::ExtractStr: Something is really wrong\n"); // FIXME better to throw something here :-)
          exit(1);
     }
-    long long actual_index = ((double) index_oracle) / stamp_max_value * dict.size();
-    if ( actual_index == dict.size())  actual_index--; /* If we hit the boundary step inside a bit*/
-    return dict.get(actual_index);
+    long long actual_index = ((double) index_oracle) / stamp_max_value * dict->size();
+    if ( actual_index == dict->size())  actual_index--; /* If we hit the boundary step inside a bit*/
+    return dict->get(actual_index);
 }

@@ -25,6 +25,7 @@
 #include "stamp.h"
 #include "stamp_arithm.h"
 #include "dict.h"
+#include <memory>
 
 class StampDict: public StampBaseStr
 {
@@ -34,13 +35,13 @@ class StampDict: public StampBaseStr
     StampArithm<unsigned int> stamp32;
     StampArithm<unsigned long long> stamp64;
     int stamp_size;
-    DictBase& dict;
+    std::shared_ptr<DictBase> dict;
     unsigned long long stamp_max_value;
 
-    int ChooseStampSize(DictBase & dict);
+    int ChooseStampSize(std::shared_ptr<DictBase> dict);
 
   public:
-    StampDict(DictBase & dict_arg) : dict{dict_arg},  stamp_size{ChooseStampSize(dict_arg)} {};
+    StampDict(std::shared_ptr<DictBase> dict_arg) : dict(dict_arg),  stamp_size(ChooseStampSize(dict_arg)) {};
     std::string ExtractStr(Blob &blob) override;
     int  minSize() override {return stamp_size;}
     int  maxSize() override {return stamp_size;}
