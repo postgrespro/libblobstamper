@@ -16,8 +16,8 @@
  *
  ******************************************************************************/
 
-#ifndef STAMP_ATOMIC_H
-#define STAMP_ATOMIC_H
+#ifndef STAMP_ARITHM_H
+#define STAMP_ARITHM_H
 
 #include <string>
 #include "helpers.h"
@@ -48,4 +48,4 @@ StampArithm<T>::ExtractValue(Blob &blob)
 }
 
 
-#endif  /* STAMP_ATOMIC_H */
+#endif  /* STAMP_ARITHM_H */
