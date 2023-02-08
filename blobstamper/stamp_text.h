@@ -26,7 +26,7 @@
 #include<string>
 #include<iostream>
 
-#include<blobstamper/blobstamper.h>
+#include "blobstamper/blobstamper.h"
 
 #include "blobstamper/dict.h"
 #include "blobstamper/stamp_dict.h"
@@ -39,13 +39,13 @@ class StampTextSimple: public StampBaseStr
     std::string ExtractStr(Blob &blob) override;
 };
 
-class GalleyTextSimple:  public GalleyVectorStrStamp<StampTextSimple>
+class GalleyTextSimple:  public GalleyVectorStrStampBase<StampTextSimple>
 {
   public:
     virtual std::string ExtractStr(Blob &blob) override;
 };
 
-class GalleyLCAlphaSmall:  public GalleyVectorStrStamp<StampDictLCAlphaSmall>
+class GalleyLCAlphaSmall:  public GalleyVectorStrStampBase<StampDictLCAlphaSmall>
 {
   public:
     virtual std::string ExtractStr(Blob &blob) override;
