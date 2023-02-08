@@ -59,6 +59,16 @@ class GalleyVectorStr: public GalleyVectorBase
     std::vector<std::string> ExtractStrVector(Blob &blob);
 };
 
+template<class T> class GalleyVectorStrStampBase:  public GalleyVectorStr, public StampBaseStr
+{
+  protected:
+    T * item_stamp_p;
+  public:
+    GalleyVectorStrStampBase(): GalleyVectorStr(*(item_stamp_p = new T())) {};
+    ~GalleyVectorStrStampBase() {delete item_stamp_p;};
+};
+
+
 class GalleyVectorBin: public GalleyVectorBase
 {
     StampBaseBin & b_stamp;
