@@ -20,16 +20,9 @@
 #define STAMP_TEXT_H
 
 
-#include<stdio.h>
-#include<string.h>
+#include "galley.h"
 
-#include<string>
-#include<iostream>
-
-#include "blobstamper/blobstamper.h"
-
-#include "blobstamper/dict.h"
-#include "blobstamper/stamp_dict.h"
+#include "stamp_dict.h"
 
 class StampTextSimple: public StampBaseStr
 {
