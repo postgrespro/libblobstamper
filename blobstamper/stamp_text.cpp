@@ -19,7 +19,7 @@
 #include"stamp_text.h"
 
 std::string
-StampTextSimple::ExtractStr(Blob &blob)
+StampTextPulp::ExtractStr(Blob &blob)
 {
 
     std::vector<char> data = blob.ChopBlank(*this);
@@ -37,7 +37,7 @@ StampTextSimple::ExtractStr(Blob &blob)
     return res;
 }
 
-std::string GalleyTextSimple::ExtractStr(Blob &blob)
+std::string StampTextPulpWords::ExtractStr(Blob &blob)
 {
   std::vector<std::string> data = ExtractStrVector(blob);
   std::string res = "";
@@ -53,7 +53,7 @@ std::string GalleyTextSimple::ExtractStr(Blob &blob)
   return res;
 }
 
-std::string GalleyLCAlphaSmall::ExtractStr(Blob &blob)
+std::string StampTextDictWords::ExtractStr(Blob &blob)
 {
   std::vector<std::string> data = ExtractStrVector(blob);
   std::string res = "";

@@ -24,7 +24,7 @@
 
 #include "stamp_dict.h"
 
-class StampTextSimple: public StampBaseStr
+class StampTextPulp: public StampBaseStr
 {
   public:
     virtual int minSize() override {return 1;}
@@ -32,13 +32,13 @@ class StampTextSimple: public StampBaseStr
     std::string ExtractStr(Blob &blob) override;
 };
 
-class GalleyTextSimple:  public GalleyVectorStrStampBase<StampTextSimple>
+class StampTextPulpWords:  public GalleyVectorStrStampBase<StampTextPulp>
 {
   public:
     virtual std::string ExtractStr(Blob &blob) override;
 };
 
-class GalleyLCAlphaSmall:  public GalleyVectorStrStampBase<StampDictLCAlphaSmall>
+class StampTextDictWords:  public GalleyVectorStrStampBase<StampDictLCAlphaSmall>
 {
   public:
     virtual std::string ExtractStr(Blob &blob) override;

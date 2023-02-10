@@ -35,7 +35,7 @@ main()
     { /* 1..1 */
 		  char data[] = "папа\0мама\0бабушка\0дедушка\0братик\0сестричка";
 		  Blob blob(data, (sizeof data)-1);
-		  StampTextSimple stamp;
+		  StampTextPulp stamp;
 		  std::string s = stamp.ExtractStr(blob);
       is(s, "папа мама бабушка дедушка братик сестричка", "StampTextSimple");
 
@@ -43,7 +43,7 @@ main()
     { /* 2..2 */
 		  char data[] = "dad\0mam\0granddad\0grandmam\0brother\0sister";
 		  Blob blob(data, (sizeof data)-1);
-		  GalleyTextSimple stamp;
+		  StampTextPulpWords stamp;
 		  std::string s = stamp.ExtractStr(blob);
       is(s, "d dad gra n dmam broth er siste", "GalleyTextSimple");
 
@@ -51,7 +51,7 @@ main()
     { /* 3..3 */
 		  char data[] = "abcdef" "abcdef" "ABCDEF" "012345";
 		  Blob blob(data, (sizeof data)-1);
-		  GalleyLCAlphaSmall stamp;
+		  StampTextDictWords stamp;
 		  std::string s = stamp.ExtractStr(blob);
       is(s, "gleam godfather graffiti greened grouping gunshots gleam godfather graffiti greened grouping gunshots dismally dissented divested doorstep dread drunks convertors corpulent counterparts cranking crippled crusades", "GalleyLCAlphaSmall");
 
