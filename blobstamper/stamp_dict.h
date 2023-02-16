@@ -42,7 +42,7 @@ class StampDict: public StampBaseStr
 
   public:
     StampDict(std::shared_ptr<DictBase> dict_arg) : dict(dict_arg),  stamp_size(ChooseStampSize(dict_arg)) {};
-    std::string ExtractStr(Blob &blob) override;
+    std::string ExtractStr(std::shared_ptr<Blob> blob) override;
     int  minSize() override {return stamp_size;}
     int  maxSize() override {return stamp_size;}
 };

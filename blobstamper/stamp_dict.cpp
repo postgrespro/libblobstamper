@@ -44,7 +44,7 @@ StampDict::ChooseStampSize(std::shared_ptr<DictBase> dict)
 }
 
 std::string
-StampDict::ExtractStr(Blob &blob)
+StampDict::ExtractStr(std::shared_ptr<Blob> blob)
 {
     unsigned long long index_oracle;
 

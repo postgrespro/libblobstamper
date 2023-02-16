@@ -46,7 +46,7 @@ Blob::Dump()
     hexdump(data + begin, length);
 }
 
-Blob
+std::shared_ptr<Blob>
 Blob::ShiftBytes(size_t n)
 {
     if (this->Size() < n)
@@ -54,10 +54,10 @@ Blob::ShiftBytes(size_t n)
         throw OutOfData();
     }
 
-    Blob new_blob(this->data, size);
+    std::shared_ptr<Blob> new_blob = std::make_shared<Blob>(this->data, size);
 
-    new_blob.begin = begin;   /* FIXME this should go private once */
-    new_blob.end = begin + n - 1;
+    new_blob->begin = begin;   /* FIXME this should go private once */
+    new_blob->end = begin + n - 1;
 
     begin += n;
 

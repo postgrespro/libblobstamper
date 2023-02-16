@@ -22,6 +22,7 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <memory>
 
 
 class StampBase;
@@ -38,7 +39,7 @@ class Blob
         bool isEmpty ();
         size_t Size();
         void Dump();
-        Blob ShiftBytes(size_t n);
+	std::shared_ptr<Blob> ShiftBytes(size_t n);
         std::vector<char> ChopBlank(StampBase &stmp);
         void DataDup(char *& data_out, size_t& size_out);
         std::vector<char> asVector();

@@ -28,21 +28,21 @@ template<class T> class StampArithm: public StampBaseStr, public StampBaseV<T>
   public:
     virtual int  minSize() override {return sizeof(T);}
     virtual int  maxSize() override {return sizeof(T);}
-    virtual std::string ExtractStr(Blob &blob) override;
-    virtual T ExtractValue(Blob &blob) override;
+    virtual std::string ExtractStr(std::shared_ptr<Blob> blob) override;
+    virtual T ExtractValue(std::shared_ptr<Blob> blob) override;
 };
 
 template<class T> std::string
-StampArithm<T>::ExtractStr(Blob &blob)
+StampArithm<T>::ExtractStr(std::shared_ptr<Blob> blob)
 {
     T value = this->ExtractValue(blob);
     return to_string_precise(value);
 }
 
 template<class T> T
-StampArithm<T>::ExtractValue(Blob &blob)
+StampArithm<T>::ExtractValue(std::shared_ptr<Blob> blob)
 {
-  std::vector<char> v = blob.ChopBlank(*this);  /* Chop out blank of maxSize */
+  std::vector<char> v = blob->ChopBlank(*this);  /* Chop out blank of maxSize */
   T *pT = (T *) &v[0]; /* And interpret it as value of arithmetic type */
   return *pT;
 }

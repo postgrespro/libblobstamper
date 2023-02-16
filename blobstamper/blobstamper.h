@@ -25,3 +25,4 @@
 #include "stamp_enumerator.h"
 #include "stamp_lottery.h"
 #include "stamp_math_op.h"
+#include "stamp_text.h"
