@@ -43,7 +43,7 @@ template<class StampT> class StampLottery: public StampT
 
     virtual bool soft_maxsize_filter(StampT &stamp, int data_size) {return true;}; /* Allow to skip stamps that would leave to much data unused. But not active here*/
 
-    virtual std::string ExtractStr(Blob &blob) override;
+    virtual std::string ExtractStr(std::shared_ptr<Blob> blob) override;
     void Append(StampT & stamp);
 };
 
@@ -137,7 +137,7 @@ StampLottery<StampT>::maxSize()
 
 
 template<class StampT> std::string
-StampLottery<StampT>::ExtractStr(Blob &blob)
+StampLottery<StampT>::ExtractStr(std::shared_ptr<Blob> blob)
 {
   unsigned long oracle;
   unsigned long oracle_max;
