@@ -55,25 +55,25 @@ main()
         char expected1[]="456";
         char expected2[]="123";
 
-        Blob blob1(short_sample,strlen(short_sample));
-        Blob blob2 = blob1.ShiftBytes(3);
+	std::shared_ptr<Blob> blob1 = std::make_shared<Blob>(short_sample,strlen(short_sample));
+	std::shared_ptr<Blob> blob2 = blob1->ShiftBytes(3);
 
-        blob1.DataDup(ptr,size);
+        blob1->DataDup(ptr,size);
         ok(size == strlen(expected1), "Blob shifted data size ok");
         ok(! memcmp(expected1, ptr, size), "Blob shifted data ok");
         free(ptr);
 
-        blob2.DataDup(ptr,size);
+        blob2->DataDup(ptr,size);
         ok(size == strlen(expected2), "Blob remained data size ok");
         ok(! memcmp(expected2, ptr, size), "Blob remained data ok");
         free(ptr);
     }
     { /* 7 */
         /* Check that shifting too many bytes return empty result */
-        Blob blob(my_data, strlen(my_data));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>(my_data, strlen(my_data));
         try
         {
-          Blob blob_res = blob.ShiftBytes(99999);
+	  std::shared_ptr<Blob> blob_res = blob->ShiftBytes(99999);
           ok(false, "Shift too many bytes");
         }
         catch (OutOfData)

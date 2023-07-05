@@ -198,7 +198,7 @@ class SimpeRecursionNode: public StampBase, public Variants
 
   public:
     GalleySimpleRecusion * recursor;
-    virtual std::string do_recursion(Blob &blob) = 0;
+    virtual std::string do_recursion(std::shared_ptr<Blob> blob) = 0;
 
     virtual std::string tmpID() = 0;
 };
@@ -206,7 +206,7 @@ class TestRNode1: public SimpeRecursionNode
 {
     std::vector<std::string> operations = {"+","-","*","/","^"}	;
   public:
-    virtual std::string do_recursion(Blob &blob) override;
+    virtual std::string do_recursion(std::shared_ptr<Blob> blob) override;
     int minSize() override {return 1; }; // FIXME correct it
     int maxSize() override {return -1;}; /* Sereies always takes as much data as it can take */
 
@@ -218,7 +218,7 @@ class TestRNode1: public SimpeRecursionNode
 class TestRNode2: public SimpeRecursionNode
 {
   public:
-    virtual std::string do_recursion(Blob &blob) override;
+    virtual std::string do_recursion(std::shared_ptr<Blob> blob) override;
     int minSize() override {return 1; }; // FIXME correct it
     int maxSize() override {return -1;}; /* Sereies always takes as much data as it can take */
 
@@ -227,7 +227,7 @@ class TestRNode2: public SimpeRecursionNode
 class TestRNode3: public SimpeRecursionNode
 {
   public:
-    virtual std::string do_recursion(Blob &blob) override;
+    virtual std::string do_recursion(std::shared_ptr<Blob> blob) override;
     int minSize() override {return 1; }; // FIXME correct it
     int maxSize() override {return -1;}; /* Sereies always takes as much data as it can take */
 
@@ -247,7 +247,7 @@ class GalleySimpleRecusion : public GalleyBase
     int maxSize() override {return -1;}; /* Sereies always takes as much data as it can take */
 
 
-    virtual std::string do_recursion(Blob &blob);
+    virtual std::string do_recursion(std::shared_ptr<Blob> blob);
 
 };
 
@@ -255,7 +255,7 @@ class GalleySimpleRecusion : public GalleyBase
 
 
 std::string
-TestRNode1::do_recursion(Blob &blob)
+TestRNode1::do_recursion(std::shared_ptr<Blob> blob)
 {
   int variant_n = GetVariantSelected(); /* Copy it as early as possible as it can be overwritten while recursion */
 
@@ -265,7 +265,7 @@ TestRNode1::do_recursion(Blob &blob)
 
   unsigned short int spl_val;
 
-  if (blob.Size() < (stamp_sint.minSize() + 4* stamp_char.minSize()) )
+  if (blob->Size() < (stamp_sint.minSize() + 4* stamp_char.minSize()) )
   {
     try{
       std::string val = stamp_char.ExtractStr(blob);
@@ -273,7 +273,7 @@ TestRNode1::do_recursion(Blob &blob)
     }
     catch (OutOfData)
     {
-printf("___________________________ %i\n", blob.Size());
+printf("___________________________ %i\n", blob->Size());
       return "Q";
     }
 
@@ -288,11 +288,11 @@ printf("___________________________ %i\n", blob.Size());
   }
 
   std::vector<unsigned int> split_data_in = {spl_val, (unsigned short int) std::numeric_limits<unsigned short int>::max() - spl_val };
-  std::vector<unsigned int> split_data = fit_sizes(split_data_in, blob.Size() - 4* stamp_char.minSize());
+  std::vector<unsigned int> split_data = fit_sizes(split_data_in, blob->Size() - 4* stamp_char.minSize());
 
   printf("llll - %i %i \n",  split_data[0],  split_data[1]);
   
-  Blob blob_left =  blob.ShiftBytes(split_data[0]+ 2*stamp_char.minSize() );
+  std::shared_ptr<Blob> blob_left =  blob->ShiftBytes(split_data[0]+ 2*stamp_char.minSize() );
 
 printf("~~~ %i\n",variant_n);
 
@@ -300,10 +300,10 @@ printf("~~~ %i\n",variant_n);
 }
 
 std::string
-TestRNode2::do_recursion(Blob &blob)
+TestRNode2::do_recursion(std::shared_ptr<Blob> blob)
 {
   try{
-  Blob tmp = blob.ShiftBytes(1);
+    std::shared_ptr<Blob> tmp = blob->ShiftBytes(1);
   }
   catch (OutOfData)
   {
@@ -315,10 +315,10 @@ TestRNode2::do_recursion(Blob &blob)
 
 
 std::string
-TestRNode3::do_recursion(Blob &blob)
+TestRNode3::do_recursion(std::shared_ptr<Blob> blob)
 {
   try{
-  Blob tmp = blob.ShiftBytes(1);
+	  std::shared_ptr<Blob> tmp = blob->ShiftBytes(1);
   }
   catch (OutOfData)
   {
@@ -329,7 +329,7 @@ TestRNode3::do_recursion(Blob &blob)
 }
 
 std::string
-GalleySimpleRecusion::do_recursion(Blob& blob)
+GalleySimpleRecusion::do_recursion(std::shared_ptr<Blob> blob)
 {
 
 
@@ -411,7 +411,7 @@ main()
     TEST_START(1);
     {
 //       Blob blob(short_sample, strlen(short_sample));
-       Blob blob((char *)bin_sample, strlen((char *)bin_sample));
+       std::shared_ptr<Blob> blob = std::make_shared<Blob>((char *)bin_sample, strlen((char *)bin_sample));
        GalleySimpleRecusion galley;
 
 fprintf(stderr,"--1\n");

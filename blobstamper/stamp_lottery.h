@@ -180,9 +180,9 @@ StampLottery<StampT>::ExtractStr(std::shared_ptr<Blob> blob)
   std::ref_vector<StampT> actual_stamps;
   for(StampT & stamp : stamps)
   {
-    if(blob.Size() < stamp.minSize())  // Skip all stamps that dose not fit
+    if(blob->Size() < stamp.minSize())  // Skip all stamps that dose not fit
       continue;
-    if (soft_maxsize_filter(stamp, blob.Size()))
+    if (soft_maxsize_filter(stamp, blob->Size()))
       actual_stamps.push_back(stamp);
   }
   if (actual_stamps.empty())
@@ -190,7 +190,7 @@ StampLottery<StampT>::ExtractStr(std::shared_ptr<Blob> blob)
     // Add just everything that fits
     for(StampT & stamp : stamps)
     {
-      if(blob.Size() < stamp.minSize())  // Skip all stamps that dose not fit
+      if(blob->Size() < stamp.minSize())  // Skip all stamps that dose not fit
          continue;
       actual_stamps.push_back(stamp);
     }

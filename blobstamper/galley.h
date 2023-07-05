@@ -90,7 +90,7 @@ template<class T> class GalleyVectorV: public GalleyVectorBase
 template<class T> std::vector<T>
 GalleyVectorV<T>::ExtractValuesVector(std::shared_ptr<Blob> blob)
 {
-  std::vector<Blob> blobs = extract_internal(blob);
+  std::vector<std::shared_ptr<Blob>> blobs = extract_internal(blob);
   std::vector<T> res(blobs.size());
 
   for(int i=0; i<blobs.size(); i++)

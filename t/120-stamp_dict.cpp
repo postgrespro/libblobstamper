@@ -50,7 +50,7 @@ main()
     { /* 1..4 */
        auto dict = std::make_shared<DictTest>();
        StampDict stamp(dict);
-       Blob blob((char *) sample, 4);
+       std::shared_ptr<Blob> blob = std::make_shared<Blob>((char *) sample, 4);
        std::string s;
 
        s =  stamp.ExtractStr(blob);

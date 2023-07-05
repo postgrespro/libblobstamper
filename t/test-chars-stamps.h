@@ -22,17 +22,17 @@
 class StampTwoChars: public StampBaseStr
 {
   public:
-    std::string ExtractStr(Blob &blob) override;
+    std::string ExtractStr(std::shared_ptr<Blob> blob) override;
     virtual int  minSize() override {return 2;} /* This stamp shifts two characters only */
     virtual int  maxSize() override {return 2;} /* This stamp shifts two characters only */
 
 };
 
 std::string
-StampTwoChars::ExtractStr(Blob &blob)
+StampTwoChars::ExtractStr(std::shared_ptr<Blob> blob)
 {
     /* Chopping suitable data chunk from blob */
-    std::vector<char> data = blob.ChopBlank(*this);
+    std::vector<char> data = blob->ChopBlank(*this);
 
     size_t buf_size = data.size() + 1;
     char * buf = (char *) malloc(buf_size);
@@ -53,14 +53,14 @@ class StampSeveralChars: public StampBaseStr
   public:
     virtual int  minSize() override {return 2;} /* Minimal size of consumed data */
     virtual int  maxSize() override {return 8;} /* Maximal size of consumed data */
-    std::string ExtractStr(Blob &blob) override;
+    std::string ExtractStr(std::shared_ptr<Blob> blob) override;
 };
 
 std::string
-StampSeveralChars::ExtractStr(Blob &blob)
+StampSeveralChars::ExtractStr(std::shared_ptr<Blob> blob)
 {
 
-    std::vector<char> data = blob.ChopBlank(*this);
+    std::vector<char> data = blob->ChopBlank(*this);
     /* Save optained data as string */
     /* NEVER do this in prod, as in real live blob is binary and may have 0 in the middle of it */
     char * buf;
@@ -81,7 +81,7 @@ class StampTwoCharsList: public StampBaseStr
     StampTwoChars el_stamp;
     GalleyVectorStr galley;
   public:
-    std::string ExtractStr(Blob &blob) override;
+    std::string ExtractStr(std::shared_ptr<Blob> blob) override;
     StampTwoCharsList(): el_stamp {}, galley {el_stamp} {};
 
     virtual int minSize() override {return el_stamp.minSize();};
@@ -89,7 +89,7 @@ class StampTwoCharsList: public StampBaseStr
 };
 
 std::string
-StampTwoCharsList::ExtractStr(Blob &blob)
+StampTwoCharsList::ExtractStr(std::shared_ptr<Blob> blob)
 {
     std::string res = "";
     std::vector<std::string> list = galley.ExtractStrVector(blob);
