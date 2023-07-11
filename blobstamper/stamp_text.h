@@ -29,19 +29,19 @@ class StampTextPulp: public StampBaseStr
   public:
     virtual int minSize() override {return 1;}
     virtual int maxSize() override {return -1;}
-    std::string ExtractStr(Blob &blob) override;
+    std::string ExtractStr(std::shared_ptr<Blob> blob) override;
 };
 
 class StampTextPulpWords:  public GalleyVectorStrStampBase<StampTextPulp>
 {
   public:
-    virtual std::string ExtractStr(Blob &blob) override;
+    virtual std::string ExtractStr(std::shared_ptr<Blob> blob) override;
 };
 
 class StampTextDictWords:  public GalleyVectorStrStampBase<StampDictLCAlphaSmall>
 {
   public:
-    virtual std::string ExtractStr(Blob &blob) override;
+    virtual std::string ExtractStr(std::shared_ptr<Blob> blob) override;
 };
 
 #endif /* STAMP_TEXT_H */

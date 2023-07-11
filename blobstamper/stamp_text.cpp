@@ -19,10 +19,10 @@
 #include"stamp_text.h"
 
 std::string
-StampTextPulp::ExtractStr(Blob &blob)
+StampTextPulp::ExtractStr(std::shared_ptr<Blob> blob)
 {
 
-    std::vector<char> data = blob.ChopBlank(*this);
+    std::vector<char> data = blob->ChopBlank(*this);
 
     std::vector<char>::iterator the_iterator;
 
@@ -37,7 +37,7 @@ StampTextPulp::ExtractStr(Blob &blob)
     return res;
 }
 
-std::string StampTextPulpWords::ExtractStr(Blob &blob)
+std::string StampTextPulpWords::ExtractStr(std::shared_ptr<Blob> blob)
 {
   std::vector<std::string> data = ExtractStrVector(blob);
   std::string res = "";
@@ -53,7 +53,7 @@ std::string StampTextPulpWords::ExtractStr(Blob &blob)
   return res;
 }
 
-std::string StampTextDictWords::ExtractStr(Blob &blob)
+std::string StampTextDictWords::ExtractStr(std::shared_ptr<Blob> blob)
 {
   std::vector<std::string> data = ExtractStrVector(blob);
   std::string res = "";

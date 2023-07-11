@@ -41,7 +41,7 @@ main()
 
     /* Tests for common Stamp Lottery*/
     { /* 1..5 */
-        Blob blob((char *) sample, sizeof(sample));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>((char *) sample, sizeof(sample));
         StampArithm<unsigned short> stamp_s;
         StampArithm<unsigned char> stamp_c;
         StampArithm<unsigned int> stamp_i;
@@ -64,7 +64,7 @@ main()
 
     { /* 6 */
         sample[0] = 255; /* Should choose last stamp*/
-        Blob blob((char *) sample, sizeof(sample));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>((char *) sample, sizeof(sample));
         StampArithm<unsigned short> stamp_s;
         StampArithm<unsigned char> stamp_c;
         StampArithm<unsigned int> stamp_i;
@@ -77,7 +77,7 @@ main()
 
     { /* 7 */
         sample[0] = 128; /* Should choose stamp in the middle */
-        Blob blob((char *) sample, sizeof(sample));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>((char *) sample, sizeof(sample));
         StampArithm<unsigned short> stamp_s;
         StampArithm<unsigned char> stamp_c;
         StampArithm<unsigned int> stamp_i;
@@ -90,7 +90,7 @@ main()
 
     { /* 8 */
         sample[0] = 1; /* Should choose first available stamp*/
-        Blob blob((char *) sample, 2);  /* Sic! */
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>((char *) sample, 2);  /* Sic! */
         StampArithm<unsigned short> stamp_s;
         StampArithm<unsigned char> stamp_c;
         StampArithm<unsigned long> stamp_l;
@@ -106,7 +106,7 @@ main()
 
     { /* 9 */
         sample2[0] = 1; /* Should choose first available stamp*/
-        Blob blob((char *) sample2, sizeof(sample2));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>((char *) sample2, sizeof(sample2));
         StampArithm<unsigned short> stamp_s;
         StampArithm<unsigned char> stamp_c;
         StampArithm<unsigned long> stamp_l;
@@ -119,7 +119,7 @@ main()
 
     { /* 10 */
         sample2[0] = 255; /* Should choose last available stamp*/
-        Blob blob((char *) sample2, sizeof(sample2) -1 ); /*One byte short for unsigned long*/
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>((char *) sample2, sizeof(sample2) -1 ); /*One byte short for unsigned long*/
         StampArithm<unsigned short> stamp_s;
         StampArithm<unsigned char> stamp_c;
         StampArithm<unsigned long> stamp_l;

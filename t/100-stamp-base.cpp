@@ -54,12 +54,12 @@ main()
         char expected2[] = "34567";
 
 
-        Blob blob(short_sample, strlen(short_sample));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>(short_sample, strlen(short_sample));
         StampTwoChars stamp;
         std::string str = stamp.ExtractStr(blob);
         is(str, expected1, "ShiftSingleStampStr: shifts ok");
 
-        blob.DataDup(ptr,size);
+        blob->DataDup(ptr,size);
         ok(size == strlen(expected2), "ShiftSingleStampStr: Remaining blob data size ok");
         ok(! memcmp(expected2, ptr, size), "ShiftSingleStampStr: Remaining blob data ok");
         free(ptr);
@@ -69,7 +69,7 @@ main()
     {   /* 4 */
         char sample_two_bytes[]="12";
         std::string expected1 = "12";
-        Blob blob(sample_two_bytes, strlen(sample_two_bytes));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample_two_bytes, strlen(sample_two_bytes));
         StampTwoChars stamp;
         std::string str = stamp.ExtractStr(blob);
         is(str, expected1, "ShiftSingleStampStr: shifts first two bytes ok");
@@ -78,7 +78,7 @@ main()
 
     {  /* 5,6 */
        char sample[]="1234567890";
-       Blob blob(sample, strlen(sample));
+       std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
        StampSeveralChars stamp; /* accepts from 2 to 8 bytes*/
 
        /* If used alone, is shifts as much bytes as it can. When blob has a lot, it shifts maxSize bytes */
@@ -92,7 +92,7 @@ main()
 
     {  /* 7,8 */
        char sample[]="123456789";
-       Blob blob(sample, strlen(sample));
+       std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
        StampSeveralChars stamp; /* accepts from 2 to 8 bytes*/
 
        /* If used alone, is shifts as much bytes as it can. When blob has a lot, it shifts maxSize bytes */
@@ -116,7 +116,7 @@ main()
 
     {  /* 9 */
         char sample[]="1";
-        Blob blob(sample, strlen(sample));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
         StampTwoChars stamp;
         try {
           std::string str = stamp.ExtractStr(blob);
@@ -134,7 +134,7 @@ main()
 
     {  /* 10 */
         char sample[]="1";
-        Blob blob(sample, strlen(sample));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
         StampTwoCharsList stamp;
         try {
           std::string str = stamp.ExtractStr(blob);

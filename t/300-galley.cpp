@@ -46,7 +46,7 @@ main()
 
         StampTwoChars stamp;
         GalleyVectorStr galley(stamp);
-        Blob blob(short_sample, strlen(short_sample));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>(short_sample, strlen(short_sample));
         std::vector<std::string> res = galley.ExtractStrVector(blob);
 
         is(res[0], expected1, "GalleyVector, fixed size string stamp: First element of shifted list is ok");
@@ -64,7 +64,7 @@ main()
         std::string expected3 = "(zA, B%, CD, EF, GH, IJ, KL)";
         std::string expected4 = "(MN, OP, QR, ST, UV, WX, YZ)";
 
-        Blob blob(longer_sample, strlen(longer_sample));
+	std::shared_ptr<Blob> blob= std::make_shared<Blob>(longer_sample, strlen(longer_sample));
         StampTwoCharsList stamp_charlist;
         GalleyVectorStr galley(stamp_charlist);
 
@@ -86,7 +86,7 @@ main()
 
         StampArithm<unsigned short int> stamp;
         GalleyVectorBin galley(stamp);
-        Blob blob(short_sample, strlen(short_sample));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>(short_sample, strlen(short_sample));
         std::vector<std::vector<char>> res = galley.ExtractBinVector(blob);
 
         std::vector<char> v;
@@ -112,7 +112,7 @@ main()
         signed int sample[] = {1, -2, -30, 40, -55, 6};
         StampArithm<signed int> stamp;
         GalleyVectorV<signed int> galley(stamp);
-        Blob blob((char*)sample, sizeof(sample));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>((char*)sample, sizeof(sample));
         std::vector<signed int> res = galley.ExtractValuesVector(blob);
         ok(!memcmp((void*) &sample, (void *) &res[0], sizeof(sample)), "GalleyVectorV returns ok");
     }
@@ -129,7 +129,7 @@ main()
         std::string expected3 = "bcde";
         std::string expected4 = "ghij";
 
-        Blob blob(sample, strlen(sample));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
         StampSeveralChars stamp;
         GalleyVectorStr galley(stamp);
 
@@ -154,7 +154,7 @@ main()
         std::string expected2 = "23";
 
 
-        Blob blob(sample, strlen(sample));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
 
         StampTwoChars stamp;
         std::vector<std::reference_wrapper<StampBaseStr>> stamps;
@@ -173,7 +173,7 @@ main()
 
         is(res.size(), 2, "GalleySet, fixed size string stamps: The vector has only two elements ");
 
-        is(blob.Size(), strlen(sample) - res[0].length() - res[1].length(), "GalleySet: shifts no extra bytes for fixed stamps");
+        is(blob->Size(), strlen(sample) - res[0].length() - res[1].length(), "GalleySet: shifts no extra bytes for fixed stamps");
 
         is(galley.minSize(), stamp.minSize()*2, "GalleySet, fixed size string stamps: galley min size is ok");
         is(galley.maxSize(), stamp.maxSize()*2, "GalleySet, fixed size string stamps: galley max size is ok");
@@ -187,7 +187,7 @@ main()
         std::string expected1 = "456";
         std::string expected2 = "7*8";
 
-        Blob blob(sample, strlen(sample));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
 
         StampSeveralChars stamp;
         std::vector<std::reference_wrapper<StampBaseStr>> stamps;
@@ -207,7 +207,7 @@ main()
 
         is(res.size(), 2, "GalleySet, variated size string stamp: The vector has only two elements ");
 
-        is(blob.Size(), strlen(sample) - res[0].length() - res[1].length() - ORACLE_SIZE*2, "GalleySet: shifts one oracle for each variated stamps");
+        is(blob->Size(), strlen(sample) - res[0].length() - res[1].length() - ORACLE_SIZE*2, "GalleySet: shifts one oracle for each variated stamps");
 
         is(galley.minSize(), stamp.minSize()*2 + ORACLE_SIZE * 2, "GalleySet, variated size string stamps: galley min size is ok");
         is(galley.maxSize(), stamp.maxSize()*2 + ORACLE_SIZE * 2, "GalleySet, variated size string stamps: galley max size is ok");
@@ -221,7 +221,7 @@ main()
         std::string expected1 = "(45, 67, *8, 9a, bc)";
         std::string expected2 = "(de, &f, gh, ij, kl)";
 
-        Blob blob(sample, strlen(sample));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
 
         StampTwoCharsList stamp;
         std::vector<std::reference_wrapper<StampBaseStr>> stamps;
@@ -239,7 +239,7 @@ main()
 
         is(res.size(), 2, "GalleySet, unbounded size string stamp: The vector has only two elements ");
 
-        is(blob.Size(), 0 , "GalleySet: will use all data for unbounded stamp");
+        is(blob->Size(), 0 , "GalleySet: will use all data for unbounded stamp");
 
         is(galley.minSize(), stamp.minSize()*2 + ORACLE_SIZE * 2, "GalleySet, unbounded size string stamps: galley min size is ok");
         is(galley.maxSize(), -1, "GalleySet, unbounded size string stamps: galley max size is ok");
@@ -258,7 +258,7 @@ main()
         std::string expected5 = "(CD, EF, GH, IJ, KL, MN, OP, QR, ST, UV, WX)"; //second u_stamp
         std::string expected6 = "Z!"; //second f_stamp
 
-        Blob blob(sample, strlen(sample));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
 
 
         StampTwoChars f_stamp;
@@ -298,7 +298,7 @@ main()
 
         is(res.size(), 6, "GalleySet, mixed type stamps: The vector has only six elements ");
 
-        is(blob.Size(), 0 , "GalleySet: will use all data if we have at least one unbounded stamp");
+        is(blob->Size(), 0 , "GalleySet: will use all data if we have at least one unbounded stamp");
 
         is(galley.minSize(), (f_stamp.minSize()+v_stamp.minSize()+u_stamp.minSize())*2 + ORACLE_SIZE * (2+2+1), "GalleySet, mixed types stamps: galley min size is ok");
         is(galley.maxSize(), -1, "GalleySet, mixed types stamps: galley max size is ok");
@@ -313,7 +313,7 @@ main()
         std::string expected2 = "(23, 45, 67, *8, 9a, bc, de, &f, gh, ij, kl, mn, op, qr, st, uv, wx, yz, AB, %C, DE, FG, HI, JK, LM, NO, PQ, RS, TU, VW, XY)"; // u_stamp
         std::string expected3 = "Z!"; // second f_stamp
 
-        Blob blob(sample, strlen(sample));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
 
 
         StampTwoChars f_stamp;
@@ -340,7 +340,7 @@ main()
 
         is(res.size(), 3, "GalleySet, mixed type stamps 2: The vector has only three elements ");
 
-        is(blob.Size(), 0 , "GalleySet 2: will use all data if we have at least one unbounded stamp");
+        is(blob->Size(), 0 , "GalleySet 2: will use all data if we have at least one unbounded stamp");
 
         is(galley.minSize(), f_stamp.minSize()*2 + u_stamp.minSize() , "GalleySet 2, mixed types stamps: galley min size is ok");
         is(galley.maxSize(), -1, "GalleySet, mixed types stamps 2: galley max size is ok");
@@ -358,7 +358,7 @@ main()
         std::string expected5 = "(89)";  //second u_stamp
         std::string expected6 = "ab";    //second f_stamp
 
-        Blob blob(sample, strlen(sample));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
 
         StampTwoChars f_stamp;
         StampSeveralChars v_stamp;
@@ -397,7 +397,7 @@ main()
 
         is(res.size(), 6, "GalleySet, mixed type stamps 3: The vector has only six elements ");
 
-        is(blob.Size(), 0 , "GalleySet 3: will use all data if we have at least one unbounded stamp");
+        is(blob->Size(), 0 , "GalleySet 3: will use all data if we have at least one unbounded stamp");
 
         is(galley.minSize(), (f_stamp.minSize()+v_stamp.minSize()+u_stamp.minSize())*2 + ORACLE_SIZE * (2+2+1), "GalleySet, mixed types stamps 3: galley min size is ok");
         is(galley.maxSize(), -1, "GalleySet, mixed types stamps 3: galley max size is ok");
@@ -408,7 +408,7 @@ main()
 
         char sample[] = "oo" "oo" "oo" "oo" "oo" "z1" "23" "45" "67" "89" "a";
 
-        Blob blob(sample, strlen(sample));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
 
         StampTwoChars f_stamp;
         StampSeveralChars v_stamp;
@@ -436,7 +436,7 @@ main()
           ok(false, "GalleySet, not enough data");
         }
 
-        is(blob.Size(), strlen(sample) , "GalleySet 4: will use keep all data when applying galley fails");
+        is(blob->Size(), strlen(sample) , "GalleySet 4: will use keep all data when applying galley fails");
 
         is(galley.minSize(), (f_stamp.minSize()+v_stamp.minSize()+u_stamp.minSize())*2 + ORACLE_SIZE * (2+2+1), "GalleySet, mixed types stamps 4: galley min size is ok");
         is(galley.maxSize(), -1, "GalleySet, mixed types stamps 4: galley max size is ok");

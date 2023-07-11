@@ -49,9 +49,9 @@ GalleyVectorBase::minSize()
 
 
 std::vector<std::string>
-GalleyVectorStr::ExtractStrVector(Blob &blob)
+GalleyVectorStr::ExtractStrVector(std::shared_ptr<Blob> blob)
 {
-  std::vector<Blob> blobs = extract_internal(blob);
+  std::vector<std::shared_ptr<Blob>> blobs = extract_internal(blob);
   std::vector<std::string> res(blobs.size());
 
   for(int i = 0; i<blobs.size(); i++)
@@ -62,9 +62,9 @@ GalleyVectorStr::ExtractStrVector(Blob &blob)
 }
 
 std::vector<std::vector<char>>
-GalleyVectorBin::ExtractBinVector(Blob &blob)
+GalleyVectorBin::ExtractBinVector(std::shared_ptr<Blob> blob)
 {
-  std::vector<Blob> blobs = extract_internal(blob);
+  std::vector<std::shared_ptr<Blob>> blobs = extract_internal(blob);
   std::vector<std::vector<char>> res(blobs.size());
 
   for(int i = 0; i<blobs.size(); i++)
@@ -74,20 +74,20 @@ GalleyVectorBin::ExtractBinVector(Blob &blob)
   return res;
 }
 
-std::vector<Blob>
-GalleyVectorBase::extract_internal(Blob &blob)
+std::vector<std::shared_ptr<Blob>>
+GalleyVectorBase::extract_internal(std::shared_ptr<Blob> blob)
 {
-  if (blob.Size()<stamp.minSize())
+  if (blob->Size()<stamp.minSize())
   {
      throw OutOfData(); /* FIXME: May be later add option that allows empty lists if needed*/
   }
-  std::vector<Blob> res;
+  std::vector<std::shared_ptr<Blob>> res;
   if (stamp.isFixedSize())
   {
     int size = stamp.minSize();
-    while (blob.Size() >= size)
+    while (blob->Size() >= size)
     {
-      Blob el = blob.ShiftBytes(size);
+      std::shared_ptr<Blob> el = blob->ShiftBytes(size);
       res.push_back(el);
     }
   }
@@ -112,7 +112,7 @@ GalleyVectorBase::extract_internal(Blob &blob)
       */
 
       /* Getting count oracle and normalze it to fit available size */
-      size_t count_max = (blob.Size() - ORACLE_SIZE) / (stamp.minSize() + ORACLE_SIZE);  //First oracle - for number of items, and second one is oracle for each item size
+      size_t count_max = (blob->Size() - ORACLE_SIZE) / (stamp.minSize() + ORACLE_SIZE);  //First oracle - for number of items, and second one is oracle for each item size
 
       ORACLE_STAMP stamp_oracle;
       ORACLE_TYPE count_oracle = stamp_oracle.ExtractValue(blob);
@@ -139,7 +139,7 @@ GalleyVectorBase::extract_internal(Blob &blob)
       }
 
       /* Calculating available vairable size, that will be destributed between parts according to size oracles */
-      int data_size = blob.Size();
+      int data_size = blob->Size();
       int fixed_data_size = stamp.minSize() * count_target;
       int var_data_size = data_size - fixed_data_size;
 
@@ -151,7 +151,7 @@ GalleyVectorBase::extract_internal(Blob &blob)
         int el_size = el_size_f;
         remainder = el_size_f - el_size;
 
-        Blob blob2 = blob.ShiftBytes(el_size);
+	std::shared_ptr<Blob> blob2 = blob->ShiftBytes(el_size);
         res.push_back(blob2);
       }
     }
@@ -163,7 +163,7 @@ GalleyVectorBase::extract_internal(Blob &blob)
       ORACLE_STAMP stamp_oracle;
       while(1)
       {
-        if(stamp.minSize() + stamp_oracle.minSize() > blob.Size())
+        if(stamp.minSize() + stamp_oracle.minSize() > blob->Size())
           break;
 
         ORACLE_TYPE oracle = stamp_oracle.ExtractValue(blob);
@@ -171,7 +171,7 @@ GalleyVectorBase::extract_internal(Blob &blob)
         int size = (double) oracle / ORACLE_MAX * (var_size + 1); /* +1 -- это грубая эмуляция округления вверх. oracle == ORACLE_MAX-1 == 65534 должен дать count_max*/
         if (size > var_size) size = var_size; // In case we've hit oracle == ORACLE_MAX boundary
         size += fixed_size;
-        Blob blob2 = blob.ShiftBytes(size);
+	std::shared_ptr<Blob> blob2 = blob->ShiftBytes(size);
         res.push_back(blob2);
       }
     }
@@ -181,10 +181,10 @@ GalleyVectorBase::extract_internal(Blob &blob)
 
 /**********************************************/
 
-std::vector<Blob>
-GalleySetBase::extract_internal(Blob &blob)
+std::vector<std::shared_ptr<Blob>>
+GalleySetBase::extract_internal(std::shared_ptr<Blob> blob)
 {
-    std::vector<Blob> res;
+    std::vector<std::shared_ptr<Blob>> res;
     int fixed_total_size = 0;       // Summ of sizes of fixed parts of all stamps
     int max_varited_total_size = 0; // Summ of sizes of variable parts of variated stamps
     ORACLE_STAMP oracle_stamp;
@@ -225,12 +225,12 @@ GalleySetBase::extract_internal(Blob &blob)
        This is a variable that will set limits to gariated stamps greed (will be rediced later */
     int varited_total_size_limit = max_varited_total_size;
 
-    if(fixed_total_size > blob.Size()) /* Not enought data case*/
+    if(fixed_total_size > blob->Size()) /* Not enought data case*/
     {
        throw OutOfData();
     }
 
-    int avaliable_nonfixed_size = blob.Size() - fixed_total_size; /* The ammount of data available for non-fixed part of variated or unbounded stamps*/
+    int avaliable_nonfixed_size = blob->Size() - fixed_total_size; /* The ammount of data available for non-fixed part of variated or unbounded stamps*/
     if (varited_total_size_limit > avaliable_nonfixed_size)
         varited_total_size_limit = avaliable_nonfixed_size; /* Can't use more than we have */
 
@@ -341,19 +341,19 @@ GalleySetBase::extract_internal(Blob &blob)
           unbounded_remainder = len - el_size;
           el_size +=s.minSize();
         }
-        Blob blob2 = blob.ShiftBytes(el_size);
+	std::shared_ptr<Blob> blob2 = blob->ShiftBytes(el_size);
         res.push_back(blob2);
     }
     return res;
 }
 
 void
-GalleySetBase::LoadAll(Blob &blob)
+GalleySetBase::LoadAll(std::shared_ptr<Blob> blob)
 {
-    std::vector<Blob> blobs = extract_internal(blob);
+    std::vector<std::shared_ptr<Blob>> blobs = extract_internal(blob);
     for(int i=0; i<blobs.size(); i++)
     {
-        Blob blob = blobs[i];
+	std::shared_ptr<Blob> blob = blobs[i];
         StampBase & stamp = stamps[i];
         stamp.Load(blob);
     }
@@ -361,13 +361,13 @@ GalleySetBase::LoadAll(Blob &blob)
 
 
 std::vector<std::string>
-GalleySetStr::ExtractStrSet(Blob &blob)
+GalleySetStr::ExtractStrSet(std::shared_ptr<Blob> blob)
 {
     std::vector<std::string> res;
-    std::vector<Blob> blobs = extract_internal(blob);
+    std::vector<std::shared_ptr<Blob>> blobs = extract_internal(blob);
     for(int i=0; i<blobs.size(); i++)
     {
-        Blob blob = blobs[i];
+	std::shared_ptr<Blob> blob = blobs[i];
         StampBaseStr & stamp = s_stamps[i];
         std::string str = stamp.ExtractStr(blob);
         res.push_back(str);
@@ -376,13 +376,13 @@ GalleySetStr::ExtractStrSet(Blob &blob)
 }
 
 std::vector<std::vector<char>>
-GalleySetBin::ExtractBinSet(Blob &blob)
+GalleySetBin::ExtractBinSet(std::shared_ptr<Blob> blob)
 {
     std::vector<std::vector<char>> res;
-    std::vector<Blob> blobs = extract_internal(blob);
+    std::vector<std::shared_ptr<Blob>> blobs = extract_internal(blob);
     for(int i=0; i<blobs.size(); i++)
     {
-        Blob blob = blobs[i];
+	std::shared_ptr<Blob> blob = blobs[i];
         StampBaseBin & stamp = b_stamps[i];
         std::vector<char> v = stamp.ExtractBin(blob);
         res.push_back(v);

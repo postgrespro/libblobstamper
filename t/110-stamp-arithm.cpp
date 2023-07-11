@@ -52,7 +52,7 @@ main()
 
     /* Check that Bin and Str Char stamps works well */
     { /* 1..4 */
-        Blob blob(sample_data_char, strlen(sample_data_char));
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample_data_char, strlen(sample_data_char));
         StampArithm<char> stamp;
 
         std::vector<char> v = stamp.ExtractBin(blob);
@@ -74,7 +74,7 @@ main()
 
     /* Check that Bin and Srt Int16 stamps works well */
     { /* 5..11 */
-        Blob blob((char *)sample_data_int16, sample_data_int16_size);
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>((char *)sample_data_int16, sample_data_int16_size);
         StampArithm<short int> stamp;
         std::vector<char> v = stamp.ExtractBin(blob);
         short int * pi = (short int *) &v[0];
@@ -105,7 +105,7 @@ main()
 
     /* Check that Bin and Srt Int32 stamps works well */
     { /*  12..18 */
-        Blob blob((char *)sample_data_int32, sample_data_int32_size);
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>((char *)sample_data_int32, sample_data_int32_size);
         StampArithm<int> stamp;
 
         std::vector<char> v = stamp.ExtractBin(blob);
@@ -139,7 +139,7 @@ main()
 
     /* Check that Bin and Srt Int64 stamps works well */
     { /* 19..25 */
-        Blob blob((char *)sample_data_int64, sample_data_int64_size);
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>((char *)sample_data_int64, sample_data_int64_size);
         StampArithm<long long> stamp;
 
         std::vector<char> v = stamp.ExtractBin(blob);
@@ -173,7 +173,7 @@ main()
 
     /* Test Double stamp */
     { /* 26..29 */
-        Blob blob((char *)sample_data_double, sample_data_double_size);
+	std::shared_ptr<Blob> blob = std::make_shared<Blob>((char *)sample_data_double, sample_data_double_size);
         StampArithm<double> stamp;
         std::vector<char> v = stamp.ExtractBin(blob);
         double *pd = (double *) &v[0];

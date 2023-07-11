@@ -37,7 +37,7 @@ main()
 {
     TEST_START(1);
     { /* 1..1 */
-        Blob blob((char *) sample, sizeof(sample));
+	    std::shared_ptr<Blob> blob = std::make_shared<Blob>((char *) sample, sizeof(sample));
         StampArithm<unsigned char> base_stamp;
         StampStrEnumerator stamp(base_stamp, "; ", "<", ">");
 

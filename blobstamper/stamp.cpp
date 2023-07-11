@@ -27,10 +27,10 @@
 
 
 void
-StampBase::Load(Blob &blob)
+StampBase::Load(std::shared_ptr<Blob> blob)
 {
 
-  if (minSize() > blob.Size())
+  if (minSize() > blob->Size())
   {
     throw OutOfData();
   }
@@ -38,13 +38,12 @@ StampBase::Load(Blob &blob)
   size_t res_size;
   if (isUnbounded())
   {
-    res_size = blob.Size();
+    res_size = blob->Size();
   } else
   {
     res_size = maxSize();
-    if (res_size > blob.Size())
-        res_size = blob.Size();
+    if (res_size > blob->Size())
+        res_size = blob->Size();
   }
-  Blob *pb = new Blob(blob.ShiftBytes(res_size));
-  bitten_blob = std::unique_ptr<Blob>(pb);
+  bitten_blob = blob->ShiftBytes(res_size);
 }

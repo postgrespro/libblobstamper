@@ -44,7 +44,7 @@ class StampStrEnumerator: public GalleyVectorStr, public StampBaseStr
                     right_bracket(arg_r),
                     GalleyVectorStr(arg_stamp) {};
 
-    virtual std::string ExtractStr(Blob &blob) override;
+    virtual std::string ExtractStr(std::shared_ptr<Blob> blob) override;
 
 };
 
