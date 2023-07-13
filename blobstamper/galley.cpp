@@ -87,7 +87,7 @@ GalleyVectorBase::extract_internal(std::shared_ptr<Blob> blob)
     int size = stamp.minSize();
     while (blob->Size() >= size)
     {
-      std::shared_ptr<Blob> el = blob->ShiftBytes(size);
+      std::shared_ptr<Blob> el = blob->Chop(size);
       res.push_back(el);
     }
   }
@@ -151,7 +151,7 @@ GalleyVectorBase::extract_internal(std::shared_ptr<Blob> blob)
         int el_size = el_size_f;
         remainder = el_size_f - el_size;
 
-	std::shared_ptr<Blob> blob2 = blob->ShiftBytes(el_size);
+	std::shared_ptr<Blob> blob2 = blob->Chop(el_size);
         res.push_back(blob2);
       }
     }
@@ -171,7 +171,7 @@ GalleyVectorBase::extract_internal(std::shared_ptr<Blob> blob)
         int size = (double) oracle / ORACLE_MAX * (var_size + 1); /* +1 -- это грубая эмуляция округления вверх. oracle == ORACLE_MAX-1 == 65534 должен дать count_max*/
         if (size > var_size) size = var_size; // In case we've hit oracle == ORACLE_MAX boundary
         size += fixed_size;
-	std::shared_ptr<Blob> blob2 = blob->ShiftBytes(size);
+	std::shared_ptr<Blob> blob2 = blob->Chop(size);
         res.push_back(blob2);
       }
     }
@@ -341,7 +341,7 @@ GalleySetBase::extract_internal(std::shared_ptr<Blob> blob)
           unbounded_remainder = len - el_size;
           el_size +=s.minSize();
         }
-	std::shared_ptr<Blob> blob2 = blob->ShiftBytes(el_size);
+	std::shared_ptr<Blob> blob2 = blob->Chop(el_size);
         res.push_back(blob2);
     }
     return res;

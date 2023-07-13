@@ -32,7 +32,7 @@ std::string
 StampTwoChars::ExtractStr(std::shared_ptr<Blob> blob)
 {
     /* Chopping suitable data chunk from blob */
-    std::vector<char> data = blob->ChopBlank(*this);
+    std::vector<char> data = blob->Chop(minSize(), maxSize())->AsByteVector();
 
     size_t buf_size = data.size() + 1;
     char * buf = (char *) malloc(buf_size);
@@ -59,8 +59,7 @@ class StampSeveralChars: public StampBaseStr
 std::string
 StampSeveralChars::ExtractStr(std::shared_ptr<Blob> blob)
 {
-
-    std::vector<char> data = blob->ChopBlank(*this);
+    std::vector<char> data = blob->Chop(minSize(), maxSize())->AsByteVector();
     /* Save optained data as string */
     /* NEVER do this in prod, as in real live blob is binary and may have 0 in the middle of it */
     char * buf;

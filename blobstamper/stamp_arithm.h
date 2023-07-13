@@ -42,7 +42,7 @@ StampArithm<T>::ExtractStr(std::shared_ptr<Blob> blob)
 template<class T> T
 StampArithm<T>::ExtractValue(std::shared_ptr<Blob> blob)
 {
-  std::vector<char> v = blob->ChopBlank(*this);  /* Chop out blank of maxSize */
+  std::vector<char> v = blob->Chop(sizeof(T))->AsByteVector();  /* Chop out blank of type's size */
   T *pT = (T *) &v[0]; /* And interpret it as value of arithmetic type */
   return *pT;
 }

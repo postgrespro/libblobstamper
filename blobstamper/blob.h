@@ -39,8 +39,11 @@ class Blob
         bool isEmpty ();
         size_t Size();
         void Dump();
-	std::shared_ptr<Blob> ShiftBytes(size_t n);
-        std::vector<char> ChopBlank(StampBase &stmp);
+
+        std::vector<char> AsByteVector();
+        std::shared_ptr<Blob> Chop(size_t chop_size);
+        std::shared_ptr<Blob> Chop(size_t min_size, size_t max_size);
+
         void DataDup(char *& data_out, size_t& size_out);
         std::vector<char> asVector();
         std::string asString(); /* Should not be used in prod, for tests and examples only*/

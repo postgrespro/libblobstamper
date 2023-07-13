@@ -46,46 +46,40 @@ Blob::Dump()
     hexdump(data + begin, length);
 }
 
+
 std::shared_ptr<Blob>
-Blob::ShiftBytes(size_t n)
+Blob::Chop(size_t chop_size)
 {
-    if (this->Size() < n)
+    if (this->Size() < chop_size)
     {
         throw OutOfData();
     }
 
-    std::shared_ptr<Blob> new_blob = std::make_shared<Blob>(this->data, size);
-
-    new_blob->begin = begin;   /* FIXME this should go private once */
-    new_blob->end = begin + n - 1;
-
-    begin += n;
+    std::shared_ptr<Blob> new_blob = std::make_shared<Blob>(this->data + begin, chop_size);
+    begin += chop_size;
 
     return new_blob;
 }
 
-std::vector<char>
-Blob::ChopBlank(StampBase &stamp)
+std::shared_ptr<Blob>
+Blob::Chop(size_t min_size, size_t max_size)
 {
-    if (stamp.minSize() > this->Size())
+    if (this->Size() < min_size)
     {
         throw OutOfData();
     }
-    size_t res_size;
-    if (stamp.isUnbounded())
-    {
-        res_size = this->Size();
-    } else
-    {
-        res_size = stamp.maxSize();
-        if (res_size > this->Size())
-            res_size = this->Size();
-    }
-    std::vector<char> res((char*)this->data + this->begin, (char*)this->data + this->begin + res_size);
-    this->begin += res_size;
-    return res;
+    if (this->Size() >= max_size)
+        return this->Chop(max_size);
+
+    return this->Chop(this->Size());
 }
 
+std::vector<char>
+Blob::AsByteVector()
+{
+    std::vector<char> res(data + begin, data + begin + size);
+    return res;
+}
 
 size_t
 Blob::Size()

@@ -56,7 +56,7 @@ main()
         char expected2[]="123";
 
 	std::shared_ptr<Blob> blob1 = std::make_shared<Blob>(short_sample,strlen(short_sample));
-	std::shared_ptr<Blob> blob2 = blob1->ShiftBytes(3);
+	std::shared_ptr<Blob> blob2 = blob1->Chop(3);
 
         blob1->DataDup(ptr,size);
         ok(size == strlen(expected1), "Blob shifted data size ok");
@@ -73,7 +73,7 @@ main()
 	std::shared_ptr<Blob> blob = std::make_shared<Blob>(my_data, strlen(my_data));
         try
         {
-	  std::shared_ptr<Blob> blob_res = blob->ShiftBytes(99999);
+	  std::shared_ptr<Blob> blob_res = blob->Chop(99999);
           ok(false, "Shift too many bytes");
         }
         catch (OutOfData)

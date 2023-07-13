@@ -21,8 +21,7 @@
 std::string
 StampTextPulp::ExtractStr(std::shared_ptr<Blob> blob)
 {
-
-    std::vector<char> data = blob->ChopBlank(*this);
+    std::vector<char> data = blob->Chop(minSize(), maxSize())->AsByteVector();
 
     std::vector<char>::iterator the_iterator;
 

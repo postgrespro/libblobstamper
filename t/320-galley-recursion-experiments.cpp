@@ -292,7 +292,7 @@ printf("___________________________ %i\n", blob->Size());
 
   printf("llll - %i %i \n",  split_data[0],  split_data[1]);
   
-  std::shared_ptr<Blob> blob_left =  blob->ShiftBytes(split_data[0]+ 2*stamp_char.minSize() );
+  std::shared_ptr<Blob> blob_left =  blob->Chop(split_data[0]+ 2*stamp_char.minSize() );
 
 printf("~~~ %i\n",variant_n);
 
@@ -303,7 +303,7 @@ std::string
 TestRNode2::do_recursion(std::shared_ptr<Blob> blob)
 {
   try{
-    std::shared_ptr<Blob> tmp = blob->ShiftBytes(1);
+    std::shared_ptr<Blob> tmp = blob->Chop(1);
   }
   catch (OutOfData)
   {
@@ -318,7 +318,7 @@ std::string
 TestRNode3::do_recursion(std::shared_ptr<Blob> blob)
 {
   try{
-	  std::shared_ptr<Blob> tmp = blob->ShiftBytes(1);
+	  std::shared_ptr<Blob> tmp = blob->Chop(1);
   }
   catch (OutOfData)
   {
