@@ -29,9 +29,8 @@ class StampBase;
 
 class Blob
 {
-    protected:
+    private:
         char*  data;
-        size_t    size;
         size_t    begin;
         size_t    end;
     public:
@@ -49,12 +48,12 @@ class Blob
         std::string asString(); /* Should not be used in prod, for tests and examples only*/
 };
 
-class OutOfData  /*An exeption. Experemental for now*/
+class OutOfData  /*An exception. Experimental for now*/
 {
 
 };
 
-class NotImplemented  /*An exeption */
+class NotImplemented  /*An exception */
 {
 
 };

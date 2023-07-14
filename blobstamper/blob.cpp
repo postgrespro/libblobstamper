@@ -27,9 +27,8 @@
 Blob::Blob (char * data_in, size_t size_in)
 {
     data = data_in;
-    size = size_in;
     begin = 0;
-    end = size -1; /* i.e. size=1 means begin=0 && end=0 */
+    end = size_in - 1; /* i.e. size=1 means begin=0 && end=0 */
 }
 
 bool
@@ -77,7 +76,7 @@ Blob::Chop(size_t min_size, size_t max_size)
 std::vector<char>
 Blob::AsByteVector()
 {
-    std::vector<char> res(data + begin, data + begin + size);
+    std::vector<char> res(data + begin, data + end + 1);
     return res;
 }
 
@@ -100,8 +99,6 @@ std::vector<char>
 Blob::asVector()
 {
   std::vector<char> res( (char *)data + begin, (char*)data + begin + Size());
-
-//  memcpy(&res[0], data + begin, Size());
   return res;
 }
 
