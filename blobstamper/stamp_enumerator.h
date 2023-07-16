@@ -28,12 +28,12 @@
 class StampStrEnumerator: public GalleyVectorStr, public StampBaseStr
 {
   protected:
-    StampBaseStr & stamp_str;
+    std::shared_ptr<StampBaseStr> stamp_str;
     const std::string separator;
     const std::string left_bracket;
     const std::string right_bracket;
   public:
-    StampStrEnumerator(StampBaseStr &arg_stamp,
+    StampStrEnumerator(std::shared_ptr<StampBaseStr> arg_stamp,
                        const std::string arg_sep,
                        const std::string arg_l,
                        const std::string arg_r

@@ -43,9 +43,9 @@ class GalleyBase: public virtual StampBase
 class GalleyVectorBase : public GalleyBase
 {
   protected:
-    StampBase &stamp;
+    std::shared_ptr<StampBase> stamp;
   public:
-    GalleyVectorBase(StampBase & stamp_arg) : stamp(stamp_arg) {};
+    GalleyVectorBase(std::shared_ptr<StampBase> stamp_arg) : stamp(stamp_arg) {};
     std::vector<std::shared_ptr<Blob>> extract_internal(std::shared_ptr<Blob> blob);
     int minSize() override;
     int maxSize() override {return -1;}; /* Sereies always takes as much data as it can take */
@@ -55,7 +55,7 @@ class GalleyVectorBase : public GalleyBase
 class GalleyVectorStr: public GalleyVectorBase
 {
   public:
-    GalleyVectorStr(StampBaseStr & stamp_arg): GalleyVectorBase(stamp_arg) {};
+    GalleyVectorStr(std::shared_ptr<StampBaseStr> stamp_arg): GalleyVectorBase(stamp_arg) {};
     std::vector<std::string> ExtractStrVector(std::shared_ptr<Blob> blob);
 };
 
@@ -71,9 +71,9 @@ template<class T> class GalleyVectorStrStampBase:  public GalleyVectorStr, publi
 
 class GalleyVectorBin: public GalleyVectorBase
 {
-    StampBaseBin & b_stamp;
+    std::shared_ptr<StampBaseBin> b_stamp;
   public:
-    GalleyVectorBin(StampBaseBin & stamp_arg): GalleyVectorBase(stamp_arg), b_stamp(stamp_arg)  {};
+    GalleyVectorBin(std::shared_ptr<StampBaseBin> stamp_arg): GalleyVectorBase(stamp_arg), b_stamp(stamp_arg)  {};
     std::vector<std::vector<char>> ExtractBinVector(std::shared_ptr<Blob> blob);
 };
 
