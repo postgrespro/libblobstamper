@@ -56,7 +56,8 @@ GalleyVectorStr::ExtractStrVector(std::shared_ptr<Blob> blob)
 
   for(int i = 0; i<blobs.size(); i++)
   {
-    res[i] = (dynamic_cast<StampBaseStr*>(stamp.get()))->ExtractStr(blobs[i]);  // We know for sure that stamp is StampBaseStr
+    std::shared_ptr<StampBaseStr> s = std::dynamic_pointer_cast<StampBaseStr>(stamp);
+    res[i] = s->ExtractStr(blobs[i]);  // We know for sure that stamp is StampBaseStr
   }
   return res;
 }

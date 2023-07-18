@@ -62,10 +62,10 @@ class GalleyVectorStr: public GalleyVectorBase
 template<class T> class GalleyVectorStrStampBase:  public GalleyVectorStr, public StampBaseStr
 {
   protected:
-    T * item_stamp_p;
+    std::shared_ptr<T> item_stamp_p;
   public:
-    GalleyVectorStrStampBase(): GalleyVectorStr(*(item_stamp_p = new T())) {};
-    ~GalleyVectorStrStampBase() {delete item_stamp_p;};
+    GalleyVectorStrStampBase(): item_stamp_p{std::make_shared<T>()}, GalleyVectorStr(item_stamp_p) {};
+//    GalleyVectorStrStampBase(): GalleyVectorStr(item_stamp_p = std::make_shared<T>()) {};
 };
 
 
@@ -80,9 +80,9 @@ class GalleyVectorBin: public GalleyVectorBase
 
 template<class T> class GalleyVectorV: public GalleyVectorBase
 {
-    StampBaseV<T>& v_stamp;
+    std::shared_ptr<StampBaseV<T>> v_stamp;
   public:
-    GalleyVectorV(StampBaseV<T> & stamp_arg): GalleyVectorBase(stamp_arg), v_stamp(stamp_arg)  {};
+    GalleyVectorV(std::shared_ptr<StampBaseV<T>> stamp_arg): GalleyVectorBase(stamp_arg), v_stamp(stamp_arg)  {};
     std::vector<T> ExtractValuesVector(std::shared_ptr<Blob> blob);
 };
 
@@ -95,7 +95,7 @@ GalleyVectorV<T>::ExtractValuesVector(std::shared_ptr<Blob> blob)
 
   for(int i=0; i<blobs.size(); i++)
   {
-    res[i] = v_stamp.ExtractValue(blobs[i]);
+    res[i] = v_stamp->ExtractValue(blobs[i]);
   }
   return res;
 }
