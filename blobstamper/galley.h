@@ -61,11 +61,9 @@ class GalleyVectorStr: public GalleyVectorBase
 
 template<class T> class GalleyVectorStrStampBase:  public GalleyVectorStr, public StampBaseStr
 {
-  protected:
-    std::shared_ptr<T> item_stamp_p;
   public:
-    GalleyVectorStrStampBase(): item_stamp_p{std::make_shared<T>()}, GalleyVectorStr(item_stamp_p) {};
-//    GalleyVectorStrStampBase(): GalleyVectorStr(item_stamp_p = std::make_shared<T>()) {};
+    GalleyVectorStrStampBase(): GalleyVectorStr(std::make_shared<T>()) {};
+
 };
 
 
