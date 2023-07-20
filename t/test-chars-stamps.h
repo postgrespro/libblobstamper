@@ -77,13 +77,13 @@ StampSeveralChars::ExtractStr(std::shared_ptr<Blob> blob)
 class StampTwoCharsList: public StampBaseStr
 {
   protected:
-    StampTwoChars el_stamp;
+    std::shared_ptr<StampTwoChars> el_stamp;
     GalleyVectorStr galley;
   public:
     std::string ExtractStr(std::shared_ptr<Blob> blob) override;
-    StampTwoCharsList(): el_stamp {}, galley {el_stamp} {};
+    StampTwoCharsList(): el_stamp {std::make_shared<StampTwoChars>()}, galley {el_stamp} {};
 
-    virtual int minSize() override {return el_stamp.minSize();};
+    virtual int minSize() override {return el_stamp->minSize();};
     virtual int maxSize() override {return -1;};
 };
 
