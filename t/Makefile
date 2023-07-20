@@ -21,7 +21,7 @@ build-libtappp:
 	$(MAKE) -C ../libtappp
 
 %.t: %.cpp $(BLOBSTAMPER_OBJ)
-	$(CXX) $(CXXFLAGS) -I../libtappp/include -I.. -o $@ $< $(BLOBSTAMPER_OBJ)  -L../libtappp -ltap++
+	$(CXX) $(CXXFLAGS) -I../libtappp/include -g -I.. -o $@ $< $(BLOBSTAMPER_OBJ)  -L../libtappp -ltap++
 
 test: all
 	@echo run_tests.pl $(TEST_BIN)

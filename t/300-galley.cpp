@@ -44,9 +44,9 @@ main()
         std::string expected2 = "34";
         std::string expected3 = "56";
 
-        StampTwoChars stamp;
+        std::shared_ptr<StampTwoChars> stamp = std::make_shared<StampTwoChars>();
         GalleyVectorStr galley(stamp);
-	std::shared_ptr<Blob> blob = std::make_shared<Blob>(short_sample, strlen(short_sample));
+	      std::shared_ptr<Blob> blob = std::make_shared<Blob>(short_sample, strlen(short_sample));
         std::vector<std::string> res = galley.ExtractStrVector(blob);
 
         is(res[0], expected1, "GalleyVector, fixed size string stamp: First element of shifted list is ok");
@@ -64,8 +64,8 @@ main()
         std::string expected3 = "(zA, B%, CD, EF, GH, IJ, KL)";
         std::string expected4 = "(MN, OP, QR, ST, UV, WX, YZ)";
 
-	std::shared_ptr<Blob> blob= std::make_shared<Blob>(longer_sample, strlen(longer_sample));
-        StampTwoCharsList stamp_charlist;
+	      std::shared_ptr<Blob> blob= std::make_shared<Blob>(longer_sample, strlen(longer_sample));
+        std::shared_ptr<StampTwoCharsList> stamp_charlist = std::make_shared<StampTwoCharsList>();
         GalleyVectorStr galley(stamp_charlist);
 
         std::vector<std::string> res = galley.ExtractStrVector(blob);
@@ -84,9 +84,9 @@ main()
         unsigned short int expected2 = (unsigned char) '4' * 256 +(unsigned char) '3';
         unsigned short int expected3 = (unsigned char) '6' * 256 +(unsigned char) '5';
 
-        StampArithm<unsigned short int> stamp;
+        std::shared_ptr<StampArithm<unsigned short int>> stamp = std::make_shared<StampArithm<unsigned short int>>();
         GalleyVectorBin galley(stamp);
-	std::shared_ptr<Blob> blob = std::make_shared<Blob>(short_sample, strlen(short_sample));
+	      std::shared_ptr<Blob> blob = std::make_shared<Blob>(short_sample, strlen(short_sample));
         std::vector<std::vector<char>> res = galley.ExtractBinVector(blob);
 
         std::vector<char> v;
@@ -110,7 +110,7 @@ main()
     { /* 14 */
 
         signed int sample[] = {1, -2, -30, 40, -55, 6};
-        StampArithm<signed int> stamp;
+        std::shared_ptr<StampArithm<signed int>> stamp = std::make_shared<StampArithm<signed int>>();
         GalleyVectorV<signed int> galley(stamp);
 	std::shared_ptr<Blob> blob = std::make_shared<Blob>((char*)sample, sizeof(sample));
         std::vector<signed int> res = galley.ExtractValuesVector(blob);
@@ -129,8 +129,8 @@ main()
         std::string expected3 = "bcde";
         std::string expected4 = "ghij";
 
-	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
-        StampSeveralChars stamp;
+	      std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
+        std::shared_ptr<StampSeveralChars> stamp = std::make_shared<StampSeveralChars>();
         GalleyVectorStr galley(stamp);
 
         std::vector<std::string> res = galley.ExtractStrVector(blob);

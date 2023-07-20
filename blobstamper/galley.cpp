@@ -29,19 +29,19 @@
 int
 GalleyVectorBase::minSize()
 {
-  if (stamp.isFixedSize())
+  if (stamp->isFixedSize())
   {
-    return stamp.minSize(); // When size is fixed, series can have only one member with no extra data used
+    return stamp->minSize(); // When size is fixed, series can have only one member with no extra data used
   }
   else
   {
-    if (stamp.isUnbounded())
+    if (stamp->isUnbounded())
     {
-      return stamp.minSize() + ORACLE_SIZE * 2; // One -- count oracle, one -- size oracle
+      return stamp->minSize() + ORACLE_SIZE * 2; // One -- count oracle, one -- size oracle
     }
     else
     {
-      return stamp.minSize() + ORACLE_SIZE; // At leas one element with an oracle
+      return stamp->minSize() + ORACLE_SIZE; // At leas one element with an oracle
     }
   }
 }
@@ -56,7 +56,8 @@ GalleyVectorStr::ExtractStrVector(std::shared_ptr<Blob> blob)
 
   for(int i = 0; i<blobs.size(); i++)
   {
-    res[i] = (dynamic_cast<StampBaseStr &>(stamp)).ExtractStr(blobs[i]);  // We know for sure that stamp is StampBaseStr
+    std::shared_ptr<StampBaseStr> s = std::dynamic_pointer_cast<StampBaseStr>(stamp);
+    res[i] = s->ExtractStr(blobs[i]);  // We know for sure that stamp is StampBaseStr
   }
   return res;
 }
@@ -69,7 +70,7 @@ GalleyVectorBin::ExtractBinVector(std::shared_ptr<Blob> blob)
 
   for(int i = 0; i<blobs.size(); i++)
   {
-    res[i] = b_stamp.ExtractBin(blobs[i]);
+    res[i] = b_stamp->ExtractBin(blobs[i]);
   }
   return res;
 }
@@ -77,14 +78,14 @@ GalleyVectorBin::ExtractBinVector(std::shared_ptr<Blob> blob)
 std::vector<std::shared_ptr<Blob>>
 GalleyVectorBase::extract_internal(std::shared_ptr<Blob> blob)
 {
-  if (blob->Size()<stamp.minSize())
+  if (blob->Size()<stamp->minSize())
   {
      throw OutOfData(); /* FIXME: May be later add option that allows empty lists if needed*/
   }
   std::vector<std::shared_ptr<Blob>> res;
-  if (stamp.isFixedSize())
+  if (stamp->isFixedSize())
   {
-    int size = stamp.minSize();
+    int size = stamp->minSize();
     while (blob->Size() >= size)
     {
       std::shared_ptr<Blob> el = blob->Chop(size);
@@ -93,7 +94,7 @@ GalleyVectorBase::extract_internal(std::shared_ptr<Blob> blob)
   }
   else
   {
-    if (stamp.isUnbounded())
+    if (stamp->isUnbounded())
     {
       /*
          The idea of this part is following:
@@ -112,7 +113,7 @@ GalleyVectorBase::extract_internal(std::shared_ptr<Blob> blob)
       */
 
       /* Getting count oracle and normalze it to fit available size */
-      size_t count_max = (blob->Size() - ORACLE_SIZE) / (stamp.minSize() + ORACLE_SIZE);  //First oracle - for number of items, and second one is oracle for each item size
+      size_t count_max = (blob->Size() - ORACLE_SIZE) / (stamp->minSize() + ORACLE_SIZE);  //First oracle - for number of items, and second one is oracle for each item size
 
       ORACLE_STAMP stamp_oracle;
       ORACLE_TYPE count_oracle = stamp_oracle.ExtractValue(blob);
@@ -140,14 +141,14 @@ GalleyVectorBase::extract_internal(std::shared_ptr<Blob> blob)
 
       /* Calculating available vairable size, that will be destributed between parts according to size oracles */
       int data_size = blob->Size();
-      int fixed_data_size = stamp.minSize() * count_target;
+      int fixed_data_size = stamp->minSize() * count_target;
       int var_data_size = data_size - fixed_data_size;
 
       /* normalizing oracles so they fit total variable size, chop to parts and stamp parts */
       float remainder = 0; /* we do not want waste bytes because of rounding, so we keep the remainder, and reuse it. Thus we will use all bytes (alomost, may loose last one due to remainder=0.99999)*/
       for(ORACLE_TYPE o : size_oracles)
       {
-        float el_size_f = stamp.minSize() + (float) o / size_oracle_total * var_data_size + remainder;
+        float el_size_f = stamp->minSize() + (float) o / size_oracle_total * var_data_size + remainder;
         int el_size = el_size_f;
         remainder = el_size_f - el_size;
 
@@ -158,12 +159,12 @@ GalleyVectorBase::extract_internal(std::shared_ptr<Blob> blob)
     else
     {
       /* Stamp is variated size */
-      int fixed_size = stamp.minSize();
-      int var_size = stamp.maxSize() - fixed_size;
+      int fixed_size = stamp->minSize();
+      int var_size = stamp->maxSize() - fixed_size;
       ORACLE_STAMP stamp_oracle;
       while(1)
       {
-        if(stamp.minSize() + stamp_oracle.minSize() > blob->Size())
+        if(stamp->minSize() + stamp_oracle.minSize() > blob->Size())
           break;
 
         ORACLE_TYPE oracle = stamp_oracle.ExtractValue(blob);
