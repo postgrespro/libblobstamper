@@ -64,7 +64,7 @@ template<class T> class StampBasePV: public StampBaseBin
 {
   public:
     virtual sized_ptr<T> ExtractPValue(std::shared_ptr<Blob> blob) = 0;/* Should be defined by derived classes*/
-    sized_ptr<T> UnloadPValue() {return ExtractPValue(*bitten_blob);};
+    sized_ptr<T> UnloadPValue() {return ExtractPValue(bitten_blob);};
     virtual std::vector<char> ExtractBin(std::shared_ptr<Blob> blob) override;
 };
 
@@ -83,7 +83,7 @@ template<class T> class StampBaseV: public StampBasePV<T>
 {
   public:
     virtual T ExtractValue(std::shared_ptr<Blob> blob) = 0;/* Should be defined by derived classes*/
-    T UnloadValue() {return ExtractValue(*bitten_blob);};
+    T UnloadValue() {return ExtractValue(bitten_blob);};
 
     virtual std::vector<char> ExtractBin(std::shared_ptr<Blob> blob) override;
     virtual sized_ptr<T> ExtractPValue(std::shared_ptr<Blob> blob) override;

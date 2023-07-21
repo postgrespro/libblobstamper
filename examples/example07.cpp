@@ -20,8 +20,8 @@ class StampPoint3D: public StampBaseStr, public StampBaseV<Point3D>
   public:
     virtual int minSize() override;
     virtual int maxSize() override;
-    virtual std::string ExtractStr(Blob &blob) override;
-    virtual Point3D ExtractValue(Blob &blob) override;
+    virtual std::string ExtractStr(std::shared_ptr<Blob> blob) override;
+    virtual Point3D ExtractValue(std::shared_ptr<Blob> blob) override;
 };
 
 int StampPoint3D::minSize()
@@ -31,10 +31,10 @@ int StampPoint3D::minSize()
 
 int StampPoint3D::maxSize()
 {
-  return stampX.maxSize() + stampY.maxSize() + stampZ.maxSize(); 
+  return stampX.maxSize() + stampY.maxSize() + stampZ.maxSize();
 }
 
-std::string StampPoint3D::ExtractStr(Blob &blob)
+std::string StampPoint3D::ExtractStr(std::shared_ptr<Blob> blob)
 {
   std::string X,Y,Z;
   X = stampX.ExtractStr(blob);
@@ -43,7 +43,7 @@ std::string StampPoint3D::ExtractStr(Blob &blob)
   return "(" + X + ", " + Y + ", " + Z + ")";
 }
 
-Point3D StampPoint3D::ExtractValue(Blob &blob)
+Point3D StampPoint3D::ExtractValue(std::shared_ptr<Blob> blob)
 {
   Point3D res;
   res.X = stampX.ExtractValue(blob);
@@ -55,17 +55,13 @@ Point3D StampPoint3D::ExtractValue(Blob &blob)
 
 class StampPolyLine3D:  public GalleyVectorStr, public StampBaseStr
 {
-  protected:
-    StampPoint3D * item_stamp_p;
   public:
-    StampPolyLine3D(): GalleyVectorStr(*(item_stamp_p = new StampPoint3D())) {};
-    ~StampPolyLine3D() {delete item_stamp_p;};
-
-    virtual std::string ExtractStr(Blob &blob) override;
+    StampPolyLine3D(): GalleyVectorStr(std::make_shared<StampPoint3D>()) {};
+    virtual std::string ExtractStr(std::shared_ptr<Blob> blob) override;
 };
 
 
-std::string StampPolyLine3D::ExtractStr(Blob &blob)
+std::string StampPolyLine3D::ExtractStr(std::shared_ptr<Blob> blob)
 {
   std::vector<std::string> data = ExtractStrVector(blob);
   std::string res = "";
@@ -85,7 +81,7 @@ std::string StampPolyLine3D::ExtractStr(Blob &blob)
 int main()
 {
   char data[] = "abcdef" "abcdef" "ABCDEF" "012345";
-  Blob blob(data, strlen(data));
+  auto blob = std::make_shared<Blob>(data, strlen(data));
   StampPolyLine3D stamp;
 
   std::string s = stamp.ExtractStr(blob);

@@ -13,7 +13,7 @@ class StampPoint3D: public StampBaseStr
   public:
     virtual int minSize() override;
     virtual int maxSize() override;
-    virtual std::string ExtractStr(Blob &blob) override;
+    virtual std::string ExtractStr(std::shared_ptr<Blob> blob) override;
 };
 
 int StampPoint3D::minSize()
@@ -23,10 +23,10 @@ int StampPoint3D::minSize()
 
 int StampPoint3D::maxSize()
 {
-  return stampX.maxSize() + stampY.maxSize() + stampZ.maxSize(); 
+  return stampX.maxSize() + stampY.maxSize() + stampZ.maxSize();
 }
 
-std::string StampPoint3D::ExtractStr(Blob &blob)
+std::string StampPoint3D::ExtractStr(std::shared_ptr<Blob> blob)
 {
   std::string X,Y,Z;
   X = stampX.ExtractStr(blob);
@@ -39,7 +39,7 @@ std::string StampPoint3D::ExtractStr(Blob &blob)
 int main()
 {
   char data[] = "abcdef";
-  Blob blob(data, strlen(data));
+  auto blob = std::make_shared<Blob>(data, strlen(data));
   StampPoint3D stamp;
 
   std::string s = stamp.ExtractStr(blob);

@@ -9,7 +9,7 @@
 int main()
 {
   char data[] = "abcdefjhi";
-  Blob blob(data, strlen(data));
+  auto blob = std::make_shared<Blob>(data, strlen(data));
   StampArithm<short int> stamp1;
   StampArithm<short int> stamp2;
   StampArithm<short int> stamp3;

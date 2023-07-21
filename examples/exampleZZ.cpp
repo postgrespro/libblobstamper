@@ -15,7 +15,7 @@ class BinaryOp: public StampBaseStr, public GalleySetBase
     StampBaseStr &stamp1;
     StampBaseStr &stamp2;
   public:
-    virtual std::string ExtractStr(Blob &blob) override;
+    virtual std::string ExtractStr(std::shared_ptr<Blob> blob) override;
     BinaryOp(std::string arg_op_name, StampBaseStr& arg_stamp1, StampBaseStr& arg_stamp2) :
         GalleySetBase({arg_stamp1, arg_stamp2}),
         op_name(arg_op_name),
@@ -27,9 +27,9 @@ class BinaryOp: public StampBaseStr, public GalleySetBase
 };
 
 std::string
-BinaryOp::ExtractStr(Blob &blob)
+BinaryOp::ExtractStr(std::shared_ptr<Blob> blob)
 {
-  std::vector<Blob> blobs = extract_internal(blob);
+  std::vector<std::shared_ptr<Blob>> blobs = this->extract_internal(blob);
   return (std::string)"(" +  stamp1.ExtractStr(blobs[0]) + " "+  op_name + " " + stamp2.ExtractStr(blobs[1]) + ")";
 }
 
@@ -50,7 +50,7 @@ char data[] =
 "\x006\x079\x022\x0F4\x0ED\x059\x080\x081\x08F\x0A6\x08F\x042\x08A\x0CC\x030\x019\x094\x0F3\x062\x00B\x08A\x0D4\x0F8\x0F3\x03B\x049\x0D1\x06D\x0C6\x067\x006\x0D3\x023\x035\x053\x0C1\x0F8\x068\x0EF\x0AD\x0C7\x053\x004\x02C"
 "\x092\x087\x075\x0B0\x0F0\x0F7\x0D9\x04C\x0C7\x0A2\x095\x02B\x038\x02E\x0F2\x005\x0BE\x0CD\x02E\x093\x08A\x088\x063\x07D\x0F1\x08A\x002\x0D0\x0B9\x05C\x008\x066\x002\x044\x0B0\x08F\x041\x009\x06F\x0E5\x08B\x068\x0EB\x05A";
 
-  Blob blob(data, strlen(data));
+  auto blob = std::make_shared<Blob>(data, strlen(data));
 
   StampArithm<unsigned char> stampс;
 
@@ -67,7 +67,7 @@ char data[] =
 
   for(int i=stamp_lot.minSize(); i<=strlen(data);i++)
   {
-    Blob blob2(data, i);
+    auto blob2 = std::make_shared<Blob>(data, i);
     std::cout << i << " " << stamp_lot.ExtractStr(blob2) <<"\n";
   }
 }
