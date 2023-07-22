@@ -28,12 +28,12 @@ class StampMathUnaryOp: public StampBaseStr
 {
   protected:
     std::string op_name;
-    StampBaseStr &stamp;
+    std::shared_ptr<StampBaseStr> stamp;
   public:
     virtual std::string ExtractStr(std::shared_ptr<Blob> blob) override;
-    StampMathUnaryOp(std::string arg_op_name, StampBaseStr& arg_stamp) : op_name(arg_op_name), stamp(arg_stamp) {};
+    StampMathUnaryOp(std::string arg_op_name, std::shared_ptr<StampBaseStr> arg_stamp) : op_name(arg_op_name), stamp(arg_stamp) {};
     virtual int maxSize() override {return -1;};
-    virtual int minSize() override {return stamp.minSize();};
+    virtual int minSize() override {return stamp->minSize();};
 };
 
 
@@ -42,11 +42,13 @@ class StampMathBinaryOp: public StampBaseStr, public GalleySetBase
 {
   protected:
     std::string op_name;
-    StampBaseStr &stamp1;
-    StampBaseStr &stamp2;
+    std::shared_ptr<StampBaseStr> stamp1;
+    std::shared_ptr<StampBaseStr> stamp2;
   public:
     virtual std::string ExtractStr(std::shared_ptr<Blob> blob) override;
-    StampMathBinaryOp(std::string arg_op_name, StampBaseStr& arg_stamp1, StampBaseStr& arg_stamp2) :
+    StampMathBinaryOp(std::string arg_op_name,
+                      std::shared_ptr<StampBaseStr> arg_stamp1,
+                      std::shared_ptr<StampBaseStr> arg_stamp2) :
         GalleySetBase({arg_stamp1, arg_stamp2}),
         op_name(arg_op_name),
         stamp1(arg_stamp1),

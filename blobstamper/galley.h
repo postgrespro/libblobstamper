@@ -102,9 +102,9 @@ GalleyVectorV<T>::ExtractValuesVector(std::shared_ptr<Blob> blob)
 class GalleySetBase : public GalleyBase
 {
   protected:
-    std::vector<std::reference_wrapper<StampBase>> stamps;
+    std::vector<std::shared_ptr<StampBase>> stamps;
   public:
-    GalleySetBase(std::vector<std::reference_wrapper<StampBase>> arg) : stamps(arg) {};
+    GalleySetBase(std::vector<std::shared_ptr<StampBase>> arg) : stamps(arg) {};
     std::vector<std::shared_ptr<Blob>> extract_internal(std::shared_ptr<Blob> blob);
     void LoadAll(std::shared_ptr<Blob> blob);
 
@@ -114,39 +114,17 @@ class GalleySetBase : public GalleyBase
 
 class GalleySetBin : public GalleySetBase
 {
-    std::vector<std::reference_wrapper<StampBaseBin>> b_stamps;
   public:
-    GalleySetBin(std::vector<std::reference_wrapper<StampBaseBin>> arg) : GalleySetBase(cast_arg(arg)), b_stamps(arg) {};
+    GalleySetBin(std::vector<std::shared_ptr<StampBaseBin>> arg) : GalleySetBase(cast_shared_vector<StampBase>(arg)) {};
     std::vector<std::vector<char>> ExtractBinSet(std::shared_ptr<Blob> blob);
-
-    std::vector<std::reference_wrapper<StampBase>> cast_arg(std::vector<std::reference_wrapper<StampBaseBin>> in)
-    {
-      std::vector<std::reference_wrapper<StampBase>> res;
-      for(StampBaseBin & s : in)
-      {
-        res.push_back(s);
-      }
-      return res;
-    };
 };
 
 
 class GalleySetStr : public GalleySetBase
 {
-    std::vector<std::reference_wrapper<StampBaseStr>> s_stamps;
   public:
-    GalleySetStr(std::vector<std::reference_wrapper<StampBaseStr>> arg) : GalleySetBase(cast_arg(arg)), s_stamps(arg) {}; 
+    GalleySetStr(std::vector<std::shared_ptr<StampBaseStr>> arg) : GalleySetBase(cast_shared_vector<StampBase>(arg)){};
     std::vector<std::string> ExtractStrSet(std::shared_ptr<Blob> blob);
-
-    std::vector<std::reference_wrapper<StampBase>> cast_arg(std::vector<std::reference_wrapper<StampBaseStr>> in)
-    {
-      std::vector<std::reference_wrapper<StampBase>> res;
-      for(StampBaseStr & s : in)
-      {
-        res.push_back(s);
-      }
-      return res;
-    };
 };
 
 

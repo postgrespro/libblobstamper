@@ -156,10 +156,10 @@ main()
 
 	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
 
-        StampTwoChars stamp;
-        std::vector<std::reference_wrapper<StampBaseStr>> stamps;
-        stamps.push_back(stamp);
-        stamps.push_back(stamp);
+        auto stamp = std::make_shared<StampTwoChars>();
+        std::vector<std::shared_ptr<StampBaseStr>> stamps;
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(stamp));
 
         GalleySetStr galley(stamps);
 
@@ -175,8 +175,8 @@ main()
 
         is(blob->Size(), strlen(sample) - res[0].length() - res[1].length(), "GalleySet: shifts no extra bytes for fixed stamps");
 
-        is(galley.minSize(), stamp.minSize()*2, "GalleySet, fixed size string stamps: galley min size is ok");
-        is(galley.maxSize(), stamp.maxSize()*2, "GalleySet, fixed size string stamps: galley max size is ok");
+        is(galley.minSize(), stamp->minSize()*2, "GalleySet, fixed size string stamps: galley min size is ok");
+        is(galley.maxSize(), stamp->maxSize()*2, "GalleySet, fixed size string stamps: galley max size is ok");
     }
 
     /* Test Galley Set with variated size stamps*/
@@ -189,10 +189,10 @@ main()
 
 	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
 
-        StampSeveralChars stamp;
-        std::vector<std::reference_wrapper<StampBaseStr>> stamps;
-        stamps.push_back(stamp);
-        stamps.push_back(stamp);
+        auto stamp = std::make_shared<StampSeveralChars>();
+        std::vector<std::shared_ptr<StampBaseStr>> stamps;
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(stamp));
 
         GalleySetStr galley(stamps);
 
@@ -209,8 +209,8 @@ main()
 
         is(blob->Size(), strlen(sample) - res[0].length() - res[1].length() - ORACLE_SIZE*2, "GalleySet: shifts one oracle for each variated stamps");
 
-        is(galley.minSize(), stamp.minSize()*2 + ORACLE_SIZE * 2, "GalleySet, variated size string stamps: galley min size is ok");
-        is(galley.maxSize(), stamp.maxSize()*2 + ORACLE_SIZE * 2, "GalleySet, variated size string stamps: galley max size is ok");
+        is(galley.minSize(), stamp->minSize()*2 + ORACLE_SIZE * 2, "GalleySet, variated size string stamps: galley min size is ok");
+        is(galley.maxSize(), stamp->maxSize()*2 + ORACLE_SIZE * 2, "GalleySet, variated size string stamps: galley max size is ok");
     }
 
     /* Test Galley Set with unbounded size stamps*/
@@ -223,10 +223,10 @@ main()
 
 	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
 
-        StampTwoCharsList stamp;
-        std::vector<std::reference_wrapper<StampBaseStr>> stamps;
-        stamps.push_back(stamp);
-        stamps.push_back(stamp);
+        auto stamp = std::make_shared<StampTwoCharsList>();
+        std::vector<std::shared_ptr<StampBaseStr>> stamps;
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(stamp));
 
         GalleySetStr galley(stamps);
 
@@ -241,7 +241,7 @@ main()
 
         is(blob->Size(), 0 , "GalleySet: will use all data for unbounded stamp");
 
-        is(galley.minSize(), stamp.minSize()*2 + ORACLE_SIZE * 2, "GalleySet, unbounded size string stamps: galley min size is ok");
+        is(galley.minSize(), stamp->minSize()*2 + ORACLE_SIZE * 2, "GalleySet, unbounded size string stamps: galley min size is ok");
         is(galley.maxSize(), -1, "GalleySet, unbounded size string stamps: galley max size is ok");
 
     }
@@ -261,17 +261,17 @@ main()
 	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
 
 
-        StampTwoChars f_stamp;
-        StampSeveralChars v_stamp;
-        StampTwoCharsList u_stamp;
+        auto f_stamp = std::make_shared<StampTwoChars>();
+        auto v_stamp = std::make_shared<StampSeveralChars>();
+        auto u_stamp = std::make_shared<StampTwoCharsList>();
 
-        std::vector<std::reference_wrapper<StampBaseStr>> stamps;
-        stamps.push_back(u_stamp);
-        stamps.push_back(v_stamp);
-        stamps.push_back(v_stamp);
-        stamps.push_back(f_stamp);
-        stamps.push_back(u_stamp);
-        stamps.push_back(f_stamp);
+        std::vector<std::shared_ptr<StampBaseStr>> stamps;
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(u_stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(v_stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(v_stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(f_stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(u_stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(f_stamp));
 
         GalleySetStr galley(stamps);
 
@@ -300,7 +300,7 @@ main()
 
         is(blob->Size(), 0 , "GalleySet: will use all data if we have at least one unbounded stamp");
 
-        is(galley.minSize(), (f_stamp.minSize()+v_stamp.minSize()+u_stamp.minSize())*2 + ORACLE_SIZE * (2+2+1), "GalleySet, mixed types stamps: galley min size is ok");
+        is(galley.minSize(), (f_stamp->minSize()+v_stamp->minSize()+u_stamp->minSize())*2 + ORACLE_SIZE * (2+2+1), "GalleySet, mixed types stamps: galley min size is ok");
         is(galley.maxSize(), -1, "GalleySet, mixed types stamps: galley max size is ok");
     }
 
@@ -316,13 +316,13 @@ main()
 	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
 
 
-        StampTwoChars f_stamp;
-        StampTwoCharsList u_stamp;
+        auto f_stamp = std::make_shared<StampTwoChars>();
+        auto u_stamp = std::make_shared<StampTwoCharsList>();
 
-        std::vector<std::reference_wrapper<StampBaseStr>> stamps;
-        stamps.push_back(f_stamp);
-        stamps.push_back(u_stamp);
-        stamps.push_back(f_stamp);
+        std::vector<std::shared_ptr<StampBaseStr>> stamps;
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(f_stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(u_stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(f_stamp));
 
         GalleySetStr galley(stamps);
 
@@ -342,7 +342,7 @@ main()
 
         is(blob->Size(), 0 , "GalleySet 2: will use all data if we have at least one unbounded stamp");
 
-        is(galley.minSize(), f_stamp.minSize()*2 + u_stamp.minSize() , "GalleySet 2, mixed types stamps: galley min size is ok");
+        is(galley.minSize(), f_stamp->minSize()*2 + u_stamp->minSize() , "GalleySet 2, mixed types stamps: galley min size is ok");
         is(galley.maxSize(), -1, "GalleySet, mixed types stamps 2: galley max size is ok");
     }
 
@@ -360,17 +360,17 @@ main()
 
 	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
 
-        StampTwoChars f_stamp;
-        StampSeveralChars v_stamp;
-        StampTwoCharsList u_stamp;
+        auto f_stamp = std::make_shared<StampTwoChars>();
+        auto v_stamp = std::make_shared<StampSeveralChars>();
+        auto u_stamp = std::make_shared<StampTwoCharsList>();
 
-        std::vector<std::reference_wrapper<StampBaseStr>> stamps;
-        stamps.push_back(u_stamp);
-        stamps.push_back(v_stamp);
-        stamps.push_back(v_stamp);
-        stamps.push_back(f_stamp);
-        stamps.push_back(u_stamp);
-        stamps.push_back(f_stamp);
+        std::vector<std::shared_ptr<StampBaseStr>> stamps;
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(u_stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(v_stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(v_stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(f_stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(u_stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(f_stamp));
 
         GalleySetStr galley(stamps);
 
@@ -399,7 +399,7 @@ main()
 
         is(blob->Size(), 0 , "GalleySet 3: will use all data if we have at least one unbounded stamp");
 
-        is(galley.minSize(), (f_stamp.minSize()+v_stamp.minSize()+u_stamp.minSize())*2 + ORACLE_SIZE * (2+2+1), "GalleySet, mixed types stamps 3: galley min size is ok");
+        is(galley.minSize(), (f_stamp->minSize()+v_stamp->minSize()+u_stamp->minSize())*2 + ORACLE_SIZE * (2+2+1), "GalleySet, mixed types stamps 3: galley min size is ok");
         is(galley.maxSize(), -1, "GalleySet, mixed types stamps 3: galley max size is ok");
     }
 
@@ -410,17 +410,17 @@ main()
 
 	std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
 
-        StampTwoChars f_stamp;
-        StampSeveralChars v_stamp;
-        StampTwoCharsList u_stamp;
+        auto f_stamp = std::make_shared<StampTwoChars>();
+        auto v_stamp = std::make_shared<StampSeveralChars>();
+        auto u_stamp = std::make_shared<StampTwoCharsList>();
 
-        std::vector<std::reference_wrapper<StampBaseStr>> stamps;
-        stamps.push_back(u_stamp);
-        stamps.push_back(v_stamp);
-        stamps.push_back(v_stamp);
-        stamps.push_back(f_stamp);
-        stamps.push_back(u_stamp);
-        stamps.push_back(f_stamp);
+        std::vector<std::shared_ptr<StampBaseStr>> stamps;
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(u_stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(v_stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(v_stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(f_stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(u_stamp));
+        stamps.push_back(std::dynamic_pointer_cast<StampBaseStr>(f_stamp));
 
         GalleySetStr galley(stamps);
         try{
@@ -438,7 +438,7 @@ main()
 
         is(blob->Size(), strlen(sample) , "GalleySet 4: will use keep all data when applying galley fails");
 
-        is(galley.minSize(), (f_stamp.minSize()+v_stamp.minSize()+u_stamp.minSize())*2 + ORACLE_SIZE * (2+2+1), "GalleySet, mixed types stamps 4: galley min size is ok");
+        is(galley.minSize(), (f_stamp->minSize()+v_stamp->minSize()+u_stamp->minSize())*2 + ORACLE_SIZE * (2+2+1), "GalleySet, mixed types stamps 4: galley min size is ok");
         is(galley.maxSize(), -1, "GalleySet, mixed types stamps 4: galley max size is ok");
     }
     TEST_END;

@@ -197,16 +197,16 @@ GalleySetBase::extract_internal(std::shared_ptr<Blob> blob)
     int variated_count = 0;
 
     /* Loop throight stamps calculating total sizes and seeing what kind of stamps do we have*/
-    for(StampBase & s : stamps)
+    for(std::shared_ptr<StampBase> s : stamps)
     {
-        fixed_total_size += s.minSize();
-        if (s.isVariated())
+        fixed_total_size += s->minSize();
+        if (s->isVariated())
         {
-            max_varited_total_size += s.maxSize() - s.minSize();
+            max_varited_total_size += s->maxSize() - s->minSize();
             has_variated_stamps = true;
             variated_count++;
         }
-        if (s.isUnbounded())
+        if (s->isUnbounded())
         {
             has_unbounded_stamps = true;
             unbounded_count++;
@@ -254,13 +254,13 @@ GalleySetBase::extract_internal(std::shared_ptr<Blob> blob)
     double total_unbounded_modifiers = 0;
 
     std::vector<double> size_modifiers;
-    for(StampBase & s : stamps)
+    for(std::shared_ptr<StampBase> s : stamps)
     {
         ORACLE_TYPE o_value = 0;
         double modifier = 0;
-        if (!s.isFixedSize())
+        if (!s->isFixedSize())
         {
-            if (s.isUnbounded() && unbounded_count <=1 )
+            if (s->isUnbounded() && unbounded_count <=1 )
             {
                modifier = 1; //Nothing to predict, it will use all space
             } else
@@ -268,12 +268,12 @@ GalleySetBase::extract_internal(std::shared_ptr<Blob> blob)
               o_value = oracle_stamp.ExtractValue(blob);
               modifier = (double) o_value / (double) ORACLE_MAX;
             }
-            if (s.isUnbounded())
+            if (s->isUnbounded())
             {
                 total_unbounded_modifiers += modifier;
             } else
             {
-                predicted_variated_total_size += (s.maxSize() - s.minSize()) * modifier;
+                predicted_variated_total_size += (s->maxSize() - s->minSize()) * modifier;
             }
         }
         size_modifiers.push_back(modifier);
@@ -283,8 +283,8 @@ GalleySetBase::extract_internal(std::shared_ptr<Blob> blob)
         total_unbounded_modifiers = 0;
         for(int i=0; i<stamps.size();i++)
         {
-            StampBase &s = stamps[i];
-            if (s.isUnbounded())
+            std::shared_ptr<StampBase> s = stamps[i];
+            if (s->isUnbounded())
             {
                 size_modifiers[i] = 1;
                 total_unbounded_modifiers += 1;
@@ -321,26 +321,26 @@ GalleySetBase::extract_internal(std::shared_ptr<Blob> blob)
     /* chopping this sizes out of the blob and saving them a result vector*/
     for(int i=0; i<stamps.size();i++)
     {
-        StampBase &s = stamps[i];
+        std::shared_ptr<StampBase> s = stamps[i];
         double modifier = size_modifiers[i];
         int el_size;
-        if (s.isFixedSize())
+        if (s->isFixedSize())
         {
-           el_size = s.minSize();
+           el_size = s->minSize();
         }
-        if (s.isVariated())
+        if (s->isVariated())
         {
-          double len = (s.maxSize() - s.minSize()) * modifier * k_variated + variated_remainder;
+          double len = (s->maxSize() - s->minSize()) * modifier * k_variated + variated_remainder;
           el_size = round(len);
           variated_remainder = len - el_size;
-          el_size += s.minSize();
+          el_size += s->minSize();
         }
-        if (s.isUnbounded())
+        if (s->isUnbounded())
         {
           double len =  modifier * k_unbounded + unbounded_remainder;
           el_size = round(len);
           unbounded_remainder = len - el_size;
-          el_size +=s.minSize();
+          el_size +=s->minSize();
         }
 	std::shared_ptr<Blob> blob2 = blob->Chop(el_size);
         res.push_back(blob2);
@@ -355,8 +355,8 @@ GalleySetBase::LoadAll(std::shared_ptr<Blob> blob)
     for(int i=0; i<blobs.size(); i++)
     {
 	std::shared_ptr<Blob> blob = blobs[i];
-        StampBase & stamp = stamps[i];
-        stamp.Load(blob);
+        std::shared_ptr<StampBase> s = stamps[i];
+        s->Load(blob);
     }
 }
 
@@ -369,8 +369,8 @@ GalleySetStr::ExtractStrSet(std::shared_ptr<Blob> blob)
     for(int i=0; i<blobs.size(); i++)
     {
 	std::shared_ptr<Blob> blob = blobs[i];
-        StampBaseStr & stamp = s_stamps[i];
-        std::string str = stamp.ExtractStr(blob);
+        auto stamp = std::dynamic_pointer_cast<StampBaseStr>(stamps[i]);
+        std::string str = stamp->ExtractStr(blob);
         res.push_back(str);
     }
     return res;
@@ -384,8 +384,8 @@ GalleySetBin::ExtractBinSet(std::shared_ptr<Blob> blob)
     for(int i=0; i<blobs.size(); i++)
     {
 	std::shared_ptr<Blob> blob = blobs[i];
-        StampBaseBin & stamp = b_stamps[i];
-        std::vector<char> v = stamp.ExtractBin(blob);
+        auto stamp = std::dynamic_pointer_cast<StampBaseBin>(stamps[i]);
+        std::vector<char> v = stamp->ExtractBin(blob);
         res.push_back(v);
     }
     return res;
@@ -403,15 +403,15 @@ GalleySetBase::minSize()
     int res = 0;
 
     /* Loop throight stamps calculating total sizes and seeing what kind of stamps do we have*/
-    for(StampBase & s : stamps)
+    for(std::shared_ptr<StampBase> s : stamps)
     {
-        res += s.minSize();
-        if (s.isVariated())
+        res += s->minSize();
+        if (s->isVariated())
         {
             has_variated_stamps = true;
             variated_count++;
         }
-        if (s.isUnbounded())
+        if (s->isUnbounded())
         {
             has_unbounded_stamps = true;
             unbounded_count++;
@@ -434,14 +434,14 @@ GalleySetBase::maxSize()
     int res = 0;
 
     /* Loop throight stamps calculating total sizes and seeing what kind of stamps do we have*/
-    for(StampBase & s : stamps)
+    for(std::shared_ptr<StampBase> s : stamps)
     {
-        res += s.maxSize();
-        if (s.isVariated())
+        res += s->maxSize();
+        if (s->isVariated())
         {
             res += ORACLE_SIZE;  // Each variated stamp needs an oracle to predict it's size. It also affects max size
         }
-        if (s.isUnbounded())
+        if (s->isUnbounded())
         {
             return -1; // Junst one unbounded stamp makes all thing unbounded
         }

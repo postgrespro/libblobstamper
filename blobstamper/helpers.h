@@ -20,6 +20,7 @@
 #define HELPERS_H
 
 #include<vector>
+#include<memory>
 
 void hexdump(void *pAddressIn, long  lSize);
 
@@ -145,7 +146,16 @@ VLATO_ptr<T,ArrayT>::VLATO_ptr(size_t offset, size_t length)
   _offset = offset;
 }
 
-
-
+template<class Tto, class Tfrom>
+std::vector<std::shared_ptr<Tto>> cast_shared_vector(std::vector<std::shared_ptr<Tfrom>> v)
+{
+  std::vector<std::shared_ptr<Tto>> res;
+  for(auto e : v)
+  {
+    auto p = std::dynamic_pointer_cast<Tto>(e);
+    res.push_back(p);
+  }
+  return res;
+}
 
 #endif  /*HELPERS_H*/
