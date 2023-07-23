@@ -69,18 +69,16 @@ template<class T> class GalleyVectorStrStampBase:  public GalleyVectorStr, publi
 
 class GalleyVectorBin: public GalleyVectorBase
 {
-    std::shared_ptr<StampBaseBin> b_stamp;
   public:
-    GalleyVectorBin(std::shared_ptr<StampBaseBin> stamp_arg): GalleyVectorBase(stamp_arg), b_stamp(stamp_arg)  {};
+    GalleyVectorBin(std::shared_ptr<StampBaseBin> stamp_arg): GalleyVectorBase(stamp_arg) {};
     std::vector<std::vector<char>> ExtractBinVector(std::shared_ptr<Blob> blob);
 };
 
 
 template<class T> class GalleyVectorV: public GalleyVectorBase
 {
-    std::shared_ptr<StampBaseV<T>> v_stamp;
   public:
-    GalleyVectorV(std::shared_ptr<StampBaseV<T>> stamp_arg): GalleyVectorBase(stamp_arg), v_stamp(stamp_arg)  {};
+    GalleyVectorV(std::shared_ptr<StampBaseV<T>> stamp_arg): GalleyVectorBase(stamp_arg) {};
     std::vector<T> ExtractValuesVector(std::shared_ptr<Blob> blob);
 };
 
@@ -93,7 +91,7 @@ GalleyVectorV<T>::ExtractValuesVector(std::shared_ptr<Blob> blob)
 
   for(int i=0; i<blobs.size(); i++)
   {
-    res[i] = v_stamp->ExtractValue(blobs[i]);
+    res[i] = std::dynamic_pointer_cast<StampBaseV<T>>(stamp)->ExtractValue(blobs[i]);
   }
   return res;
 }

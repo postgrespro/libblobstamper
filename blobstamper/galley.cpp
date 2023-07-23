@@ -70,7 +70,7 @@ GalleyVectorBin::ExtractBinVector(std::shared_ptr<Blob> blob)
 
   for(int i = 0; i<blobs.size(); i++)
   {
-    res[i] = b_stamp->ExtractBin(blobs[i]);
+    res[i] = std::dynamic_pointer_cast<StampBaseBin>(stamp)->ExtractBin(blobs[i]);
   }
   return res;
 }
