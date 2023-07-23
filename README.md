@@ -33,10 +33,9 @@ You can use stamp on a Blob as many times as you like until you are out of Blob 
 Stamp is a C++ object that "bites" chunk of binary data from Blob and converts it
 into certain structured representation (text string with syntax that is provided
 by stamp or C-structure)
-
 ```
   char data[] ="abcdefghijk";
-  Blob blob(data, strlen(data));  // Blob with "random" data
+  auto blob = std::make_shared<Blob>(data, strlen(data));  // Blob with "random" data
 
   StampArithm<short int> stamp;  // Stamp for getting short integer (both string and value representations)
 
@@ -110,10 +109,10 @@ Example:
 
 ```
   char data[] ="abcdefghijk";
-  Blob blob1(data, strlen(data));  // Blob with "random" data
-  Blob blob2(data, strlen(data));  // Another Blob with same data
+  auto blob1 = std::make_shared<Blob>(data, strlen(data));  // Blob with "random" data
+  auto blob2 = std::make_shared<Blob>(data, strlen(data));  // Another Blob with same data
 
-  StampArithm<short int> stamp;  // Stamp for short integer data (both string and value)
+  auto stamp = std::make_shared<StampArithm<short int>>();  // Stamp for short integer data (both string and value)
 
   GalleyVectorStr galley_s(stamp);
   GalleyVectorV<short int> galley_v(stamp);
@@ -134,10 +133,10 @@ Example:
 
 ```
   char data[] ="abcdefghijk";
-  Blob blob(data, strlen(data));  // Blob with "random" data
+  auto blob = std::make_shared<Blob>(data, strlen(data));  // Blob with "random" data
 
-  StampArithm<short int> stamp_i;  // Stamp for short integer data (both string and value)
-  StampArithm<float> stamp_f;      // Stamp for float numeric data (both string and value)
+  auto stamp_i = std::make_shared<StampArithm<short int>>();  // Stamp for short integer data (both string and value)
+  auto stamp_f = std::make_shared<StampArithm<float>>();      // Stamp for float numeric data (both string and value)
 
   GalleySetStr galley({stamp_i, stamp_f});
 
@@ -180,7 +179,7 @@ class ComplexIntStamp: public StampBaseStr
   public:
     virtual int minSize() override;
     virtual int maxSize() override;
-    virtual std::string ExtractStr(Blob &blob) override;
+    virtual std::string ExtractStr(std::shared_ptr<Blob> blob) override;
 };
 ```
 Actually here we can have one `StampArithm<short int>` stamp, and apply it two times.  
@@ -205,7 +204,7 @@ Now we will implement Extract Method.
 We just extract two values with `stampA` and `stampB` and combine them into string we want.
 
 ```
-std::string ComplexIntStamp::ExtractStr(Blob &blob)
+std::string ComplexIntStamp::ExtractStr(std::shared_ptr<Blob> blob)
 {
   std::string A, B;
   A = stampA.ExtractStr(blob);
@@ -220,7 +219,7 @@ Now you can use your stamp the way any stamp is used:
 int main()
 {
   char data[] = "abcdef";
-  Blob blob(data, strlen(data));
+  auto blob = std::make_shared<Blob>(data, strlen(data));
   ComplexIntStamp stamp;
 
   std::string s = stamp.ExtractStr(blob);
@@ -254,7 +253,7 @@ class ComplexIntStamp: public StampBaseV<complex_short>
   public:
     virtual int minSize() override;
     virtual int maxSize() override;
-    virtual complex_short ExtractValue(Blob &blob) override;
+    virtual complex_short ExtractValue(std::shared_ptr<Blob> blob) override;
 };
 ```
 
@@ -277,7 +276,7 @@ In `ExtractValue` method we locally create desired structure, fill it with
 values fetched from the Blob, and return the structure by value.
 
 ```
-complex_short ComplexIntStamp::ExtractValue(Blob &blob)
+complex_short ComplexIntStamp::ExtractValue(std::shared_ptr<Blob> blob)
 {
   complex_short res;
   res.re = stampA.ExtractValue(blob);
@@ -292,7 +291,7 @@ Then we can use stamp for extracting `complex_short` directly from the Blob:
 int main()
 {
   char data[] = "abcdef";
-  Blob blob(data, strlen(data));
+  auto blob = std::make_shared<Blob> (data, strlen(data));
   ComplexIntStamp stamp;
 
   complex_short cs = stamp.ExtractValue(blob);
@@ -310,14 +309,13 @@ To add extract method to Galley you should use multiple inheritance.
 ```
 class ArrayOfComplexIntStamp: public GalleyVectorStr, public StampBaseStr
 {
-  protected:
-    ComplexIntStamp * item_stamp_p;
   public:
-    ComplexIntArrayStamp(): GalleyVectorStr(*(item_stamp_p = new ComplexIntStamp())) {};
-    ~ComplexIntArrayStamp() {delete item_stamp_p;};
+    ArrayOfComplexIntStamp(): GalleyVectorStr(std::dynamic_pointer_cast<StampBaseStr>(std::make_shared<ComplexIntStamp>()))  {};
 
-    virtual std::string ExtractStr(Blob &blob) override;
+    virtual std::string ExtractStr(std::shared_ptr<Blob> blob) override;
 };
+
+
 ```
 Because of initialization order issue, we have to initialize the stamp inside the call of parent class constructor via `new` method, and then destroy in in the destructor.
 
@@ -326,7 +324,7 @@ We implement only the Extract method we need.
 
 
 ```
-std::string ComplexIntArrayStamp::ExtractStr(Blob &blob)
+std::string ArrayOfComplexIntStamp::ExtractStr(std::shared_ptr<Blob> blob)
 {
   std::vector<std::string> data = ExtractStrVector(blob);
   std::string res = "";
@@ -403,15 +401,14 @@ If you have Stamp with Value Extract Method, and you are going to use `GalleyVec
 It would be something like that:
 
 ```
-ComplexIntStamp stamp;
+auto stamp = std::make_shared<ComplexIntStamp>();
 GalleyVectorV<complex_short> galley(stamp);
 complex_short *result;
-int result_size;
 std::vector<complex_short> vec = galley.ExtractValuesVector(blob);
-result_len = vec.size();
+int result_size = vec.size();
 
-result = (complex_short *) malloc(sizeof(complex_short) * result_len));
-memcpy((void*) result, (void*) &vec[0], sizeof(complex_short) * result_len);
+result = (complex_short *) malloc(sizeof(complex_short) * result_size);
+memcpy((void*) result, (void*) &vec[0], sizeof(complex_short) * result_size);
 ```
 
 ## Further reading
