@@ -53,4 +53,14 @@ class StampDictLCAlphaSmall : public StampDict
     StampDictLCAlphaSmall (): StampDict(std::make_shared<DictLCAlphaSmall>()) {};
 };
 
+
+template<class T> class StampDictT: public StampDict
+{
+  protected:
+    std::shared_ptr<T> dict;
+  public:
+    StampDictT<T>(): StampDict(dict = std::make_shared<T>()) {};
+};
+
+
 #endif /* STAMP_DICT_H */

@@ -32,15 +32,27 @@ class StampBase
 {
   protected:
     std::shared_ptr<Blob> bitten_blob;
+    bool                  is_recursive = 0;
+    bool                  is_in_recursion = 0;
   public:
-    virtual int  minSize() = 0;
-    virtual int  maxSize() = 0;
+    virtual int minSize() = 0;
+    virtual int maxSize() = 0;
 
     void Load(std::shared_ptr<Blob> blob);
 
     bool isFixedSize() {return minSize() == maxSize();}
     bool isVariated()  {return ! isFixedSize() && ! isUnbounded();}
     bool isUnbounded() {return maxSize() == -1;}
+    virtual bool isRecursive() {return is_recursive;}
+};
+
+class StampRecursive: public virtual StampBase
+{
+  protected:
+//    bool is_in_recursion = 0;
+  public:
+    StampRecursive() {is_recursive = 1;}
+    virtual ssize_t minSizeNR() = 0;
 };
 
 

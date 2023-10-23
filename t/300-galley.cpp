@@ -123,26 +123,31 @@ main()
           but at least here we check that it work the same way it worked before. May be this test should be improved later*/
 
         char sample[]="z1234567*89abcde&fghijklm";
-
+        char sample2[]="1234";
         std::string expected1 = "234";
         std::string expected2 = "7*8";
         std::string expected3 = "bcde";
         std::string expected4 = "ghij";
 
-	      std::shared_ptr<Blob> blob = std::make_shared<Blob>(sample, strlen(sample));
-        std::shared_ptr<StampSeveralChars> stamp = std::make_shared<StampSeveralChars>();
+        auto blob  = std::make_shared<Blob>(sample, strlen(sample));
+        auto stamp = std::make_shared<StampSeveralChars>();
         GalleyVectorStr galley(stamp);
 
         std::vector<std::string> res = galley.ExtractStrVector(blob);
-        std::string str;
+//        std::string str;
 
-        is(res[0], expected1, "GalleyVector, unlimited size string stamp: First element of shifted list is ok");
-        is(res[1], expected2, "GalleyVector, unlimited size string stamp: Second element of shifted list is ok");
-        is(res[2], expected3, "GalleyVector, unlimited size string stamp: Third element of shifted list is ok");
-        is(res[3], expected4, "GalleyVector, unlimited size string stamp: Fourth element of shifted list is ok");
+        is(res[0], expected1, "GalleyVector, variated size string stamp: First element of shifted list is ok");
+        is(res[1], expected2, "GalleyVector, variated size string stamp: Second element of shifted list is ok");
+        is(res[2], expected3, "GalleyVector, variated size string stamp: Third element of shifted list is ok");
+        is(res[3], expected4, "GalleyVector, variated size string stamp: Fourth element of shifted list is ok");
 
-        is(res.size(), 4, "GalleyVector, unlimited size string stamp: The list has only 4 members");
+        is(res.size(), 4, "GalleyVector, variated size string stamp: The list has only 4 members");
 
+        auto blob2 = std::make_shared<Blob>(sample2, strlen(sample2));
+        res = galley.ExtractStrVector(blob2);
+        
+
+        
     }
 
     /* Test GalleySet with fixed size stamps*/
