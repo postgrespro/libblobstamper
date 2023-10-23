@@ -26,6 +26,7 @@
 #include <tap++/tap++.h>
 
 #include "blobstamper/blobstamper.h"
+#include "blobstamper/oracle.h"
 
 #include "test-chars-stamps.h"
 

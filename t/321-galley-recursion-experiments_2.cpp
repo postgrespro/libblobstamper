@@ -28,6 +28,7 @@
 
 #include "blobstamper/blobstamper.h"
 #include "blobstamper/dict.h"
+#include "blobstamper/oracle.h"
 
 #include "test-chars-stamps.h"
 
@@ -44,20 +45,6 @@ unsigned char bin_sample[]= {49, 22, 152, 226, 89, 119, 247, 115, 43, 42, 243, 7
 //class TestRNode2;
 //class TestRNode3;
 
-size_t
-Proportion(ORACLE_TYPE oracle, size_t min, size_t max)
-{
-  /* Sorry explanation is in Russian. PR translation if you can */
-  /* Считаем пропорацию, с округлением вниз.
-   * Диапазон увиличиваем на единицу, чтобы хвост диапазона пресказания при
-   * округлении вниз как раз попадал в последний элемент целевого диапозона.
-   * Разброс предсказания увеличиваем на единицу, так чтобы ровно на конец
-   * хвоста диапазона предсказания не попасть никогда и тогда он не округлиться 
-   * в max + 1*/
-  size_t delta = max - min + 1;
-  size_t res = floor(((float) oracle) / ((float) ORACLE_MAX + 1) * delta );
-  return min + res;
-}
 
 class PoolPickerStamp : public virtual StampBaseStr
 {
@@ -122,7 +109,7 @@ fprintf(stderr, "*");
     }
   }
 
-  size_t index = Proportion(oracle, 0, target_pool.size() - 1);
+  size_t index = OracleProportion(oracle, 0, target_pool.size() - 1);
   return target_pool[index].lock()->ExtractStr(blob);
 }
 
@@ -243,12 +230,12 @@ main()
 
     TEST_START(6);
     {
-       is(Proportion(0,0,255), 0);
-       is(Proportion(255,0,255), 0);
-       is(Proportion(256,0,255), 1);
-       is(Proportion(65535,0,255), 255);
-       is(Proportion(65535-255,0,255), 255);
-       is(Proportion(65535-256,0,255), 254);
+       is(OracleProportion(0,0,255), 0);
+       is(OracleProportion(255,0,255), 0);
+       is(OracleProportion(256,0,255), 1);
+       is(OracleProportion(65535,0,255), 255);
+       is(OracleProportion(65535-255,0,255), 255);
+       is(OracleProportion(65535-256,0,255), 254);
 
     }
     TEST_END;

@@ -24,7 +24,7 @@
 #include "stamp.h"
 #include "stamp_arithm.h"
 #include "galley.h"
-
+#include "oracle.h"
 
 int
 GalleyVectorBase::minSize()

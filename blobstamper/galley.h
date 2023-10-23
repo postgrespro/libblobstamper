@@ -19,19 +19,12 @@
 #ifndef GALLEY_H
 #define GALLEY_H
 
-
-#include <limits>
 #include <vector>
 #include <functional> // for std::reference_wrapper
 
 #include "stamp.h"
 #include "blob.h"
 
-
-#define ORACLE_TYPE unsigned short int
-#define ORACLE_STAMP StampArithm<ORACLE_TYPE>
-#define ORACLE_SIZE sizeof(ORACLE_TYPE)
-#define ORACLE_MAX std::numeric_limits<ORACLE_TYPE>::max()
 
 class GalleyBase: public virtual StampBase
 /* Galley is a kind of stamp, somwhere deep inside. */
@@ -63,7 +56,6 @@ template<class T> class GalleyVectorStrStampBase:  public GalleyVectorStr, publi
 {
   public:
     GalleyVectorStrStampBase(): GalleyVectorStr(std::make_shared<T>()) {};
-
 };
 
 
