@@ -171,9 +171,10 @@ fprintf(stderr, "fixed = %i, var_size = %i\n", fixed_size, var_size);
 
         ORACLE_TYPE oracle = stamp_oracle.ExtractValue(blob);
 
-        int size = (double) oracle / ORACLE_MAX * (var_size + 1); /* +1 -- это грубая эмуляция округления вверх. oracle == ORACLE_MAX-1 == 65534 должен дать count_max*/
-        if (size > var_size) size = var_size; // In case we've hit oracle == ORACLE_MAX boundary
-        size += fixed_size;
+        int size = OracleProportion(oracle, stamp->minSize(), stamp->maxSize());
+        if (size > blob->Size())
+          size = blob->Size();  // Getting what have been left, if not as much as we wanted
+
 fprintf(stderr,"---- %i %i\n", size, blob->Size());
         std::shared_ptr<Blob> blob2 = blob->Chop(size);
         res.push_back(blob2);
