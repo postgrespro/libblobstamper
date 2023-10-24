@@ -96,7 +96,6 @@ PoolPickerStamp::isRecursive()
 std::string
 PoolPickerStamp::ExtractStr(std::shared_ptr<Blob> blob)
 {
-fprintf(stderr, "*");
   static ORACLE_STAMP stamp_oracle;
   ORACLE_TYPE oracle = stamp_oracle.ExtractValue(blob);
 
@@ -192,36 +191,99 @@ class StampJSONArray: public StampStrEnumerator
             :StampStrEnumerator(picker, ", ", "[", "]") {};
 };
 
+class StampJSONHashEl: public StampBaseStr
+{
+  private:
+    std::shared_ptr<StampJSONString> stamp_name;
+    std::shared_ptr<PoolPickerStamp> stamp_value;
+  public:
+    StampJSONHashEl(std::shared_ptr<PoolPickerStamp> picker)
+            :stamp_value(picker), stamp_name(std::make_shared<StampJSONString>()) {};
+    virtual int minSize() override {return stamp_name->minSize() + stamp_value->minSize();};
+    virtual int maxSize() override {return -1;};
+    std::string ExtractStr(std::shared_ptr<Blob> blob) override;
+};
+
+std::string
+StampJSONHashEl::ExtractStr(std::shared_ptr<Blob> blob)
+{
+   std::string n = stamp_name->ExtractStr(blob);
+   std::string v = stamp_value->ExtractStr(blob);
+   return n + ": " + v;
+}
+
+class StampJSONHash: public StampStrEnumerator
+{
+  private:
+    std::shared_ptr<StampJSONHashEl> stamp_el;
+  public:
+    StampJSONHash(std::shared_ptr<PoolPickerStamp> picker)
+            :StampStrEnumerator(stamp_el = std::make_shared<StampJSONHashEl>(picker), ", ", "{", "}") {};
+};
+
+
+class StampJSON: public PoolPickerStamp
+{
+  private:
+    std::shared_ptr<StampJSONString> stamp_s;
+    std::shared_ptr<StampJSONInt>    stamp_i;
+    std::shared_ptr<StampJSONFloat>  stamp_f;
+    std::shared_ptr<StampJSONArray>  stamp_a;
+    std::shared_ptr<StampJSONHash>   stamp_h;
+
+  public:
+   StampJSON();
+};
+
+void null_deleter(StampJSON *) {}
+
+StampJSON::StampJSON()
+   : PoolPickerStamp({})
+{
+  stamp_i = std::make_shared<StampJSONInt>();
+  stamp_f = std::make_shared<StampJSONFloat>();
+  stamp_s = std::make_shared<StampJSONString>();
+
+  // FIXME Так не надо делеать!!!! null_deleter -- зло.
+  stamp_a = std::make_shared<StampJSONArray>(std::shared_ptr<StampJSON>(this, null_deleter));
+  stamp_h = std::make_shared<StampJSONHash>(std::shared_ptr<StampJSON>(this, null_deleter));
+  add_weak(stamp_i);
+  add_weak(stamp_f);
+  add_weak(stamp_s);
+  add_weak(stamp_a);
+  add_weak(stamp_h);
+}
 
 
 int
 main()
 {
- //   auto dict =std::make_shared<DictLCAlphaSmall>();
- //   auto stamp_d = std::make_shared<StampDict>(dict);
-//    auto stamp_d = std::make_shared<StampDictT<DictLCAlphaSmall>>();
-//    auto stamp_i = std::make_shared<StampArithm<long int>>();
-//    auto stamp_f = std::make_shared<StampArithm<float>>();
-//
     auto stamp_d = std::make_shared<StampJSONString>();
     auto stamp_i = std::make_shared<StampJSONInt>();
     auto stamp_f = std::make_shared<StampJSONFloat>();
 
 
 //    PoolPickerStamp stamp({stamp_i, stamp_f, stamp_d});
-    std::shared_ptr<PoolPickerStamp> picker(new PoolPickerStamp({stamp_i, stamp_f, stamp_d}));
+    std::shared_ptr<PoolPickerStamp> picker(new PoolPickerStamp({stamp_f, stamp_i, stamp_d}));
  //   picker->add_weak(picker);
     auto stamp_a = std::make_shared<StampJSONArray>(picker);
     picker->add_weak(stamp_a);
 
-    
-    std::shared_ptr<Blob> blob = std::make_shared<Blob>((char *)bin_sample, strlen((char *)bin_sample));
+    auto stamp_h = std::make_shared<StampJSONHash>(picker);
+    picker->add_weak(stamp_h);
 
+    fprintf(stderr," hash sizes=  %i %i \n",stamp_h->minSize(), stamp_h->maxSize());
+
+    
+    auto blob = std::make_shared<Blob>((char *)bin_sample, strlen((char *)bin_sample));
+
+    auto stamp_j = std::make_shared<StampJSON>();
 
     fprintf(stderr,"%i %i \n",stamp_a->minSize(), stamp_a->maxSize());
 //    for(int i =0; i<25; i++)
     {
-      std::string s = stamp_a->ExtractStr(blob);
+//      std::string s = stamp_a->ExtractStr(blob);
+      std::string s = stamp_h->ExtractStr(blob);
 
       fprintf(stderr,"%i %s\n",picker->isRecursive(), s.c_str());
     }
