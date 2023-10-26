@@ -32,6 +32,9 @@
 
 #include "test-chars-stamps.h"
 
+// tmp
+#include <fstream>
+
 using namespace TAP;
 
 char short_sample[]="1234567";
@@ -54,7 +57,7 @@ class PoolPickerStamp : public virtual StampBaseStr
 
   public:
     PoolPickerStamp(std::vector<std::shared_ptr<StampBaseStr>> new_pool);
-    ~PoolPickerStamp() {fprintf(stderr, "DESTROY!\n");};
+//    ~PoolPickerStamp() {fprintf(stderr, "DESTROY!\n");};
 
     std::string ExtractStr(std::shared_ptr<Blob> blob) override;
     virtual void add_weak(std::shared_ptr<StampBaseStr> stamp);
@@ -80,9 +83,9 @@ PoolPickerStamp::isRecursive()
   if(is_recursive || is_in_recursion)
     return true;
   is_in_recursion = true;
-  for(auto stamp : pool)
+  for(auto stamp : weak_pool)
   {
-    if (stamp->isRecursive())
+    if (stamp.lock()->isRecursive())
     {
       is_recursive = true;  // Once recursive -- recursive forever.
       is_in_recursion = false;
@@ -100,13 +103,22 @@ PoolPickerStamp::ExtractStr(std::shared_ptr<Blob> blob)
   ORACLE_TYPE oracle = stamp_oracle.ExtractValue(blob);
 
   std::vector<std::weak_ptr<StampBaseStr>> target_pool;
-  for(auto stamp : weak_pool)
+  std::vector<std::weak_ptr<StampBaseStr>> unbounded_pool;
+
+  for(auto stamp_w : weak_pool)
   {
-    if (stamp.lock()->minSize() <= blob->Size())
+    auto stamp = stamp_w.lock();
+    if (stamp->minSize() <= blob->Size())
     {
-       target_pool.push_back(stamp);
+      target_pool.push_back(stamp_w);
+      if (stamp->maxSize() == -1 || stamp->maxSize() >= blob->Size())
+      {
+        unbounded_pool.push_back(stamp_w);
+      }
     }
   }
+  if (unbounded_pool.size()>0)
+        target_pool = unbounded_pool;
 
   size_t index = OracleProportion(oracle, 0, target_pool.size() - 1);
   return target_pool[index].lock()->ExtractStr(blob);
@@ -115,20 +127,22 @@ PoolPickerStamp::ExtractStr(std::shared_ptr<Blob> blob)
 int
 PoolPickerStamp::minSize()
 {
-  int res = INT_MAX;
+  int res = INT_MAX / 2;
   /* Do not check is_recursive here: even if stamp is known to be recursive we
    * still should iterate all his non-recursive children to find real minimal 
    * size */
   if (is_in_recursion)
     return res;
-  is_in_recursion = 1; /* Do not use isRecursive() inside as it uses same flag*/
-  for(auto stamp : pool)
+  is_in_recursion = true; /* Do not use isRecursive() inside as it uses same flag*/
+  for(auto stamp : weak_pool)
   {
-    int candidat = stamp->minSize();
+    int candidat = stamp.lock()->minSize();
     if (res > candidat)
          res = candidat;
   }
-  is_in_recursion = 0;
+  is_in_recursion = false;
+  if (res == INT_MAX / 2)
+      return INT_MAX / 2;
   res += ORACLE_SIZE;
   return res;
 }
@@ -139,16 +153,19 @@ PoolPickerStamp::maxSize()
   int res = 0;
   if (is_recursive || is_in_recursion)
     return -1;
-  is_in_recursion = 1; /* Do not use isRecursive() inside as it uses same flag*/
-  for(auto stamp : pool)
+  is_in_recursion = true; /* Do not use isRecursive() inside as it uses same flag*/
+  for(auto stamp : weak_pool)
   {
-    int candidat = stamp->maxSize();
+    int candidat = stamp.lock()->maxSize();
     if (candidat == -1)
+    {
+      is_in_recursion = false;
       return  -1;
+    }
     if (res < candidat)
          res = candidat;
   }
-  is_in_recursion = 0;
+  is_in_recursion = false;
   res += ORACLE_SIZE;
   return res;
 }
@@ -172,6 +189,9 @@ class StampJSONString : public virtual StampDictT<DictLCAlphaSmall>
   protected:
   public:
   std::string ExtractStr(std::shared_ptr<Blob> blob) override;
+    virtual int minSize() override {return 8;};
+    virtual int maxSize() override {return 8;};
+
 };
 
 
@@ -250,6 +270,7 @@ StampJSON::StampJSON()
   add_weak(stamp_i);
   add_weak(stamp_f);
   add_weak(stamp_s);
+
   add_weak(stamp_a);
   add_weak(stamp_h);
 }
@@ -258,37 +279,27 @@ StampJSON::StampJSON()
 int
 main()
 {
-    auto stamp_d = std::make_shared<StampJSONString>();
-    auto stamp_i = std::make_shared<StampJSONInt>();
-    auto stamp_f = std::make_shared<StampJSONFloat>();
+//    std::fstream f{"/dev/random"};
+    std::fstream f{"buf"};
+    if (!f) 
+      std::cerr << "Unable to open file";
 
+    std::vector<char> buffer (128,0);
+    f.read(&buffer[0], buffer.size());
 
-//    PoolPickerStamp stamp({stamp_i, stamp_f, stamp_d});
-    std::shared_ptr<PoolPickerStamp> picker(new PoolPickerStamp({stamp_f, stamp_i, stamp_d}));
- //   picker->add_weak(picker);
-    auto stamp_a = std::make_shared<StampJSONArray>(picker);
-    picker->add_weak(stamp_a);
+//    auto blob = std::make_shared<Blob>((char *)bin_sample, strlen((char *)bin_sample));
+    auto blob = std::make_shared<Blob>(&buffer[0], buffer.size());
 
-    auto stamp_h = std::make_shared<StampJSONHash>(picker);
-    picker->add_weak(stamp_h);
-
-    fprintf(stderr," hash sizes=  %i %i \n",stamp_h->minSize(), stamp_h->maxSize());
-
-    
-    auto blob = std::make_shared<Blob>((char *)bin_sample, strlen((char *)bin_sample));
 
     auto stamp_j = std::make_shared<StampJSON>();
 
-    fprintf(stderr,"%i %i \n",stamp_a->minSize(), stamp_a->maxSize());
-//    for(int i =0; i<25; i++)
-    {
-//      std::string s = stamp_a->ExtractStr(blob);
-      std::string s = stamp_h->ExtractStr(blob);
+//    printf("%i\n", stamp_j->minSize());
 
-      fprintf(stderr,"%i %s\n",picker->isRecursive(), s.c_str());
-    }
+    std::string s = stamp_j->ExtractStr(blob);
 
+    printf("%s\n", s.c_str());
 
+/*
 
     TEST_START(6);
     {
@@ -300,5 +311,5 @@ main()
        is(OracleProportion(65535-256,0,255), 254);
 
     }
-    TEST_END;
+    TEST_END;*/
 }
