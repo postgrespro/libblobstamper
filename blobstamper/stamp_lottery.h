@@ -19,6 +19,7 @@
 #ifndef STAMP_LOTTERY_H
 #define STAMP_LOTTERY_H
 
+#include<limits>
 template<class StampT> class StampLottery: public StampT
 {
   protected:

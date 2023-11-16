@@ -161,7 +161,6 @@ GalleyVectorBase::extract_internal(std::shared_ptr<Blob> blob)
       /* Stamp is variated size */
       int fixed_size = stamp->minSize();
       int var_size = stamp->maxSize() - fixed_size;
-fprintf(stderr, "fixed = %i, var_size = %i\n", fixed_size, var_size);
 
       ORACLE_STAMP stamp_oracle;
       while(1)
@@ -175,7 +174,6 @@ fprintf(stderr, "fixed = %i, var_size = %i\n", fixed_size, var_size);
         if (size > blob->Size())
           size = blob->Size();  // Getting what have been left, if not as much as we wanted
 
-fprintf(stderr,"---- %i %i\n", size, blob->Size());
         std::shared_ptr<Blob> blob2 = blob->Chop(size);
         res.push_back(blob2);
       }
@@ -346,7 +344,7 @@ GalleySetBase::extract_internal(std::shared_ptr<Blob> blob)
           unbounded_remainder = len - el_size;
           el_size +=s->minSize();
         }
-	std::shared_ptr<Blob> blob2 = blob->Chop(el_size);
+        std::shared_ptr<Blob> blob2 = blob->Chop(el_size);
         res.push_back(blob2);
     }
     return res;
@@ -358,7 +356,7 @@ GalleySetBase::LoadAll(std::shared_ptr<Blob> blob)
     std::vector<std::shared_ptr<Blob>> blobs = extract_internal(blob);
     for(int i=0; i<blobs.size(); i++)
     {
-	std::shared_ptr<Blob> blob = blobs[i];
+        std::shared_ptr<Blob> blob = blobs[i];
         std::shared_ptr<StampBase> s = stamps[i];
         s->Load(blob);
     }
@@ -372,7 +370,7 @@ GalleySetStr::ExtractStrSet(std::shared_ptr<Blob> blob)
     std::vector<std::shared_ptr<Blob>> blobs = extract_internal(blob);
     for(int i=0; i<blobs.size(); i++)
     {
-	std::shared_ptr<Blob> blob = blobs[i];
+        std::shared_ptr<Blob> blob = blobs[i];
         auto stamp = std::dynamic_pointer_cast<StampBaseStr>(stamps[i]);
         std::string str = stamp->ExtractStr(blob);
         res.push_back(str);
@@ -387,7 +385,7 @@ GalleySetBin::ExtractBinSet(std::shared_ptr<Blob> blob)
     std::vector<std::shared_ptr<Blob>> blobs = extract_internal(blob);
     for(int i=0; i<blobs.size(); i++)
     {
-	std::shared_ptr<Blob> blob = blobs[i];
+        std::shared_ptr<Blob> blob = blobs[i];
         auto stamp = std::dynamic_pointer_cast<StampBaseBin>(stamps[i]);
         std::vector<char> v = stamp->ExtractBin(blob);
         res.push_back(v);
