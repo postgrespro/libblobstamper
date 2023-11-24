@@ -411,6 +411,17 @@ result = (complex_short *) malloc(sizeof(complex_short) * result_size);
 memcpy((void*) result, (void*) &vec[0], sizeof(complex_short) * result_size);
 ```
 
+## Trophies
+
+### PostgreSQL
+
+* [BUG #18214](https://www.postgresql.org/message-id/flat/18214-891f77caa80a35cc%40postgresql.org):
+`poly_contain` (`@>`) hangs forever for input data with zeros and infinities in
+PosrgreSQL 14-16
+* [BUG #17962](https://www.postgresql.org/message-id/17962-4f00b6f26724858d%40postgresql.org): PostgreSQL 11 hangs on `poly_contain` (`@>`) with specific data
+
+
+
 ## Further reading
 
 1. Read examples. They are in `examples` directory.
