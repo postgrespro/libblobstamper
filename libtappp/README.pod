@@ -36,6 +36,17 @@ libtap++ - C++ unit tests for the Test Anything Protocol
 
 C<libtap++> is a TAP producer for C++ programs.
 
+=head1 HISTORY
+
+libtap++ was originally developed as a part of
+L<libperl++|https://github.com/Leont/libperl--> project by Leon Timmermans
+
+Then forked into separate L<libtap++|https://github.com/cbab/libtappp>
+project by Christian Babeux
+
+Now libtap++ us supported by Nikolay Shaplov at
+L<https://gitlab.com/dhyannataraj/libtappp>
+
 =head1 FUNCTIONS
 
 All functions and variables are defined in the C<TAP> namespace.

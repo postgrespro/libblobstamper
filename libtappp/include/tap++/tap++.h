@@ -11,6 +11,13 @@
 #pragma warning( disable : 4290 ) // MSVC: https://msdn.microsoft.com/en-us/library/sa28fef8.aspx
 #endif
 
+#if __cplusplus >= 201103L
+#define NOEXCEPT noexcept(true)
+#else
+#define NOEXCEPT throw()
+#endif
+
+
 namespace TAP {
 	namespace details {
 		struct skip_all_type {};
@@ -20,7 +27,7 @@ namespace TAP {
 
 		/* Return the variant of "Failed test" or "Failed                   */
 		/* (TODO) test" required by whether the current test is a todo test */
-		char const * failed_test_msg() throw();
+		char const * failed_test_msg() NOEXCEPT;
 	}
 	class fatal_exception : public std::exception {
 		std::string message;
@@ -30,64 +37,64 @@ namespace TAP {
 		const char* what() const throw() {
 			return message.c_str();
 		}
-		~fatal_exception() throw() {
+		~fatal_exception() NOEXCEPT {
 		}
 	};
 	extern const details::skip_all_type skip_all;
 	extern const details::no_plan_type no_plan;
-	void plan(unsigned) throw(fatal_exception);
-	void plan(const details::skip_all_type&, const std::string& = "") throw(fatal_exception);
-	void plan(const details::no_plan_type&) throw();
-	void done_testing() throw(fatal_exception);
-	void done_testing(unsigned) throw(fatal_exception);
+	void plan(unsigned);
+	void plan(const details::skip_all_type&, const std::string& = "");
+	void plan(const details::no_plan_type&) NOEXCEPT;
+	void done_testing();
+	void done_testing(unsigned);
 
-	unsigned planned() throw();
-	unsigned encountered() throw();
+	unsigned planned() NOEXCEPT;
+	unsigned encountered() NOEXCEPT;
 
-	bool ok(bool, const std::string& = "") throw();
-	bool not_ok(bool, const std::string& = "") throw();
+	bool ok(bool, const std::string& = "") NOEXCEPT;
+	bool not_ok(bool, const std::string& = "") NOEXCEPT;
 
-	bool pass(const std::string& = "") throw();
-	bool fail(const std::string& = "") throw();
+	bool pass(const std::string& = "") NOEXCEPT;
+	bool fail(const std::string& = "") NOEXCEPT;
 
-	void skip(unsigned, const std::string& = "") throw();
-	void bail_out(const std::string& reason) throw();
+	void skip(unsigned, const std::string& = "") NOEXCEPT;
+	void bail_out(const std::string& reason) NOEXCEPT;
 
-	int exit_status() throw();
-	bool summary() throw();
+	int exit_status() NOEXCEPT;
+	bool summary() NOEXCEPT;
 
-	void set_output(std::ostream&) throw(fatal_exception);
-	void set_error(std::ostream&) throw(fatal_exception);
+	void set_output(std::ostream&);
+	void set_error(std::ostream&);
 
-	template<typename T> void diag(const T& first) throw() {
+	template<typename T> void diag(const T& first) NOEXCEPT {
 		*details::error << "# " << first << std::endl;
 	}
-	template<typename T1, typename T2> void diag(const T1& first, const T2& second) throw() {
+	template<typename T1, typename T2> void diag(const T1& first, const T2& second) NOEXCEPT {
 		*details::error << "# " << first << second << std::endl;
 	}
-	template<typename T1, typename T2, typename T3> void diag(const T1& first, const T2& second, const T3& third) throw() {
+	template<typename T1, typename T2, typename T3> void diag(const T1& first, const T2& second, const T3& third) NOEXCEPT {
 		*details::error << "# " << first << second << third << std::endl;
 	}
-	template<typename T1, typename T2, typename T3, typename T4> void diag(const T1& first, const T2& second, const T3& third, const T4& fourth) throw() {
+	template<typename T1, typename T2, typename T3, typename T4> void diag(const T1& first, const T2& second, const T3& third, const T4& fourth) NOEXCEPT {
 		*details::error << "# " << first << second << third << fourth << std::endl;
 	}
-	template<typename T1, typename T2, typename T3, typename T4, typename T5> void diag(const T1& first, const T2& second, const T3& third, const T4& fourth, const T5& fifth) throw() {
+	template<typename T1, typename T2, typename T3, typename T4, typename T5> void diag(const T1& first, const T2& second, const T3& third, const T4& fourth, const T5& fifth) NOEXCEPT {
 		*details::error << "# " << first << second << third << fourth << fifth << std::endl;
 	}
 
-	template<typename T> void note(const T& first) throw() {
+	template<typename T> void note(const T& first) NOEXCEPT {
 		*details::output << "# " << first << std::endl;
 	}
-	template<typename T1, typename T2> void note(const T1& first, const T2& second) throw() {
+	template<typename T1, typename T2> void note(const T1& first, const T2& second) NOEXCEPT {
 		*details::output << "# " << first << second << std::endl;
 	}
-	template<typename T1, typename T2, typename T3> void note(const T1& first, const T2& second, const T3& third) throw() {
+	template<typename T1, typename T2, typename T3> void note(const T1& first, const T2& second, const T3& third) NOEXCEPT {
 		*details::output << "# " << first << second << third << std::endl;
 	}
-	template<typename T1, typename T2, typename T3, typename T4> void note(const T1& first, const T2& second, const T3& third, const T4& fourth) throw() {
+	template<typename T1, typename T2, typename T3, typename T4> void note(const T1& first, const T2& second, const T3& third, const T4& fourth) NOEXCEPT {
 		*details::output << "# " << first << second << third << fourth << std::endl;
 	}
-	template<typename T1, typename T2, typename T3, typename T4, typename T5> void note(const T1& first, const T2& second, const T3& third, const T4& fourth, const T5& fifth) throw() {
+	template<typename T1, typename T2, typename T3, typename T4, typename T5> void note(const T1& first, const T2& second, const T3& third, const T4& fourth, const T5& fifth) NOEXCEPT {
 		*details::output << "# " << first << second << third << fourth << fifth << std::endl;
 	}
 
@@ -246,8 +253,8 @@ namespace TAP {
 	class todo_guard {
 		const std::string value;
 		public:
-		todo_guard() throw();
-		~todo_guard() throw();
+		todo_guard() NOEXCEPT;
+		~todo_guard() NOEXCEPT;
 	};
 }
 
@@ -257,22 +264,22 @@ namespace TAP {
 	namespace details {
 		struct Skip_exception {
 			const std::string reason;
-			Skip_exception(const std::string& _reason) throw() : reason(_reason) {
+			Skip_exception(const std::string& _reason) NOEXCEPT : reason(_reason) {
 			}
 		};
 		struct Todo_exception {
 			const std::string reason;
-			Todo_exception(const std::string& _reason) throw() : reason(_reason) {
+			Todo_exception(const std::string& _reason) NOEXCEPT : reason(_reason) {
 			}
 		};
 
-		void start_block(unsigned) throw();
-		unsigned stop_block() throw(fatal_exception);
+		void start_block(unsigned) NOEXCEPT;
+		unsigned stop_block();
 
 	}
 
-	void skip(const std::string& reason) throw(details::Skip_exception);
-	void skip_todo(const std::string& reason) throw(details::Todo_exception);
+	void skip(const std::string& reason);
+	void skip_todo(const std::string& reason);
 }
 
 #define TRY(action, name) do {\
