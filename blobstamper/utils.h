@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * Copyright 2021 Nikolay Shaplov (Postgres Professional)
+ * Copyright 2021-2024 Nikolay Shaplov (Postgres Professional)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,25 @@
  * limitations under the License.
  *
  ******************************************************************************/
+#include <sstream>
 
-#include "stamp_enumerator.h"
-
-#include"galley.h"
-#include"stamp.h"
-#include"blob.h"
-#include "utils.h" 
-
-std::string StampStrEnumerator::ExtractStr(std::shared_ptr<Blob> blob)
+namespace Utils
 {
-  std::vector<std::string> data = ExtractStrVector(blob);
-  auto res = Utils::join(data, separator);
-  res = left_bracket + res + right_bracket;
-  return res;
+template <typename T>
+    std::string join(const T &container, const std::string &delimiter)
+    {
+        std::ostringstream oss;
+        if (container.empty())
+        {
+            return {};
+        }        
+        for (auto it = container.cbegin(); it != container.cend(); ++it)
+        {
+            oss << *it << delimiter;
+        }
+
+        auto res = oss.str();
+        res.resize(res.size() - delimiter.size());
+        return res;
+    }
 }

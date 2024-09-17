@@ -15,56 +15,39 @@
  * limitations under the License.
  *
  ******************************************************************************/
+#include <sstream>
 
 #include"stamp_text.h"
+#include "utils.h"
 
 std::string
 StampTextPulp::ExtractStr(std::shared_ptr<Blob> blob)
 {
     std::vector<char> data = blob->Chop(minSize(), maxSize())->AsByteVector();
+  if (data.empty())
+  {
+    return {};
+  }
+  std::ostringstream ss;
 
-    std::vector<char>::iterator the_iterator;
+  for (auto sym : data)
+  {
+    if (sym == '\0') { sym = ' '; }
+    ss << sym;
+  }
 
-    the_iterator = data.begin();
-    std:: string res;
-    while (the_iterator != data.end())
-    {
-      if (*the_iterator == '\0') { *the_iterator = ' '; }
-      res.push_back(*the_iterator++);
-    }
-
-    return res;
+  return ss.str();
 }
 
 std::string StampTextPulpWords::ExtractStr(std::shared_ptr<Blob> blob)
 {
   std::vector<std::string> data = ExtractStrVector(blob);
-  std::string res = "";
-
-  for(std::string s : data)
-  {
-    if (!res.empty())
-    {
-      res+=" ";
-    }
-    res+= s;
-  }
-  return res;
+  return Utils::join(data, " ");
 }
 
 std::string StampTextDictWords::ExtractStr(std::shared_ptr<Blob> blob)
 {
   std::vector<std::string> data = ExtractStrVector(blob);
-  std::string res = "";
-
-  for(std::string s : data)
-  {
-    if (!res.empty())
-    {
-      res+=" ";
-    }
-    res+= s;
-  }
-  return res;
+  return Utils::join(data, " ");
 }
 
