@@ -31,7 +31,7 @@ OracleProportion(ORACLE_TYPE oracle, size_t min, size_t max)
    * хвоста диапазона предсказания не попасть никогда и тогда он не округлиться 
    * в max + 1*/
   size_t delta = max - min + 1;
-  size_t res = floor(((float) oracle) / ((float) ORACLE_MAX + 1) * delta );
+  size_t res = floor(((float) oracle) / ((float) ORACLE_MAX + 1) * delta);
   return min + res;
 }
 

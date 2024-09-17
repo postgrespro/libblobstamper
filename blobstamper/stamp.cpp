@@ -43,7 +43,7 @@ StampBase::Load(std::shared_ptr<Blob> blob)
   {
     res_size = maxSize();
     if (res_size > blob->Size())
-        res_size = blob->Size();
+      res_size = blob->Size();
   }
   bitten_blob = blob->Chop(res_size);
 }

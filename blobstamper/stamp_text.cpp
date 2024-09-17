@@ -16,7 +16,7 @@
  *
  ******************************************************************************/
 
-#include"stamp_text.h"
+#include "stamp_text.h"
 
 std::string
 StampTextPulp::ExtractStr(std::shared_ptr<Blob> blob)
@@ -26,7 +26,7 @@ StampTextPulp::ExtractStr(std::shared_ptr<Blob> blob)
     std::vector<char>::iterator the_iterator;
 
     the_iterator = data.begin();
-    std:: string res;
+    std::string res;
     while (the_iterator != data.end())
     {
       if (*the_iterator == '\0') { *the_iterator = ' '; }

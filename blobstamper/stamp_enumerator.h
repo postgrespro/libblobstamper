@@ -19,11 +19,11 @@
 #ifndef STAMP_ENUMERATOR_H
 #define STAMP_ENUMERATOR_H
 
-#include"galley.h"
-#include"stamp.h"
-#include"blob.h"
+#include "galley.h"
+#include "stamp.h"
+#include "blob.h"
 
-#include<string>
+#include <string>
 
 class StampStrEnumerator: public GalleyVectorStr, public StampBaseStr
 {

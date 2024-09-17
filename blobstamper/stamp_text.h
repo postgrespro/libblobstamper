@@ -27,8 +27,8 @@
 class StampTextPulp: public StampBaseStr
 {
   public:
-    virtual int minSize() override {return 1;}
-    virtual int maxSize() override {return -1;}
+    virtual int minSize() override { return  1; }
+    virtual int maxSize() override { return -1; }
     std::string ExtractStr(std::shared_ptr<Blob> blob) override;
 };
 

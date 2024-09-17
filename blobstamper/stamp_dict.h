@@ -47,10 +47,10 @@ class StampDict: public StampBaseStr
     int  maxSize() override {return stamp_size;}
 };
 
-class StampDictLCAlphaSmall : public StampDict
+class StampDictLCAlphaSmall: public StampDict
 {
   public:
-    StampDictLCAlphaSmall (): StampDict(std::make_shared<DictLCAlphaSmall>()) {};
+    StampDictLCAlphaSmall(): StampDict(std::make_shared<DictLCAlphaSmall>()) {};
 };
 
 

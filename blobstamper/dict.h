@@ -20,8 +20,8 @@
 #define DICT_H
 
 
-#include<string>
-#include<vector>
+#include <string>
+#include <vector>
 
 
 class DictBase
@@ -31,10 +31,10 @@ class DictBase
   public:
     size_t size();
     std::string get(size_t n); // FIXME May be it would be good to use operator[]  later.
-    DictBase() {data = {};};
+    DictBase() { data = {}; };
 };
 
-class DictLCAlphaSmall : public DictBase
+class DictLCAlphaSmall: public DictBase
 {
   public:
      DictLCAlphaSmall();

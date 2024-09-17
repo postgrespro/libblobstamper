@@ -81,7 +81,7 @@ GalleyVectorV<T>::ExtractValuesVector(std::shared_ptr<Blob> blob)
   std::vector<std::shared_ptr<Blob>> blobs = extract_internal(blob);
   std::vector<T> res(blobs.size());
 
-  for(int i=0; i<blobs.size(); i++)
+  for (int i = 0; i < blobs.size(); i++)
   {
     res[i] = std::dynamic_pointer_cast<StampBaseV<T>>(stamp)->ExtractValue(blobs[i]);
   }

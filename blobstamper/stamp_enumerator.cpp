@@ -29,13 +29,13 @@ std::string StampStrEnumerator::ExtractStr(std::shared_ptr<Blob> blob)
   std::vector<std::string> data = ExtractStrVector(blob);
   std::string res = "";
 
-  for(std::string s : data)
+  for (std::string s : data)
   {
     if (!res.empty())
     {
-      res+= separator;
+      res += separator;
     }
-    res+= s;
+    res += s;
   }
   res = left_bracket + res + right_bracket;
   return res;

@@ -40,9 +40,9 @@ class StampBase
 
     void Load(std::shared_ptr<Blob> blob);
 
-    bool isFixedSize() {return minSize() == maxSize();}
-    bool isVariated()  {return ! isFixedSize() && ! isUnbounded();}
-    bool isUnbounded() {return maxSize() == -1;}
+    bool isFixedSize() { return minSize() == maxSize(); }
+    bool isVariated()  { return !isFixedSize() && !isUnbounded(); }
+    bool isUnbounded() { return maxSize() == -1; }
     virtual bool isRecursive() {return is_recursive;}
 };
 
@@ -90,8 +90,8 @@ StampBasePV<T>::ExtractBin(std::shared_ptr<Blob> blob)
   return v;
 }
 
-template<class T> class StampBaseV: public StampBasePV<T>
-,public virtual StampBase //FIXME I do not understand why do we need it here, but wihtout it, it does not build
+template<class T> class StampBaseV: public StampBasePV<T>,
+public virtual StampBase //FIXME I do not understand why do we need it here, but wihtout it, it does not build
 {
   public:
     virtual T ExtractValue(std::shared_ptr<Blob> blob) = 0;/* Should be defined by derived classes*/

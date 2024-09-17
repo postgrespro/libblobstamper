@@ -427,7 +427,7 @@ GalleySetBase::minSize()
     if (unbounded_count > 1) /* One unbounded stamp will take all data. Nothing to predict */
         res += ORACLE_SIZE * unbounded_count;
 
-   return res;
+    return res;
 }
 
 int

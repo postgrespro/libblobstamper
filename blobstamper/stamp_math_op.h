@@ -19,9 +19,9 @@
 #ifndef STAMP_MATH_OP_H
 #define STAMP_MATH_OP_H
 
-#include"blob.h"
-#include"stamp.h"
-#include"galley.h"
+#include "blob.h"
+#include "stamp.h"
+#include "galley.h"
 
 
 class StampMathUnaryOp: public StampBaseStr
@@ -31,7 +31,7 @@ class StampMathUnaryOp: public StampBaseStr
     std::shared_ptr<StampBaseStr> stamp;
   public:
     virtual std::string ExtractStr(std::shared_ptr<Blob> blob) override;
-    StampMathUnaryOp(std::string arg_op_name, std::shared_ptr<StampBaseStr> arg_stamp) : op_name(arg_op_name), stamp(arg_stamp) {};
+    StampMathUnaryOp(std::string arg_op_name, std::shared_ptr<StampBaseStr> arg_stamp): op_name(arg_op_name), stamp(arg_stamp) {};
     virtual int maxSize() override {return -1;};
     virtual int minSize() override {return stamp->minSize();};
 };
@@ -48,7 +48,7 @@ class StampMathBinaryOp: public StampBaseStr, public GalleySetBase
     virtual std::string ExtractStr(std::shared_ptr<Blob> blob) override;
     StampMathBinaryOp(std::string arg_op_name,
                       std::shared_ptr<StampBaseStr> arg_stamp1,
-                      std::shared_ptr<StampBaseStr> arg_stamp2) :
+                      std::shared_ptr<StampBaseStr> arg_stamp2):
         GalleySetBase({arg_stamp1, arg_stamp2}),
         op_name(arg_op_name),
         stamp1(arg_stamp1),

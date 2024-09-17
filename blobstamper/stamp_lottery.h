@@ -62,10 +62,10 @@ template<class StampT> bool
 StampLottery4Recursion<StampT>::
 soft_maxsize_filter(StampT &stamp, int data_size)
 {
-  if ( stamp.isUnbounded() ||            // Unbounded is always ok
-       stamp.maxSize() > data_size  ||  // Variated that can consume all data is ok
-       stamp.minSize() + stamp.maxSize() > data_size  // Fixed or variated stamp that lefts less data then it's min size will also do
-      )
+  if (stamp.isUnbounded() ||            // Unbounded is always ok
+      stamp.maxSize() > data_size  ||  // Variated that can consume all data is ok
+      stamp.minSize() + stamp.maxSize() > data_size  // Fixed or variated stamp that lefts less data then it's min size will also do
+     )
       return true;
   return false;
 }
@@ -76,7 +76,7 @@ init_stored_min(std::ref_vector<StampT> stamps_arg)
 {
   int min = std::numeric_limits<int>::max();
 
-  for(StampT & stamp : stamps)
+  for (StampT & stamp : stamps)
   {
 
     if (min > stamp.minSize())
@@ -91,13 +91,13 @@ init_stored_max(std::ref_vector<StampT> stamps_arg)
 {
   int max = 0;
 
-  for(StampT & stamp : stamps)
+  for (StampT & stamp : stamps)
   {
     if (stamp.maxSize() == -1)
       return -1;
 
     if (max < stamp.maxSize())
-        max = stamp.maxSize();
+      max = stamp.maxSize();
   }
   return max;
 }

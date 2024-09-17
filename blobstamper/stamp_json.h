@@ -27,7 +27,7 @@
 #include "stamp_dict.h"
 #include "stamp_enumerator.h"
 
-class PoolPickerStamp : public virtual StampBaseStr
+class PoolPickerStamp: public virtual StampBaseStr
 {
   protected:
     std::vector<std::shared_ptr<StampBaseStr>> pool;
@@ -44,15 +44,15 @@ class PoolPickerStamp : public virtual StampBaseStr
     virtual int maxSize() override;
 };
 
-class StampJSONInt : public virtual StampArithm<long int>
+class StampJSONInt: public virtual StampArithm<long int>
 {
 };
 
-class StampJSONFloat : public virtual StampArithm<double>
+class StampJSONFloat: public virtual StampArithm<double>
 {
 };
 
-class StampJSONString : public virtual StampDictT<DictLCAlphaSmall>
+class StampJSONString: public virtual StampDictT<DictLCAlphaSmall>
 {
   protected:
   public:
@@ -66,8 +66,8 @@ class StampJSONArray: public StampStrEnumerator
 {
   private:
   public:
-    StampJSONArray(std::shared_ptr<PoolPickerStamp> picker)
-            :StampStrEnumerator(picker, ", ", "[", "]") {};
+    StampJSONArray(std::shared_ptr<PoolPickerStamp> picker):
+                   StampStrEnumerator(picker, ", ", "[", "]") {};
 };
 
 class StampJSONHashEl: public StampBaseStr
@@ -76,8 +76,8 @@ class StampJSONHashEl: public StampBaseStr
     std::shared_ptr<StampJSONString> stamp_name;
     std::shared_ptr<PoolPickerStamp> stamp_value;
   public:
-    StampJSONHashEl(std::shared_ptr<PoolPickerStamp> picker)
-            :stamp_value(picker), stamp_name(std::make_shared<StampJSONString>()) {};
+    StampJSONHashEl(std::shared_ptr<PoolPickerStamp> picker):
+                    stamp_value(picker), stamp_name(std::make_shared<StampJSONString>()) {};
     virtual int minSize() override {return stamp_name->minSize() + stamp_value->minSize();};
     virtual int maxSize() override {return -1;};
     std::string ExtractStr(std::shared_ptr<Blob> blob) override;
@@ -88,8 +88,8 @@ class StampJSONHash: public StampStrEnumerator
   private:
     std::shared_ptr<StampJSONHashEl> stamp_el;
   public:
-    StampJSONHash(std::shared_ptr<PoolPickerStamp> picker)
-            :StampStrEnumerator(stamp_el = std::make_shared<StampJSONHashEl>(picker), ", ", "{", "}") {};
+    StampJSONHash(std::shared_ptr<PoolPickerStamp> picker):
+                  StampStrEnumerator(stamp_el = std::make_shared<StampJSONHashEl>(picker), ", ", "{", "}") {};
 };
 
 
