@@ -18,13 +18,14 @@
 
 #include <string>
 #include <vector>
+#include <cstring>
+
+
 #define WANT_TEST_EXTRAS
 #include <tap++/tap++.h>
 
 #include "blobstamper/stamp_json.h"
-
-// tmp
-#include <fstream>
+#include "blobstamper/oracle.h"
 
 using namespace TAP;
 
@@ -36,30 +37,78 @@ unsigned char bin_sample[]= {49, 22, 152, 226, 89, 119, 247, 115, 43, 42, 243, 7
 int
 main()
 {
-    std::fstream f{"/dev/random"};
-//    std::fstream f{"buf"};
-    if (!f) 
-      std::cerr << "Unable to open file";
 
-    std::vector<char> buffer (128,0);
-    f.read(&buffer[0], buffer.size());
+// If you uncomment this it will crash for reason I do not understand
 
-//    auto blob = std::make_shared<Blob>((char *)bin_sample, strlen((char *)bin_sample));
-    auto blob = std::make_shared<Blob>(&buffer[0], buffer.size());
+/*    auto blob1 = std::make_shared<Blob>((char *)bin_sample, strlen((char *)bin_sample));
+    auto stamp_j1 = std::make_shared<StampJSON>();
+    std::string s1 = stamp_j1->ExtractStr(blob1);
+    printf("%s\n", s1.c_str());
+*/
 
-
-    auto stamp_j = std::make_shared<StampJSON>();
-
-    std::string s = stamp_j->ExtractStr(blob);
-
-    printf("%s\n", s.c_str());
-
-/*
-
-    TEST_START(6);
+    TEST_START(5);
     {
+        auto blob = std::make_shared<Blob>((char *)bin_sample, strlen((char *)bin_sample));
+        auto stamp_j = std::make_shared<StampJSON>();
 
-
+        std::string s = stamp_j->ExtractStr(blob);
+        std::string expected = "[6850509402014839822, 3438255817691106319, \"resulted\", -2.684757453484730872673776686700739040682020879678934003695336094670709694419006239953740106372555463816175000634871124431422513570790242370232656601974908085084433064181237341375458199532539671263821862377193715039215799333468172751725903574125176464661297323397544866180407166347114750393787405005704461598334438005517341732432719884411807209593715412099886215291366653445948031730949878692626953125e-151, \"lushes\", -5199661808640109653, \"denomination\", -3.06532686549173138956803086330182850360870361328125, \"sedating\", \"robots\", -3.3696970613711244822470283884492113423278459359891097388748050077510095184860700081976239055565263066452656899596451722800338757224380970001220703125e-42, \"preface\", 9.55422367779008699072920786882312943145717681740324270561686674939552239415695463827122863940711666092367434557202401330797838517640477979352142678948212051182053983211517333984375e-56, 6300155112918555921, \"dams\", 2.411323842459936645124797826433320804619144161893916130561265623523643502350374626190490408739886564139366504029821786107467040377895714047017891228899122281601579488797245463600235576598531485903332393648607370715931713232242018751523644727805408352870771308312443806176048554264200149458533769648133943422986030732712523236966445578809656378067940216124429747414289524093606877704785435824362397944294729373146388523502884316004124548536154374326842524560415029933595880452289294570895862703927051929788804023836835074268010108198185051300394774230223405817676130206688777308144339841912135245325959771275736867526109676372404347501558868228887456576678950716422841427035057837446885287135955877602100372314453125e-287, 9188031415654983422, -5901895462997796268, \"blazer\"]";
+        is(s, expected, "json stamp works well");
     }
-    TEST_END;*/
+    /* Smallest sample giving sane output */
+    {
+        auto blob = std::make_shared<Blob>((char *)bin_sample, 10); /* ORACLE_SIZE = 2 + int = 8 */
+        auto stamp_j = std::make_shared<StampJSON>();
+
+        std::string s = stamp_j->ExtractStr(blob);
+        std::string expected = "3038649880288027288";
+        is(s, expected, "json stamp on shortest data works well");
+    }
+    /* Check throw OutOfMemory when data length is less then ORACLE_SIZE */
+    {
+        auto blob = std::make_shared<Blob>((char *)bin_sample, ORACLE_SIZE - 1);
+        auto stamp_j = std::make_shared<StampJSON>();
+
+        int cought = 0;
+        try{
+          std::string s = stamp_j->ExtractStr(blob);
+        }
+        catch (OutOfData)
+        {
+            cought = 1;
+        }
+        ok(cought, "Throws OutOfData if have data size less then ORACLE_SIZE");
+    }
+    /* Check throw OutOfMemory when data length is equal to ORACLE_SIZE */
+    {
+        auto blob = std::make_shared<Blob>((char *)bin_sample, ORACLE_SIZE);
+        auto stamp_j = std::make_shared<StampJSON>();
+
+        int cought = 0;
+        try{
+          std::string s = stamp_j->ExtractStr(blob);
+        }
+        catch (OutOfData)
+        {
+            cought = 1;
+        }
+        ok(cought, "Throws OutOfData if have data size equal to ORACLE_SIZE");
+    }
+    /* Check throw OutOfMemory when data length is bit bigger than ORACLE_SIZE */
+    /* But not big enough to give any output */
+    {
+        auto blob = std::make_shared<Blob>((char *)bin_sample, ORACLE_SIZE + 1);
+        auto stamp_j = std::make_shared<StampJSON>();
+
+        int cought = 0;
+        try{
+          std::string s = stamp_j->ExtractStr(blob);
+        }
+        catch (OutOfData)
+        {
+            cought = 1;
+        }
+        ok(cought, "Throws OutOfData if have data size is a bit bigger then ORACLE_SIZE");
+    }
+    TEST_END;
 }

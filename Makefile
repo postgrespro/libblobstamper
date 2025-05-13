@@ -43,6 +43,7 @@ clean: blob-stamper-clean
 	$(MAKE) -C t clean
 	$(MAKE) -C examples clean
 	$(MAKE) -C libtappp clean
+	$(MAKE) -C console_demo clean
 	@echo Clean done!
 
 test:

@@ -77,6 +77,25 @@ PoolPickerStamp::ExtractStr(std::shared_ptr<Blob> blob)
   if (unbounded_pool.size()>0)
     target_pool = unbounded_pool;
 
+  if (target_pool.size() == 0)
+  {
+    /* Most probably we are in out of data situation. Check it
+     * and throw an exception. Or abort if something goes wrong
+     *
+     * Normally caller should not call this method when he is out of data
+     * so it is OK to do the check at the end, when get no success, and not
+     * in the beginning.
+     */
+    if (blob->Size() < this->minSize())
+    {
+      throw OutOfData();
+    } else
+    {
+      fprintf(stderr, "Something is really wrong in PoolPickerStamp::ExtractStr\n");
+      abort();
+    }
+  }
+
   size_t index = OracleProportion(oracle, 0, target_pool.size() - 1);
   return target_pool[index].lock()->ExtractStr(blob);
 }
