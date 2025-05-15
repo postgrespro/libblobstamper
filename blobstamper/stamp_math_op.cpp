@@ -29,7 +29,7 @@ StampMathUnaryOp::ExtractStr(std::shared_ptr<Blob> blob)
 std::string
 StampMathBinaryOp::ExtractStr(std::shared_ptr<Blob> blob)
 {
-  std::vector<std::shared_ptr<Blob>> blobs = extract_internal(blob);
+  const std::vector<std::shared_ptr<Blob>> &blobs = extract_internal(blob);
   return (std::string)"(" +  stamp1->ExtractStr(blobs[0]) + " " +  op_name + " " + stamp2->ExtractStr(blobs[1]) + ")";
 }
 

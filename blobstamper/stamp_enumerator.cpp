@@ -26,10 +26,10 @@
 
 std::string StampStrEnumerator::ExtractStr(std::shared_ptr<Blob> blob)
 {
-  std::vector<std::string> data = ExtractStrVector(blob);
+  const std::vector<std::string> &data = ExtractStrVector(blob);
   std::string res = "";
 
-  for (std::string s : data)
+  for (const std::string &s : data)
   {
     if (!res.empty())
     {

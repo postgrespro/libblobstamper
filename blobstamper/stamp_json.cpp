@@ -27,7 +27,7 @@
 PoolPickerStamp::PoolPickerStamp(std::vector<std::shared_ptr<StampBaseStr>> new_pool)
         : pool{new_pool}
 {
-  for (auto stamp : pool)
+  for (const auto &stamp : pool)
   {
      std::weak_ptr<StampBaseStr> wp = stamp;
      weak_pool.push_back(wp);
@@ -40,7 +40,7 @@ PoolPickerStamp::isRecursive()
   if (is_recursive || is_in_recursion)
     return true;
   is_in_recursion = true;
-  for (auto stamp : weak_pool)
+  for (const auto &stamp : weak_pool)
   {
     if (stamp.lock()->isRecursive())
     {
@@ -62,7 +62,7 @@ PoolPickerStamp::ExtractStr(std::shared_ptr<Blob> blob)
   std::vector<std::weak_ptr<StampBaseStr>> target_pool;
   std::vector<std::weak_ptr<StampBaseStr>> unbounded_pool;
 
-  for (auto stamp_w : weak_pool)
+  for (const auto &stamp_w : weak_pool)
   {
     auto stamp = stamp_w.lock();
     if (stamp->minSize() <= blob->Size())
@@ -110,7 +110,7 @@ PoolPickerStamp::minSize()
   if (is_in_recursion)
     return res;
   is_in_recursion = true; /* Do not use isRecursive() inside as it uses same flag*/
-  for(auto stamp : weak_pool)
+  for (const auto &stamp : weak_pool)
   {
     int candidat = stamp.lock()->minSize();
     if (res > candidat)
@@ -130,7 +130,7 @@ PoolPickerStamp::maxSize()
   if (is_recursive || is_in_recursion)
     return -1;
   is_in_recursion = true; /* Do not use isRecursive() inside as it uses same flag*/
-  for (auto stamp : weak_pool)
+  for (const auto &stamp : weak_pool)
   {
     int candidat = stamp.lock()->maxSize();
     if (candidat == -1)
@@ -163,8 +163,8 @@ StampJSONString::ExtractStr(std::shared_ptr<Blob> blob)
 std::string
 StampJSONHashEl::ExtractStr(std::shared_ptr<Blob> blob)
 {
-   std::string n = stamp_name->ExtractStr(blob);
-   std::string v = stamp_value->ExtractStr(blob);
+   const std::string &n = stamp_name->ExtractStr(blob);
+   const std::string &v = stamp_value->ExtractStr(blob);
    return n + ": " + v;
 }
 
