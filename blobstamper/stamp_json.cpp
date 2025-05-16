@@ -74,10 +74,10 @@ PoolPickerStamp::ExtractStr(std::shared_ptr<Blob> blob)
       }
     }
   }
-  if (unbounded_pool.size()>0)
+  if (! unbounded_pool.empty())
     target_pool = unbounded_pool;
 
-  if (target_pool.size() == 0)
+  if (target_pool.empty())
   {
     /* Most probably we are in out of data situation. Check it
      * and throw an exception. Or abort if something goes wrong
@@ -187,4 +187,3 @@ StampJSON::StampJSON()
   add_weak(stamp_a);
   add_weak(stamp_h);
 }
-
