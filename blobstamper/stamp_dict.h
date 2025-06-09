@@ -56,10 +56,8 @@ class StampDictLCAlphaSmall: public StampDict
 
 template<class T> class StampDictT: public StampDict
 {
-  protected:
-    std::shared_ptr<T> dict;
   public:
-    StampDictT<T>(): StampDict(dict = std::make_shared<T>()) {};
+    StampDictT<T>(): StampDict(std::make_shared<T>()) {};
 };
 
 
