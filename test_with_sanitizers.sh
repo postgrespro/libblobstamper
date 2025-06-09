@@ -11,3 +11,4 @@ make
 make examples
 make -C console_demo
 make test
+make -C t
