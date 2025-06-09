@@ -64,7 +64,6 @@ class StampJSONString: public virtual StampDictT<DictLCAlphaSmall>
 
 class StampJSONArray: public StampStrEnumerator
 {
-  private:
   public:
     StampJSONArray(std::shared_ptr<PoolPickerStamp> picker):
                    StampStrEnumerator(picker, ", ", "[", "]") {};
@@ -85,11 +84,9 @@ class StampJSONHashEl: public StampBaseStr
 
 class StampJSONHash: public StampStrEnumerator
 {
-  private:
-    std::shared_ptr<StampJSONHashEl> stamp_el;
   public:
     StampJSONHash(std::shared_ptr<PoolPickerStamp> picker):
-                  StampStrEnumerator(stamp_el = std::make_shared<StampJSONHashEl>(picker), ", ", "{", "}") {};
+                  StampStrEnumerator(std::make_shared<StampJSONHashEl>(picker), ", ", "{", "}") {};
 };
 
 
