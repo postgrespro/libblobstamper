@@ -31,30 +31,30 @@ using namespace TAP;
 int
 main()
 {
-    TEST_START(3);
-    { /* 1..1 */
-		  char data[] = "папа\0мама\0бабушка\0дедушка\0братик\0сестричка";
-		  std::shared_ptr<Blob> blob = std::make_shared<Blob>(data, (sizeof data)-1);
-		  StampTextPulp stamp;
-		  std::string s = stamp.ExtractStr(blob);
-      is(s, "папа мама бабушка дедушка братик сестричка", "StampTextSimple");
+  TEST_START(3);
+  { /* 1..1 */
+    char data[] = "папа\0мама\0бабушка\0дедушка\0братик\0сестричка";
+    std::shared_ptr<Blob> blob = std::make_shared<Blob>(data, (sizeof data)-1);
+    StampTextPulp stamp;
+    std::string s = stamp.ExtractStr(blob);
+    is(s, "папа мама бабушка дедушка братик сестричка", "StampTextSimple");
+  }
 
-    }
-    { /* 2..2 */
-		  char data[] = "dad\0mam\0granddad\0grandmam\0brother\0sister";
-		  std::shared_ptr<Blob> blob = std::make_shared<Blob>(data, (sizeof data)-1);
-		  StampTextPulpWords stamp;
-		  std::string s = stamp.ExtractStr(blob);
-      is(s, "d dad gra n dmam broth er siste", "GalleyTextSimple");
+  { /* 2..2 */
+    char data[] = "dad\0mam\0granddad\0grandmam\0brother\0sister";
+    std::shared_ptr<Blob> blob = std::make_shared<Blob>(data, (sizeof data)-1);
+    StampTextPulpWords stamp;
+    std::string s = stamp.ExtractStr(blob);
+    is(s, "d dad gra n dmam broth er siste", "GalleyTextSimple");
+  }
 
-    }
-    { /* 3..3 */
-		  char data[] = "abcdef" "abcdef" "ABCDEF" "012345";
-		  std::shared_ptr<Blob> blob = std::make_shared<Blob>(data, (sizeof data)-1);
-		  StampTextDictWords stamp;
-		  std::string s = stamp.ExtractStr(blob);
-      is(s, "gleam godfather graffiti greened grouping gunshots gleam godfather graffiti greened grouping gunshots dismally dissented divested doorstep dread drunks convertors corpulent counterparts cranking crippled crusades", "GalleyLCAlphaSmall");
+  { /* 3..3 */
+    char data[] = "abcdef" "abcdef" "ABCDEF" "012345";
+    std::shared_ptr<Blob> blob = std::make_shared<Blob>(data, (sizeof data)-1);
+    StampTextDictWords stamp;
+    std::string s = stamp.ExtractStr(blob);
+    is(s, "gleam godfather graffiti greened grouping gunshots gleam godfather graffiti greened grouping gunshots dismally dissented divested doorstep dread drunks convertors corpulent counterparts cranking crippled crusades", "GalleyLCAlphaSmall");
 
-    }
-    TEST_END;
+  }
+  TEST_END;
 }
