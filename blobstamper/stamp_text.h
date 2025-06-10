@@ -24,7 +24,7 @@
 
 #include "stamp_dict.h"
 
-class StampTextPulp: public StampBaseStr
+class StampStringLatin1: public StampBaseStr
 {
   public:
     virtual int minSize() override { return  1; }
@@ -32,16 +32,40 @@ class StampTextPulp: public StampBaseStr
     std::string ExtractStr(std::shared_ptr<Blob> blob) override;
 };
 
-class StampTextPulpWords:  public GalleyVectorStrStampBase<StampTextPulp>
+class StampStringASCII: public StampBaseStr
+{
+  public:
+    virtual int minSize() override { return  1; }
+    virtual int maxSize() override { return -1; }
+    std::string ExtractStr(std::shared_ptr<Blob> blob) override;
+};
+
+template<class T> class StampText: public GalleyVectorStrStampBase<T>
 {
   public:
     virtual std::string ExtractStr(std::shared_ptr<Blob> blob) override;
 };
 
-class StampTextDictWords:  public GalleyVectorStrStampBase<StampDictLCAlphaSmall>
+
+/* StampText create a string that consist of word that are separated by spaces.
+ * Each word is created by T stamp, (T is template parameter, you can set any
+ * stamp type there */
+
+template<class T>
+std::string StampText<T>::ExtractStr(std::shared_ptr<Blob> blob)
 {
-  public:
-    virtual std::string ExtractStr(std::shared_ptr<Blob> blob) override;
-};
+  std::vector<std::string> data = this->ExtractStrVector(blob);
+  std::string res = "";
+
+  for(std::string s : data)
+  {
+    if (!res.empty())
+    {
+      res+=" ";
+    }
+    res+= s;
+  }
+  return res;
+}
 
 #endif /* STAMP_TEXT_H */

@@ -19,52 +19,38 @@
 #include "stamp_text.h"
 
 std::string
-StampTextPulp::ExtractStr(std::shared_ptr<Blob> blob)
+StampStringLatin1::ExtractStr(std::shared_ptr<Blob> blob)
 {
     std::vector<char> data = blob->Chop(minSize(), maxSize())->AsByteVector();
 
-    std::vector<char>::iterator the_iterator;
+    std::vector<char>::iterator iterator;
 
-    the_iterator = data.begin();
+    iterator = data.begin();
     std::string res;
-    while (the_iterator != data.end())
+    while (iterator != data.end())
     {
-      if (*the_iterator == '\0') { *the_iterator = ' '; }
-      res.push_back(*the_iterator++);
+      if (*iterator == '\0') { *iterator = ' '; }
+      res.push_back(*iterator++);
     }
 
     return res;
 }
 
-std::string StampTextPulpWords::ExtractStr(std::shared_ptr<Blob> blob)
+std::string
+StampStringASCII::ExtractStr(std::shared_ptr<Blob> blob)
 {
-  std::vector<std::string> data = ExtractStrVector(blob);
-  std::string res = "";
+    std::vector<char> data = blob->Chop(minSize(), maxSize())->AsByteVector();
 
-  for(std::string s : data)
-  {
-    if (!res.empty())
+    std::vector<char>::iterator iterator;
+
+    iterator = data.begin();
+    std::string res;
+    while (iterator != data.end())
     {
-      res+=" ";
+      *iterator &= 0x7F; // Remove first bit. This will made it ASCII (or more precisely 7bit encoding including character 0x01..0x1F)
+      if (*iterator == '\0') { *iterator = ' '; }
+      res.push_back(*iterator++);
     }
-    res+= s;
-  }
-  return res;
-}
-
-std::string StampTextDictWords::ExtractStr(std::shared_ptr<Blob> blob)
-{
-  std::vector<std::string> data = ExtractStrVector(blob);
-  std::string res = "";
-
-  for(std::string s : data)
-  {
-    if (!res.empty())
-    {
-      res+=" ";
-    }
-    res+= s;
-  }
-  return res;
+    return res;
 }
 

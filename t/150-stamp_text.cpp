@@ -31,30 +31,48 @@ using namespace TAP;
 int
 main()
 {
-  TEST_START(3);
+  TEST_START(5);
   { /* 1..1 */
     char data[] = "папа\0мама\0бабушка\0дедушка\0братик\0сестричка";
     std::shared_ptr<Blob> blob = std::make_shared<Blob>(data, (sizeof data)-1);
-    StampTextPulp stamp;
-    std::string s = stamp.ExtractStr(blob);
-    is(s, "папа мама бабушка дедушка братик сестричка", "StampTextSimple");
+    StampStringLatin1 stamp_str_l1;
+    std::string s = stamp_str_l1.ExtractStr(blob);
+    is(s, "папа мама бабушка дедушка братик сестричка", "StampStringLatin1");
   }
 
   { /* 2..2 */
-    char data[] = "dad\0mam\0granddad\0grandmam\0brother\0sister";
+    char data[] = "папа\0мама\0бабушка\0дедушка\0братик\0сестричка";
     std::shared_ptr<Blob> blob = std::make_shared<Blob>(data, (sizeof data)-1);
-    StampTextPulpWords stamp;
-    std::string s = stamp.ExtractStr(blob);
-    is(s, "d dad gra n dmam broth er siste", "GalleyTextSimple");
+    StampStringASCII stamp_str_ascii;
+    std::string s = stamp_str_ascii.ExtractStr(blob);
+    is(s,
+       "P?P0P?P0 P<P0P<P0 P1P0P1Q\x3Q\x8P:P0 P4P5P4Q\x3Q\x8P:P0 P1Q P0Q\x2P8P: Q\x1P5Q\x1Q\x2Q P8Q\x7P:P0",
+        "StampTextASCII");
   }
 
   { /* 3..3 */
+    char data[] = "dad\0mam\0granddad\0grandmam\0brother\0sister";
+    std::shared_ptr<Blob> blob = std::make_shared<Blob>(data, (sizeof data)-1);
+    StampText<StampStringLatin1> stamp;
+    std::string s = stamp.ExtractStr(blob);
+    is(s, "d dad gra n dmam broth er siste", "StampText<StampStringLatin1>");
+  }
+
+  { /* 4..4 */
     char data[] = "abcdef" "abcdef" "ABCDEF" "012345";
     std::shared_ptr<Blob> blob = std::make_shared<Blob>(data, (sizeof data)-1);
-    StampTextDictWords stamp;
+    StampText<StampDictLCAlphaSmall> stamp;
     std::string s = stamp.ExtractStr(blob);
-    is(s, "gleam godfather graffiti greened grouping gunshots gleam godfather graffiti greened grouping gunshots dismally dissented divested doorstep dread drunks convertors corpulent counterparts cranking crippled crusades", "GalleyLCAlphaSmall");
-
+    is(s, "gleam godfather graffiti greened grouping gunshots gleam godfather graffiti greened grouping gunshots dismally dissented divested doorstep dread drunks convertors corpulent counterparts cranking crippled crusades", "StampText<StampDictLCAlphaSmall>");
   }
+
+  { /* 5..5 */
+    char data[] = "Некоторый текст написанный русскими буквами в кодировке utf-8";
+    std::shared_ptr<Blob> blob = std::make_shared<Blob>(data, (sizeof data)-1);
+    StampText<StampStringASCII> stamp;
+    std::string s = stamp.ExtractStr(blob);
+    is(s, "P9  Q  Q\x3Q \x1Q \x1P: P8 P<P 8 P 1Q\x3 P:P 2P0 P<P 8 P 2  P: P>P 4P8 Q  P>P 2P :P5  ut f-8", "StampText<StampStringASCII>");
+  }
+
   TEST_END;
 }
