@@ -39,7 +39,7 @@ class PoolPickerStamp: public virtual StampBaseStr
 
     std::string ExtractStr(std::shared_ptr<Blob> blob) override;
     virtual void add_weak(std::shared_ptr<StampBaseStr> stamp);
-    virtual bool isRecursive();
+    virtual bool isRecursive() override;
     virtual int minSize() override;
     virtual int maxSize() override;
 };
