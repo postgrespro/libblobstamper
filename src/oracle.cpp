@@ -18,7 +18,7 @@
 
 #include <math.h>
 
-#include"oracle.h"
+#include "blobstamper/oracle.h"
 
 size_t
 OracleProportion(ORACLE_TYPE oracle, size_t min, size_t max)

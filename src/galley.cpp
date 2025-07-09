@@ -20,11 +20,11 @@
 #include <functional>
 #include <cmath>
 
-#include "blob.h"
-#include "stamp.h"
-#include "stamp_arithm.h"
-#include "galley.h"
-#include "oracle.h"
+#include "blobstamper/blob.h"
+#include "blobstamper/stamp.h"
+#include "blobstamper/stamp_arithm.h"
+#include "blobstamper/galley.h"
+#include "blobstamper/oracle.h"
 
 int
 GalleyVectorBase::minSize()

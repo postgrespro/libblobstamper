@@ -18,10 +18,10 @@
 
 #include <cstring>
 
-#include "blob.h"
-#include "helpers.h"
+#include "blobstamper/blob.h"
+#include "blobstamper/helpers.h"
 
-#include "stamp.h"
+#include "blobstamper/stamp.h"
 
 
 Blob::Blob (char * data_in, size_t size_in)

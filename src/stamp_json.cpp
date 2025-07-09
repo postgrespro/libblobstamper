@@ -21,8 +21,8 @@
 #include <vector>
 #include <memory>
 
-#include "stamp_json.h"
-#include "oracle.h"
+#include "blobstamper/stamp_json.h"
+#include "blobstamper/oracle.h"
 
 PoolPickerStamp::PoolPickerStamp(std::vector<std::shared_ptr<StampBaseStr>> new_pool)
         : pool{new_pool}

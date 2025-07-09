@@ -4,60 +4,39 @@
 
 
 # https://stackoverflow.com/questions/18007326/how-to-change-default-values-of-variables-like-cc-in-makefile
-ifeq ($(origin CC),default) 
+ifeq ($(origin CC),default)
 	CC = gcc
 endif
 
-BLOBSTAMPER_SRC := $(wildcard  blobstamper/*.cpp)
+BLOBSTAMPER_SRC := $(wildcard  src/*.cpp)
 BLOBSTAMPER_OBJ := $(addsuffix .o, $(basename $(BLOBSTAMPER_SRC)))
 
 EXAMPLES_SRC = $(wildcard  examples/*.cpp)
 EXAMPLES_BIN = $(basename $(EXAMPLES_SRC))
 
 
-.PHONY: all blob-stamper-all blob-stamper-clean clean test gagaga
+.PHONY: all blob-stamper-all blob-stamper-clean clean test
 
-all: $(BLOBSTAMPER_OBJ)
+all: blob-stamper-all
 	@echo All done!
 
-blobstamper/%.o: blobstamper/%.cpp
-	$(CXX) -c -g $(CXXFLAGS) $< -o $@
+src/%.o: src/%.cpp
+	$(CXX) -c -g $(CXXFLAGS) -I include $< -o $@
 
-
-# blob-stamper-all:
-#	$(MAKE) -C blobstamper
-
-#%.o: %.cpp $(DEPS)
-#	$(CXX) -c -g $(CFLAGS) $<
-
-#%.o: %.c $(DEPS)
-#	$(CC) -c -g $(CXXFLAGS) $<
-
-
+blob-stamper-all: $(BLOBSTAMPER_OBJ)
 
 blob-stamper-clean:
-	rm -f *.o
+	rm -f src/*.o
 
 clean: blob-stamper-clean
-	$(MAKE) -C blobstamper clean
 	$(MAKE) -C t clean
 	$(MAKE) -C examples clean
-	$(MAKE) -C libtappp clean
 	$(MAKE) -C console_demo clean
 	@echo Clean done!
 
 test:
 	$(MAKE) -C t test
 
-#test_dict: test_dict.o blob-stamper-all
-#	$(CXX) $(LDFLAGS) $@.o -o $@ $(BLOB_STAMPER_OBJ)
-
 examples: $(BLOBSTAMPER_OBJ)
 	$(MAKE) -C examples
 
-gagaga:
-	@echo ------- $(BLOBSTAMPER_OBJ)
-
-#all: blob-stamper-all test_dict $(WRAPPERS_OBJ)
-#all: blob-stamper-all $(WRAPPERS_OBJ)
-#	@echo All done!

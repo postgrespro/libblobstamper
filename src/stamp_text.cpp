@@ -16,7 +16,7 @@
  *
  ******************************************************************************/
 
-#include "stamp_text.h"
+#include "blobstamper/stamp_text.h"
 
 std::string
 StampStringLatin1::ExtractStr(std::shared_ptr<Blob> blob)

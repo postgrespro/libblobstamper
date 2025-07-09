@@ -16,7 +16,34 @@
  *
  ******************************************************************************/
 
-#include "blob.h"
-#include "stamp.h"
-#include "stamp_arithm.h"
 
+#include <string>
+#include <list>
+
+#include <string.h>
+
+#include "blobstamper/blob.h"
+#include "blobstamper/stamp.h"
+
+
+void
+StampBase::Load(std::shared_ptr<Blob> blob)
+{
+
+  if (minSize() > blob->Size())
+  {
+    throw OutOfData();
+  }
+
+  size_t res_size;
+  if (isUnbounded())
+  {
+    res_size = blob->Size();
+  } else
+  {
+    res_size = maxSize();
+    if (res_size > blob->Size())
+      res_size = blob->Size();
+  }
+  bitten_blob = blob->Chop(res_size);
+}

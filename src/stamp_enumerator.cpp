@@ -16,34 +16,26 @@
  *
  ******************************************************************************/
 
-
-#include <string>
-#include <list>
-
-#include <string.h>
-
-#include "blob.h"
-#include "stamp.h"
+#include "blobstamper/stamp_enumerator.h"
+#include "blobstamper/galley.h"
+#include "blobstamper/stamp.h"
+#include "blobstamper/blob.h"
 
 
-void
-StampBase::Load(std::shared_ptr<Blob> blob)
+
+std::string StampStrEnumerator::ExtractStr(std::shared_ptr<Blob> blob)
 {
+  std::vector<std::string> data = ExtractStrVector(blob);
+  std::string res = "";
 
-  if (minSize() > blob->Size())
+  for (std::string s : data)
   {
-    throw OutOfData();
+    if (!res.empty())
+    {
+      res += separator;
+    }
+    res += s;
   }
-
-  size_t res_size;
-  if (isUnbounded())
-  {
-    res_size = blob->Size();
-  } else
-  {
-    res_size = maxSize();
-    if (res_size > blob->Size())
-      res_size = blob->Size();
-  }
-  bitten_blob = blob->Chop(res_size);
+  res = left_bracket + res + right_bracket;
+  return res;
 }

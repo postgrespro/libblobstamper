@@ -16,27 +16,20 @@
  *
  ******************************************************************************/
 
-#include "stamp_enumerator.h"
+#include <string>
+#include "blobstamper/stamp_math_op.h"
 
-#include"galley.h"
-#include"stamp.h"
-#include"blob.h"
-
-
-
-std::string StampStrEnumerator::ExtractStr(std::shared_ptr<Blob> blob)
+std::string
+StampMathUnaryOp::ExtractStr(std::shared_ptr<Blob> blob)
 {
-  std::vector<std::string> data = ExtractStrVector(blob);
-  std::string res = "";
-
-  for (std::string s : data)
-  {
-    if (!res.empty())
-    {
-      res += separator;
-    }
-    res += s;
-  }
-  res = left_bracket + res + right_bracket;
-  return res;
+  return  op_name + "(" +  stamp->ExtractStr(blob) + ")";
 }
+
+
+std::string
+StampMathBinaryOp::ExtractStr(std::shared_ptr<Blob> blob)
+{
+  std::vector<std::shared_ptr<Blob>> blobs = extract_internal(blob);
+  return (std::string)"(" +  stamp1->ExtractStr(blobs[0]) + " " +  op_name + " " + stamp2->ExtractStr(blobs[1]) + ")";
+}
+

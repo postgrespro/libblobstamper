@@ -16,10 +16,10 @@
  *
  ******************************************************************************/
 
-#include "blob.h"
-#include "stamp.h"
-#include "stamp_arithm.h"
-#include "stamp_dict.h"
+#include "blobstamper/blob.h"
+#include "blobstamper/stamp.h"
+#include "blobstamper/stamp_arithm.h"
+#include "blobstamper/stamp_dict.h"
 
 int
 StampDict::ChooseStampSize(std::shared_ptr<DictBase> dict)

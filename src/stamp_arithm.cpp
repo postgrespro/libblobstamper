@@ -16,20 +16,7 @@
  *
  ******************************************************************************/
 
-#include <string>
-#include"stamp_math_op.h"
-
-std::string
-StampMathUnaryOp::ExtractStr(std::shared_ptr<Blob> blob)
-{
-  return  op_name + "(" +  stamp->ExtractStr(blob) + ")";
-}
-
-
-std::string
-StampMathBinaryOp::ExtractStr(std::shared_ptr<Blob> blob)
-{
-  std::vector<std::shared_ptr<Blob>> blobs = extract_internal(blob);
-  return (std::string)"(" +  stamp1->ExtractStr(blobs[0]) + " " +  op_name + " " + stamp2->ExtractStr(blobs[1]) + ")";
-}
+#include "blobstamper/blob.h"
+#include "blobstamper/stamp.h"
+#include "blobstamper/stamp_arithm.h"
 
