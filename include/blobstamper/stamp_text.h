@@ -40,6 +40,14 @@ class StampStringASCII: public StampBaseStr
     std::string ExtractStr(std::shared_ptr<Blob> blob) override;
 };
 
+class StampStringUTF8: public StampBaseStr
+{
+  public:
+    virtual int minSize() override { return  3; }
+    virtual int maxSize() override { return -1; }
+    std::string ExtractStr(std::shared_ptr<Blob> blob) override;
+};
+
 template<class T> class StampText: public GalleyVectorStrStampBase<T>
 {
   public:
