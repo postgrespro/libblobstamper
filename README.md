@@ -1,3 +1,4 @@
+![Project Logo](logo/lib-blob-stamper-logo-small.png)
 # LibBlobStamper
 
 Tool for building structured data out of random input.
